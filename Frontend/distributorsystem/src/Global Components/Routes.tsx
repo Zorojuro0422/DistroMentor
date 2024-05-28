@@ -48,6 +48,7 @@ import Dashboard from "../Components/Module 3 - Dashboards/DashboardUI";
 import CashierDashboard from '../Components/Module 3 - Dashboards/CashierDashboardUI';
 import SalesAndCashierDashboard from '../Components/Module 3 - Dashboards/SalesAndCashierDashboardUI';
 import SalesAssociateDashboard from '../Components/Module 3 - Dashboards/SalesAssociateDashboardUI';
+import AddProduct from '../Components/Module 3 - Dashboards/AddProductUI';
 
 export default function MainRoutes() {
 
@@ -88,7 +89,7 @@ export default function MainRoutes() {
                             <Route path="/" element={<Navigate replace to="dashboard" />} />
                             <Route path="/dashboard" element={<><ScrollToTop/><Dashboard /></>} />
                             <Route path="/paymentList" element={<PaymentList />} />
-            
+                            <Route path="/addproduct" element={<AddProduct />} />
 
                            {/*  <Route path="/dealerOrderForm" element={<DealerOrderForm />} /> */}
                             <Route path="/distributorOrderForm" element={<><ScrollToTop/><DistributorOrderForm/></>} />
