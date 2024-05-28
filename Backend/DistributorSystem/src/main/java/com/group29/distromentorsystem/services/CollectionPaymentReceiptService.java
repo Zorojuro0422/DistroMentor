@@ -198,7 +198,7 @@ public class CollectionPaymentReceiptService {
         };
 
         //get all payment transactions from collectify
-        ResponseEntity<List<Map<String, Object>>> paymentTransactionsFromCollectify = restTemplate.exchange("https://qa-frn-dev.onrender.com/payment-transactions", HttpMethod.GET, null, responseType);
+        ResponseEntity<List<Map<String, Object>>> paymentTransactionsFromCollectify = restTemplate.exchange("https://distromentor-capstone.onrender.com/payment-transactions", HttpMethod.GET, null, responseType);
 
 
         if (paymentTransactionsFromCollectify.getBody() != null) {
