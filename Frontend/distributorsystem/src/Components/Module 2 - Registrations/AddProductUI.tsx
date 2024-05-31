@@ -29,7 +29,7 @@ const StyledCard = styled(Card)({
     display: 'flex',
     marginTop: 50,
     width: '1280px',
-    height: '600px',
+    height: '800px',
     alignItems: 'center',
     borderRadius: '25px',
     justifyContent: 'left',
@@ -198,40 +198,8 @@ const ButtonStyle = styled(Button)({
     },
     transition: 'all 0.4s'
 })
-const SignUpButton = styled(Button)({
-    backgroundColor: '#2D85E7',
-    color: '#FFFFFF',
-    width: '795px',
-    margin: '10px 0 0 80px',
-    height: '50px',
-    marginRight: '-110px',
-    marginTop: "30px",
-    marginBottom: 90,
-    ':hover': {
-        backgroundColor: 'rgba(45, 133, 231, 0.9)',
-        transform: 'scale(1.1)'
-    },
-    transition: 'all 0.4s'
-})
 
-const SignInTypo = styled(Typography)({
-    display: 'flex',
-    position: "relative",
-    textAlign: 'center',
-    // alignItems:'center',
 
-    margin: '-90px 0 0 125px',
-    // marginTop:-150,
-    // marginLeft:150,
-    // left: 1300,
-    width: "500px",
-    fontWeight: 'normal',
-    fontFamily: "Inter, sans-serif",
-    color: "#ffffff",
-    fontSize: 14,
-    zIndex: 3
-
-})
 const GridField = styled(Grid)({
 
 
@@ -244,6 +212,7 @@ export default function ProductRegistration() {
 
     const [productID, setProductID] = useState('');
     const [productName, setProductName] = useState('');
+    const [unit, setUnit] = useState('');
     const [price, setPrice] = useState('');
     const [quantity, setQuantity] = useState('');
     const [selectedProductPicture, setSelectedProductPicture] = useState<File | null>(null);
@@ -252,7 +221,7 @@ export default function ProductRegistration() {
     const [alerttitle, setAlertTitle] = useState('');
     const [alertMessage, setAlertMessage] = useState('');
     const [alertSeverity, setAlertSeverity] = useState('success');
-    const [fieldWarning, setFieldWarning] = useState({ productID: '', productName: '', price: '', quantity: '', selectedProductPicture: '' });
+    const [fieldWarning, setFieldWarning] = useState({ productID: '', productName: '', unit: '', price: '', quantity: '', selectedProductPicture: '' });
 
 
     const handleInputChange = (field: string, value: string) => {
@@ -262,6 +231,9 @@ export default function ProductRegistration() {
                 break;
             case 'productName':
                 setProductName(value);
+                break;
+            case 'unit':
+                setUnit(value);
                 break;
             case 'price':
                 setPrice(value);
@@ -280,10 +252,11 @@ export default function ProductRegistration() {
 
     const handleSubmit = async () => {
         try {
-            if (!productID || !productName || !price || !quantity || !selectedProductPicture) {
+            if (!productID || !productName || !unit || !price || !quantity || !selectedProductPicture) {
                 setFieldWarning({
                     productID: !productID ? 'Product ID is required' : '',
                     productName: !productName ? 'Product Name is required' : '',
+                    unit: !unit ? 'Unit is required' : '',
                     price: !price ? 'Price is required' : '',
                     quantity: !quantity ? 'Quantity is required' : '',
                     selectedProductPicture: !selectedProductPicture ? 'Product Picture is required' : ''
@@ -294,34 +267,57 @@ export default function ProductRegistration() {
             const formData = new FormData();
             formData.append('productID', productID);
             formData.append('productName', productName);
+            formData.append('unit', unit);
             formData.append('price', price);
             formData.append('quantity', quantity);
             formData.append('productPicture', selectedProductPicture);
 
-            // Make API call to add product
-            // Replace '/api/products' with your actual API endpoint
-            await axios.post('/api/products', formData);
-
-            // Show success message and reset form
-            alert('Product added successfully!');
-            setProductID('');
-            setProductName('');
-            setPrice('');
-            setQuantity('');
-            setSelectedProductPicture(null);
-            setFieldWarning({
-                productID: '',
-                productName: '',
-                price: '',
-                quantity: '',
-                selectedProductPicture: ''
+            // Send POST request to your backend API
+            const response = await axios.post('http://localhost:8080/product/AddProduct', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
             });
+
+            // Check if the request was successful
+            if (response.status === 200) {
+                // Show success message and reset form
+                setOpen(true);
+                setAlertTitle('Success');
+                setAlertMessage('Product added successfully!');
+                setAlertSeverity('success');
+                setProductID('');
+                setProductName('');
+                setUnit('');
+                setPrice('');
+                setQuantity('');
+                setSelectedProductPicture(null);
+                setFieldWarning({
+                    productID: '',
+                    productName: '',
+                    unit: '',
+                    price: '',
+                    quantity: '',
+                    selectedProductPicture: ''
+                });
+            } else {
+                // Show error message
+                setOpen(true);
+                setAlertTitle('Error');
+                setAlertMessage('An error occurred while adding the product. Please try again later.');
+                setAlertSeverity('error');
+            }
         } catch (error) {
             // Handle error
             console.error('Error adding product:', error);
-            alert('An error occurred while adding the product. Please try again later.');
+            setOpen(true);
+            setAlertTitle('Error');
+            setAlertMessage('An error occurred while adding the product. Please try again later.');
+            setAlertSeverity('error');
         }
     };
+
+
 
 
 
@@ -390,6 +386,12 @@ export default function ProductRegistration() {
                                                 <StyledTextField variant="outlined" label="Product Name" style={{ width: '700px' }} value={productName} onChange={(e) => handleInputChange('productName', e.target.value)} />
                                                 <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
                                                     {fieldWarning.productName}
+                                                </FormHelperText>
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                <StyledTextField variant="outlined" label="Unit" style={{ width: '700px' }} value={unit} onChange={(e) => handleInputChange('unit', e.target.value)} />
+                                                <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
+                                                    {fieldWarning.unit}
                                                 </FormHelperText>
                                             </Grid>
                                             {/* Textfield For Price */}
