@@ -1,6 +1,5 @@
 package com.group29.distromentorsystem.models;
 
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,6 +13,7 @@ public class Product {
     private String name;
     private String unit;
     private float price;
+    private int quantity; // New field for quantity
     private Set<String> orderedProductIds;
     private String productPicture;
 
@@ -21,10 +21,11 @@ public class Product {
         // Default constructor
     }
 
-    public Product(String name, String unit, float price, Set<String> orderedProductIds, String productPicture) {
+    public Product(String name, String unit, float price, int quantity, Set<String> orderedProductIds, String productPicture) {
         this.name = name;
         this.unit = unit;
         this.price = price;
+        this.quantity = quantity;
         this.orderedProductIds = orderedProductIds;
         this.productPicture = productPicture;
     }
@@ -61,6 +62,14 @@ public class Product {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public Set<String> getOrderedProductIds() {

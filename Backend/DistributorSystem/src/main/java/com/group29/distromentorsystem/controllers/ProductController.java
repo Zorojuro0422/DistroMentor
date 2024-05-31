@@ -24,14 +24,14 @@ public class ProductController {
     }
 
     // Endpoint to create a new product
-    @PostMapping
+    @PostMapping("/AddProduct")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         Product createdProduct = productService.saveProduct(product);
         return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
     }
 
     // Endpoint to get all products
-    @GetMapping
+    @GetMapping("/getAllProducts")
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> products = productService.getAllProducts();
         return new ResponseEntity<>(products, HttpStatus.OK);
@@ -47,8 +47,8 @@ public class ProductController {
 
     // Endpoint to delete a product by its ID
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteProductById(@PathVariable String productId) {
+    public ResponseEntity<String> deleteProductById(@PathVariable String productId) {
         productService.deleteProductById(productId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Product deleted successfully!", HttpStatus.NO_CONTENT);
     }
 }
