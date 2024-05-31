@@ -1,60 +1,42 @@
 package com.group29.distromentorsystem.models;
 
 
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.*;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
 
+import java.util.Set;
 
 @Document("Products")
 public class Product {
 
     @Id
-    private String productid;
-
-
+    private String productId;
     private String name;
-
-
     private String unit;
-
-
     private float price;
-
-
-    private float commissionrate;
-
-    private Set<String> orderedproductids;
-
-    //private Set<OrderedProduct> orderedProducts;
-
-    /*@OneToMany(mappedBy = "product")
-    @JsonIgnore
-    //@JsonBackReference // you inform Jackson to handle the serialization appropriately and break the infinite recursion.
-    private Set<OrderedProduct> orderedProducts;*/
-
+    private Set<String> orderedProductIds;
+    private String productPicture;
 
     public Product() {
+        // Default constructor
     }
 
-    public Product(String productid, String name, String unit, float price, float commissionrate, Set<String> orderedproductids) {
-        this.productid = productid;
+    public Product(String name, String unit, float price, Set<String> orderedProductIds, String productPicture) {
         this.name = name;
         this.unit = unit;
         this.price = price;
-        this.commissionrate = commissionrate;
-        this.orderedproductids = orderedproductids;
+        this.orderedProductIds = orderedProductIds;
+        this.productPicture = productPicture;
     }
 
-    public String getProductid() {
-        return productid;
+    // Getters and setters
+
+    public String getProductId() {
+        return productId;
     }
 
-    public void setProductid(String productid) {
-        this.productid = productid;
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
     public String getName() {
@@ -81,19 +63,19 @@ public class Product {
         this.price = price;
     }
 
-    public float getCommissionrate() {
-        return commissionrate;
+    public Set<String> getOrderedProductIds() {
+        return orderedProductIds;
     }
 
-    public void setCommissionrate(float commissionrate) {
-        this.commissionrate = commissionrate;
+    public void setOrderedProductIds(Set<String> orderedProductIds) {
+        this.orderedProductIds = orderedProductIds;
     }
 
-    public Set<String> getOrderedproductids() {
-        return orderedproductids;
+    public String getProductPicture() {
+        return productPicture;
     }
 
-    public void setOrderedproductids(Set<String> orderedproductids) {
-        this.orderedproductids = orderedproductids;
+    public void setProductPicture(String productPicture) {
+        this.productPicture = productPicture;
     }
 }

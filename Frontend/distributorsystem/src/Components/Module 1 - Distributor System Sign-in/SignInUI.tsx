@@ -115,16 +115,13 @@ export default function SignIn() {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 
         event.preventDefault();
-        setOpen(true);
-
-     
 
          if (!userid || !password) {
             setSnackbarMessage("Please enter both User ID and Password");
             setSeverity("warning");
             setOpen(true);
             return;
-        } 
+        }
         axios.post('https://distromentor-capstone.onrender.com/signin', {
             userId: userid,
             password: password
