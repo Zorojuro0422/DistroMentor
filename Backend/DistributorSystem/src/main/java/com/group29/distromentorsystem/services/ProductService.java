@@ -38,5 +38,20 @@ public class ProductService {
         productRepository.deleteById(productId);
     }
 
-    // You can add more methods here as needed, such as updating a product, searching for products by name, etc.
+    // Method to update a product
+    public Product updateProduct(String productId, Product updatedProduct) {
+        Optional<Product> existingProductOptional = productRepository.findById(productId);
+        if (existingProductOptional.isPresent()) {
+            Product existingProduct = existingProductOptional.get();
+            // Update fields of existingProduct with fields from updatedProduct
+            existingProduct.setName(updatedProduct.getName());
+            existingProduct.setUnit(updatedProduct.getUnit());
+            existingProduct.setPrice(updatedProduct.getPrice());
+            existingProduct.setQuantity(updatedProduct.getQuantity());
+            // Save the updated product
+            return productRepository.save(existingProduct);
+        } else {
+            throw new IllegalArgumentException("Product with ID " + productId + " not found.");
+        }
+    }
 }

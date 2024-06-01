@@ -38,7 +38,7 @@ public class ProductController {
     }
 
     // Endpoint to get a product by its ID
-    @GetMapping("/{productId}")
+    @GetMapping("/getAllProducts/{productId}")
     public ResponseEntity<Product> getProductById(@PathVariable String productId) {
         Optional<Product> product = productService.getProductById(productId);
         return product.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
@@ -50,5 +50,12 @@ public class ProductController {
     public ResponseEntity<String> deleteProductById(@PathVariable String productId) {
         productService.deleteProductById(productId);
         return new ResponseEntity<>("Product deleted successfully!", HttpStatus.NO_CONTENT);
+    }
+
+    // Endpoint to update a product by its ID
+    @PutMapping("/{productId}")
+    public ResponseEntity<Product> updateProduct(@PathVariable String productId, @RequestBody Product updatedProduct) {
+        Product updateProduct = productService.updateProduct(productId, updatedProduct);
+        return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
 }
