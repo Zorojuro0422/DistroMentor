@@ -46,9 +46,6 @@ import SalesAssociateDashboard from '../Components/Module 3 - Dashboards/SalesAs
 import AddProduct from '../Components/Module 2 - Registrations/AddProductUI';
 import ProductList from '../Components/Module 4 - Profiles & Approval/ProductListUI';
 import UpdateProduct from '../Components/Module 2 - Registrations/UpdateProduct';
-import CustomerRegistration from '../Components/Module 2 - Registrations/CustomerRegistration';
-
-
 
 
 export default function MainRoutes() {
@@ -70,7 +67,6 @@ export default function MainRoutes() {
                     <Route path="/DistributorRegistration" element={<DistributorRegistration />} />
                     <Route path="/addproduct" element={<AddProduct />} />
                     <Route path="/productlist" element={<ProductList />} />
-                    <Route path="/CustomerRegistration" element={<CustomerRegistration />} />
                     <Route path="/update_product/:productId" element={<UpdateProduct />} />
                     <Route path="/ThankYou" element={<><ScrollToTop/><ThankYouScreen /></>} />
                 </Route>
