@@ -322,11 +322,12 @@ export default function Dashboard() {
 
                         </PendingDealerGrid></>
               ) : (
+
                 <Box sx={{position:'fixed', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh', marginTop: '0', marginLeft: '90vh' }}>
-                <img src={logo5} alt="Logo" style={{ width: '375px', marginBottom: '-40px', marginTop:-250, marginLeft:-50 }} />
-                <LinearProgress sx={{ width: '80%',marginLeft:-6 }} />
-                {/* You can adjust the width as needed */}
-              </Box>
+                    <img src={logo5} alt="Logo" style={{ width: '375px', marginBottom: '-40px', marginTop:-250, marginLeft:-50 }} />
+                    <LinearProgress sx={{ width: '80%',marginLeft:-6 }} />
+                    {/* You can adjust the width as needed */}
+                </Box>
             )}
             
         </Grid>
