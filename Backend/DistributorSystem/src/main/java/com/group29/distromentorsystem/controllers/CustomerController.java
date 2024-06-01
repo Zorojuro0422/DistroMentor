@@ -15,13 +15,13 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-    @PostMapping
-    public Customer createCustomerProfile(@RequestBody Customer customer) {
+    @PostMapping("/createCustomer")
+    public Customer createCustomer(@RequestBody Customer customer) {
         return customerService.createCustomer(customer);
     }
 
-    @GetMapping
-    public List<Customer> getAllCustomerProfiles() {
+    @GetMapping("/getAllCustomer")
+    public List<Customer> getAllCustomer() {
         return customerService.getAllCustomer();
     }
 
