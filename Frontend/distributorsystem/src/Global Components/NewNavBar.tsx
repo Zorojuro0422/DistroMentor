@@ -204,11 +204,6 @@ export default function NewNavBar() {
                                         <StyledText1 selected1={selectedButton1 === 1} sx={{ marginLeft: -2 }} primary="Dealer Profiles List" />
                                     </StyledButton1>
                                 </Link>
-                                <Link to="/employeeProfileList">
-                                    <StyledButton1 onClick={() => handleButtonClick1(2)} selected1={selectedButton1 === 2}>
-                                        <StyledText1 selected1={selectedButton1 === 2} sx={{ marginLeft: 1 }} primary="Employee Profiles List" />
-                                    </StyledButton1>
-                                </Link>
                             </List>
                         </Collapse>
                         {/** Products */}
@@ -243,20 +238,6 @@ export default function NewNavBar() {
 
                             </List>
                         </Collapse>
-                        {/** Collector Assignment */}
-                        <Link to="/collectorAssignment">
-                            <StyledButton onClick={() => handleButtonClick(4)} selected={selectedButton === 4}>
-                                <StyledListItem>
-                                    <ListItemIcon>
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={getIconColor(4)} className="w-6 h-6" style={{ marginLeft: 23, width: 25, height: 25 }}>
-                                            <path d="M7.502 6h7.128A3.375 3.375 0 0118 9.375v9.375a3 3 0 003-3V6.108c0-1.505-1.125-2.811-2.664-2.94a48.972 48.972 0 00-.673-.05A3 3 0 0015 1.5h-1.5a3 3 0 00-2.663 1.618c-.225.015-.45.032-.673.05C8.662 3.295 7.554 4.542 7.502 6zM13.5 3A1.5 1.5 0 0012 4.5h4.5A1.5 1.5 0 0015 3h-1.5z" clipRule="evenodd" />
-                                            <path d="M3 9.375C3 8.339 3.84 7.5 4.875 7.5h9.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-9.75A1.875 1.875 0 013 20.625V9.375zm9.586 4.594a.75.75 0 00-1.172-.938l-2.476 3.096-.908-.907a.75.75 0 00-1.06 1.06l1.5 1.5a.75.75 0 001.116-.062l3-3.75z" clipRule="evenodd" />
-                                        </svg>
-                                    </ListItemIcon>
-                                    <StyledText selected={selectedButton === 4} primary="Collector Assignment" />
-                                </StyledListItem>
-                            </StyledButton>
-                        </Link>
                         {/** Schedule */}
                         <Link to="schedules/null">
                             <StyledButton onClick={() => handleButtonClick(5)} selected={selectedButton === 5}>
@@ -282,24 +263,15 @@ export default function NewNavBar() {
                                     </svg>
                                 </ListItemIcon>
                                 <StyledText selected={selectedButton === 6} primary="Payments" />
-                                {dropDownPayments ? <ExpandLess sx={{ fill: '#FFFFFF' }} /> : <ExpandMore sx={{ fill: '#FFFFFF' }} />}
                             </StyledListItem>
                         </StyledButton>
-                        <Collapse in={dropDownPayments} timeout="auto" unmountOnExit>
                             <List>
                                 <Link to="/paymentList">
                                     <StyledButton1 onClick={() => handleButtonClick1(6)} selected1={selectedButton1 === 6}>
                                         <StyledText1 selected1={selectedButton1 === 6} sx={{ marginLeft: -9 }} primary="Payment List" />
                                     </StyledButton1>
                                 </Link>
-                                <Link to="/recordDirectPayment">
-                                    <StyledButton1 onClick={() => handleButtonClick1(7)} selected1={selectedButton1 === 7}>
-                                        <StyledText1 selected1={selectedButton1 === 7} sx={{ marginLeft: 2 }} primary="Record Direct Payment" />
-                                    </StyledButton1>
-                                </Link>
                             </List>
-                        </Collapse>
-
                         {/** Sign out */}
                         <StyledButton onClick={() => handleButtonClick(7)} selected={selectedButton === 7} sx={{ marginTop: 5 }}>
                             <StyledListItem>
