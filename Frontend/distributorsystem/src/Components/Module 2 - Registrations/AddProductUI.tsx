@@ -200,120 +200,73 @@ const GridField = styled(Grid)({
 })
 
 export default function ProductRegistration() {
+  const navigate = useNavigate();
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [productID, setProductID] = useState('');
+  const [productName, setProductName] = useState('');
+  const [unit, setUnit] = useState('');
+  const [price, setPrice] = useState('');
+  const [quantity, setQuantity] = useState('');
+  const accountInfo = useRef(null);
+  const [open, setOpen] = useState(false);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertSeverity, setAlertSeverity] = useState('success');
+  const [fieldWarning, setFieldWarning] = useState({
+    productID: '',
+    productName: '',
+    unit: '',
+    price: '',
+    quantity: '',
+  });
 
-    const navigate = useNavigate();
-    const [isAlertVisible, setIsAlertVisible] = useState(false);
-
-    const [productID, setProductID] = useState('');
-    const [productName, setProductName] = useState('');
-    const [unit, setUnit] = useState('');
-    const [price, setPrice] = useState('');
-    const [quantity, setQuantity] = useState('');
-    const [selectedProductPicture, setSelectedProductPicture] = useState<File | null>(null);
-    const accountInfo = useRef(null);
-    const [open, setOpen] = useState(false);
-    const [alerttitle, setAlertTitle] = useState('');
-    const [alertMessage, setAlertMessage] = useState('');
-    const [alertSeverity, setAlertSeverity] = useState('success');
-    const [fieldWarning, setFieldWarning] = useState({ productID: '', productName: '', unit: '', price: '', quantity: '', selectedProductPicture: '' });
 
 
-    const handleInputChange = (field: string, value: string) => {
-        switch (field) {
-            case 'productID':
-                setProductID(value);
-                break;
-            case 'productName':
-                setProductName(value);
-                break;
-            case 'unit':
-                setUnit(value);
-                break;
-            case 'price':
-                setPrice(value);
-                break;
-            case 'quantity':
-                setQuantity(value);
-                break;
-        }
+    const handleSubmit = () => {
+      if (!productID || !productName || !unit || !price || !quantity) {
+        setFieldWarning({
+          productID: !productID ? 'Product ID is required' : '',
+          productName: !productName ? 'Product Name is required' : '',
+          unit: !unit ? 'Unit is required' : '',
+          price: !price ? 'Price is required' : '',
+          quantity: !quantity ? 'Quantity is required' : '',
+        });
+        return;
+      }
+
+      const productData = {
+        productid: productID,
+        name: productName,
+        unit: unit,
+        price: parseFloat(price),
+        quantity: parseInt(quantity, 10),
+      };
+
+      const url = 'http://localhost:8080/product/AddProduct';
+
+      axios
+        .post(url, productData)
+        .then((response) => {
+          alert('Successfully Added Product!');
+          // Clear form fields after successful submission
+          setProductID('');
+          setProductName('');
+          setUnit('');
+          setPrice('');
+          setQuantity('');
+          setFieldWarning({
+            productID: '',
+            productName: '',
+            unit: '',
+            price: '',
+            quantity: '',
+          });
+        })
+        .catch((error) => {
+          console.error('Error submitting product:', error);
+          alert('An error occurred while submitting the product. Please try again later.');
+        });
     };
-
-    const handleProductPictureFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files && event.target.files[0]) {
-            setSelectedProductPicture(event.target.files[0]);
-        }
-    };
-
-    const handleSubmit = async () => {
-        try {
-            if (!productID || !productName || !unit || !price || !quantity || !selectedProductPicture) {
-                setFieldWarning({
-                    productID: !productID ? 'Product ID is required' : '',
-                    productName: !productName ? 'Product Name is required' : '',
-                    unit: !unit ? 'Unit is required' : '',
-                    price: !price ? 'Price is required' : '',
-                    quantity: !quantity ? 'Quantity is required' : '',
-                    selectedProductPicture: !selectedProductPicture ? 'Product Picture is required' : ''
-                });
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('productID', productID);
-            formData.append('productName', productName);
-            formData.append('unit', unit);
-            formData.append('price', price);
-            formData.append('quantity', quantity);
-            formData.append('productPicture', selectedProductPicture);
-
-            // Send POST request to your backend API
-            const response = await axios.post('http://localhost:8080/product/AddProduct', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-
-            // Check if the request was successful
-            if (response.status === 200) {
-                // Show success message and reset form
-                setOpen(true);
-                setAlertTitle('Success');
-                setAlertMessage('Product added successfully!');
-                setAlertSeverity('success');
-                setProductID('');
-                setProductName('');
-                setUnit('');
-                setPrice('');
-                setQuantity('');
-                setSelectedProductPicture(null);
-                setFieldWarning({
-                    productID: '',
-                    productName: '',
-                    unit: '',
-                    price: '',
-                    quantity: '',
-                    selectedProductPicture: ''
-                });
-            } else {
-                // Show error message
-                setOpen(true);
-                setAlertTitle('Error');
-                setAlertMessage('An error occurred while adding the product. Please try again later.');
-                setAlertSeverity('error');
-            }
-        } catch (error) {
-            // Handle error
-            console.error('Error adding product:', error);
-            setOpen(true);
-            setAlertTitle('Error');
-            setAlertMessage('An error occurred while adding the product. Please try again later.');
-            setAlertSeverity('error');
-        }
-    };
-
-
-
-
 
     const handleAlertAcknowledged = () => {
         setIsAlertVisible(false);
@@ -370,74 +323,36 @@ export default function ProductRegistration() {
                                         <Grid container spacing={3}>
                                             {/* Textfield For Product ID */}
                                             <Grid item xs={12}>
-                                                <StyledTextField variant="outlined" label="Product ID" style={{ width: '700px' }} value={productID} onChange={(e) => handleInputChange('productID', e.target.value)} />
+                                                <StyledTextField variant="outlined" label="Product ID" style={{ width: '700px' }} value={productID} onChange={(e) => setProductID(e.target.value)} />
                                                 <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
                                                     {fieldWarning.productID}
                                                 </FormHelperText>
                                             </Grid>
                                             {/* Textfield For Product Name */}
                                             <Grid item xs={12}>
-                                                <StyledTextField variant="outlined" label="Product Name" style={{ width: '700px' }} value={productName} onChange={(e) => handleInputChange('productName', e.target.value)} />
+                                                <StyledTextField variant="outlined" label="Product Name" style={{ width: '700px' }} value={productName} onChange={(e) => setProductName(e.target.value)} />
                                                 <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
                                                     {fieldWarning.productName}
                                                 </FormHelperText>
                                             </Grid>
                                             <Grid item xs={12}>
-                                                <StyledTextField variant="outlined" label="Unit" style={{ width: '700px' }} value={unit} onChange={(e) => handleInputChange('unit', e.target.value)} />
+                                                <StyledTextField variant="outlined" label="Unit" style={{ width: '700px' }} value={unit} onChange={(e) => setUnit(e.target.value)} />
                                                 <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
                                                     {fieldWarning.unit}
                                                 </FormHelperText>
                                             </Grid>
                                             {/* Textfield For Price */}
                                             <Grid item xs={12}>
-                                                <StyledTextField variant="outlined" label="Price" style={{ width: '700px' }} value={price} onChange={(e) => handleInputChange('price', e.target.value)} />
+                                                <StyledTextField variant="outlined" label="Price" style={{ width: '700px' }} value={price} onChange={(e) => setPrice(e.target.value)} />
                                                 <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
                                                     {fieldWarning.price}
                                                 </FormHelperText>
                                             </Grid>
                                             {/* Textfield For Quantity */}
                                             <Grid item xs={12}>
-                                                <StyledTextField variant="outlined" label="Quantity" style={{ width: '700px' }} value={quantity} onChange={(e) => handleInputChange('quantity', e.target.value)} />
+                                                <StyledTextField variant="outlined" label="Quantity" style={{ width: '700px' }} value={quantity} onChange={(e) => setQuantity(e.target.value)} />
                                                 <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
                                                     {fieldWarning.quantity}
-                                                </FormHelperText>
-                                            </Grid>
-                                            {/* Button For Profile Picture File */}
-                                            <Grid item xs={12}>
-                                                <label htmlFor="productpicture-input">
-                                                    <Button
-                                                        variant="contained"
-                                                        component="span"
-                                                        aria-required
-                                                        sx={{
-                                                            backgroundColor: '#2D85E7',
-                                                            width: '700px',
-                                                            margin: '15px 0',
-                                                            height: '40px',
-                                                            ':hover': {
-                                                                backgroundColor: 'rgba(45, 133, 231, 0.9)'
-                                                            },
-                                                            transition: 'all 0.4s'
-                                                        }}
-                                                    >
-                                                        <Icon style={{ color: '#ffffff', display: 'flex', marginRight: '15px' }}>
-                                                            <input
-                                                                hidden
-                                                                accept=".jpeg,.jpg,.png"
-                                                                type="file"
-                                                                onChange={handleProductPictureFileChange}
-                                                                style={{ display: 'none' }}
-                                                                id="productpicture-input"
-                                                            />
-                                                            <UploadIcon />
-                                                        </Icon>
-                                                        <TypographyLabelC>
-                                                            {selectedProductPicture?.name || 'Upload Product Picture'}
-                                                        </TypographyLabelC>
-                                                    </Button>
-                                                </label>
-                                                <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
-                                                    {fieldWarning.selectedProductPicture}
                                                 </FormHelperText>
                                             </Grid>
                                             <Grid item xs={12}>
@@ -454,7 +369,7 @@ export default function ProductRegistration() {
                         horizontal: 'center'
                     }}>
                         <Alert onClose={handleClose} severity={alertSeverity as 'success' | 'warning' | 'error'} sx={{ width: 500 }} >
-                            <AlertTitle style={{ textAlign: 'left', fontWeight: 'bold' }}>{alerttitle}</AlertTitle>
+                            <AlertTitle style={{ textAlign: 'left', fontWeight: 'bold' }}>{alertTitle}</AlertTitle>
                             {alertMessage}
                         </Alert>
                     </Snackbar>

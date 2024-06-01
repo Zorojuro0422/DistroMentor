@@ -49,6 +49,7 @@ import CashierDashboard from '../Components/Module 3 - Dashboards/CashierDashboa
 import SalesAndCashierDashboard from '../Components/Module 3 - Dashboards/SalesAndCashierDashboardUI';
 import SalesAssociateDashboard from '../Components/Module 3 - Dashboards/SalesAssociateDashboardUI';
 import AddProduct from '../Components/Module 2 - Registrations/AddProductUI';
+import ProductList from '../Components/Module 4 - Profiles & Approval/ProductListUI';
 
 export default function MainRoutes() {
 
@@ -69,6 +70,7 @@ export default function MainRoutes() {
                     <Route path="/EmployeeRegistration" element={<EmployeeRegistration />} />
                     <Route path="/DistributorRegistration" element={<DistributorRegistration />} />
                     <Route path="/addproduct" element={<AddProduct />} />
+                    <Route path="/productlist" element={<ProductList />} />
                     <Route path="/ThankYou" element={<><ScrollToTop/><ThankYouScreen /></>} />
                 </Route>
 
