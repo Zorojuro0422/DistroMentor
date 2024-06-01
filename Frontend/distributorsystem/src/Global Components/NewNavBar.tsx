@@ -220,67 +220,63 @@ export default function NewNavBar() {
                         </StyledButton1>
                         <Collapse in={dropDownProducts} timeout="auto" unmountOnExit>
                             <List>
+                                <Link to="/AddProductUI">
+                                    <StyledButton1 onClick={() => handleButtonClick1(5)} selected1={selectedButton1 === 5}>
+                                        <StyledText1 selected1={selectedButton1 === 5} sx={{ marginLeft: 3 }} primary="Product Entry" />
+                                    </StyledButton1>
+                                </Link>
                                 <Link to="/productDistributionList">
-                                    <StyledButton1 onClick={() => handleButtonClick1(3)} selected1={selectedButton1 === 3}>
-                                        <StyledText1 selected1={selectedButton1 === 3} sx={{ marginLeft: 5 }} primary="Product Distribution List" />
-                                    </StyledButton1>
-                                </Link>
-                                {/* <Link to ="/orderConfirmation">
-                                <StyledButton>
-                                    <StyledText sx={{marginLeft: 4}} primary="Order Confirmation"/>
-                                </StyledButton>
-                                </Link> */}
-                                <Link to="/distributorOrderForm">
                                     <StyledButton1 onClick={() => handleButtonClick1(4)} selected1={selectedButton1 === 4}>
-                                        <StyledText1 selected1={selectedButton1 === 4} sx={{ marginLeft: 3 }} primary="Distributor Order Form" />
+                                        <StyledText1 selected1={selectedButton1 === 4} sx={{ marginLeft: 5 }} primary="Product Distribution List" />
                                     </StyledButton1>
                                 </Link>
-
+                                <Link to="/distributorOrderForm">
+                                    <StyledButton1 onClick={() => handleButtonClick1(5)} selected1={selectedButton1 === 5}>
+                                        <StyledText1 selected1={selectedButton1 === 5} sx={{ marginLeft: 3 }} primary="Distributor Order Form" />
+                                    </StyledButton1>
+                                </Link>
                             </List>
                         </Collapse>
-                        {/** Schedule */}
-                        <Link to="schedules/null">
-                            <StyledButton onClick={() => handleButtonClick(5)} selected={selectedButton === 5}>
+                        {/** Payments */}
+                        <Link to="/paymentList">
+                            <StyledButton onClick={() => handleButtonClick(6)} selected={selectedButton === 6}>
                                 <StyledListItem>
                                     <ListItemIcon>
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={getIconColor(5)} className="w-6 h-6" style={{ marginLeft: 23, width: 25, height: 25 }}>
-                                            <path d="M12.75 12.75a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM7.5 15.75a.75.75 0 100-1.5.75.75 0 000 1.5zM8.25 17.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM9.75 15.75a.75.75 0 100-1.5.75.75 0 000 1.5zM10.5 17.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12 15.75a.75.75 0 100-1.5.75.75 0 000 1.5zM12.75 17.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM14.25 15.75a.75.75 0 100-1.5.75.75 0 000 1.5zM15 17.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM16.5 15.75a.75.75 0 100-1.5.75.75 0 000 1.5zM15 12.75a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM16.5 13.5a.75.75 0 100-1.5.75.75 0 000 1.5z" />
-                                            <path fillRule="evenodd" d="M6.75 2.25A.75.75 0 017.5 3v1.5h9V3A.75.75 0 0118 3v1.5h.75a3 3 0 013 3v11.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V7.5a3 3 0 013-3H6V3a.75.75 0 01.75-.75zm13.5 9a1.5 1.5 0 00-1.5-1.5H5.25a1.5 1.5 0 00-1.5 1.5v7.5a1.5 1.5 0 001.5 1.5h13.5a1.5 1.5 0 001.5-1.5v-7.5z" clipRule="evenodd" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={getIconColor(6)} className="w-6 h-6" style={{ marginLeft: 23, width: 25, height: 25 }}>
+                                            <path d="M12 7.5a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5z" />
+                                            <path fillRule="evenodd" d="M1.5 4.875C1.5 3.839 2.34 3 3.375 3h17.25c1.035 0 1.875.84 1.875 1.875v9.75c0 1.036-.84 1.875-1.875 1.875H3.375A1.875 1.875 0 011.5 14.625v-9.75zM8.25 9.75a3.75 3.75 0 117.5 0 3.75 3.75 0 01-7.5 0zM18.75 9a.75.75 0 00-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 00.75-.75V9.75a.75.75 0 00-.75-.75h-.008zM4.5 9.75A.75.75 0 015.25 9h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H5.25a.75.75 0 01-.75-.75V9.75z" clipRule="evenodd" />
+                                            <path d="M2.25 18a.75.75 0 000 1.5c5.4 0 10.63.722 15.6 2.075 1.19.324 2.4-.558 2.4-1.82V18.75a.75.75 0 00-.75-.75H2.25z" />
                                         </svg>
                                     </ListItemIcon>
-                                    <StyledText selected={selectedButton === 5} primary="Schedule" />
+                                    <StyledText selected={selectedButton === 6} primary="Payments" />
                                 </StyledListItem>
                             </StyledButton>
                         </Link>
-                        {/** Payments */}
-                        <StyledButton onClick={handleDropDownPayments} selected={selectedButton === 6}>
-                            <StyledListItem>
-                                <ListItemIcon>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={getIconColor(6)} className="w-6 h-6" style={{ marginLeft: 23, width: 25, height: 25 }}>
-                                        <path d="M12 7.5a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5z" />
-                                        <path fillRule="evenodd" d="M1.5 4.875C1.5 3.839 2.34 3 3.375 3h17.25c1.035 0 1.875.84 1.875 1.875v9.75c0 1.036-.84 1.875-1.875 1.875H3.375A1.875 1.875 0 011.5 14.625v-9.75zM8.25 9.75a3.75 3.75 0 117.5 0 3.75 3.75 0 01-7.5 0zM18.75 9a.75.75 0 00-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 00.75-.75V9.75a.75.75 0 00-.75-.75h-.008zM4.5 9.75A.75.75 0 015.25 9h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H5.25a.75.75 0 01-.75-.75V9.75z" clipRule="evenodd" />
-                                        <path d="M2.25 18a.75.75 0 000 1.5c5.4 0 10.63.722 15.6 2.075 1.19.324 2.4-.558 2.4-1.82V18.75a.75.75 0 00-.75-.75H2.25z" />
-                                    </svg>
-                                </ListItemIcon>
-                                <StyledText selected={selectedButton === 6} primary="Payments" />
-                            </StyledListItem>
-                        </StyledButton>
-                            <List>
-                                <Link to="/paymentList">
-                                    <StyledButton1 onClick={() => handleButtonClick1(6)} selected1={selectedButton1 === 6}>
-                                        <StyledText1 selected1={selectedButton1 === 6} sx={{ marginLeft: -9 }} primary="Payment List" />
-                                    </StyledButton1>
-                                </Link>
-                            </List>
+                        {/** Sales */}
+                        <Link to="/paymentList">
+                        <StyledButton onClick={() => handleButtonClick(7)} selected={selectedButton === 7}>
+                                <StyledListItem>
+                                    <ListItemIcon>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={getIconColor(7)} className="w-6 h-6" style={{ marginLeft: 23, width: 25, height: 25 }}>
+                                            <path d="M12 7.5a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5z" />
+                                            <path fillRule="evenodd" d="M1.5 4.875C1.5 3.839 2.34 3 3.375 3h17.25c1.035 0 1.875.84 1.875 1.875v9.75c0 1.036-.84 1.875-1.875 1.875H3.375A1.875 1.875 0 011.5 14.625v-9.75zM8.25 9.75a3.75 3.75 0 117.5 0 3.75 3.75 0 01-7.5 0zM18.75 9a.75.75 0 00-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 00.75-.75V9.75a.75.75 0 00-.75-.75h-.008zM4.5 9.75A.75.75 0 015.25 9h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H5.25a.75.75 0 01-.75-.75V9.75z" clipRule="evenodd" />
+                                            <path d="M2.25 18a.75.75 0 000 1.5c5.4 0 10.63.722 15.6 2.075 1.19.324 2.4-.558 2.4-1.82V18.75a.75.75 0 00-.75-.75H2.25z" />
+                                        </svg>
+                                    </ListItemIcon>
+                                    <StyledText selected={selectedButton === 7} primary="Sales" />
+                                </StyledListItem>
+                            </StyledButton>
+                        </Link>
+
                         {/** Sign out */}
-                        <StyledButton onClick={() => handleButtonClick(7)} selected={selectedButton === 7} sx={{ marginTop: 5 }}>
+                        <StyledButton onClick={() => handleButtonClick(8)} selected={selectedButton === 8} sx={{ marginTop: 5 }}>
                             <StyledListItem>
                                 <ListItemIcon>
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#FFFFFF" className="w-6 h-6" style={{ marginLeft: 23, width: 25, height: 25 }}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
                                     </svg>
                                 </ListItemIcon>
-                                <StyledText selected={selectedButton === 7} primary="Sign out" />
+                                <StyledText selected={selectedButton === 8} primary="Sign out" />
                             </StyledListItem>
                         </StyledButton>
                     </List>

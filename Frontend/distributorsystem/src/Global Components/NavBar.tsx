@@ -73,8 +73,6 @@ export default function NavBar(props: navProps) {
             <Link to="/dealerRegistration"><Button sx={{ backgroundColor: 'rgba(19, 71, 95, 0.1)', fontWeight: 'bold', color: '#FFFFFF', height: '80px', width: '100%', '&:hover': { backgroundColor: '#13475F' } }}>Dealer Registration</Button></Link>
 
             <Link to="/assignmentCollector"><Button sx={{ backgroundColor: 'rgba(19, 71, 95, 0.1)', fontWeight: 'bold', color: '#FFFFFF', height: '80px', width: '100%', '&:hover': { backgroundColor: '#13475F' } }}>Collector Assignment</Button></Link>
-
-            <Link to="/schedules"><Button sx={{ backgroundColor: 'rgba(19, 71, 95, 0.1)', fontWeight: 'bold', color: '#FFFFFF', height: '80px', width: '100%', '&:hover': { backgroundColor: '#13475F' } }}>Payment Transaction Schedules</Button></Link>
             
             <Link to="/orderTransactionDetails"><Button sx={{ backgroundColor: 'rgba(19, 71, 95, 0.1)', fontWeight: 'bold', color: '#FFFFFF', height: '80px', width: '100%', '&:hover': { backgroundColor: '#13475F' } }}>Order Transaction Details</Button></Link>
             
