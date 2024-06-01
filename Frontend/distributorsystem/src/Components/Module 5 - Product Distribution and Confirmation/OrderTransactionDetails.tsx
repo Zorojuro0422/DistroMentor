@@ -342,7 +342,6 @@ export function OrderTransactionDetails() {
                             <TableHeaderCell align="center" sx={{ color: '#707070' }}>Unit</TableHeaderCell>
                             <TableHeaderCell align="center" sx={{ color: '#707070' }}>Product Name</TableHeaderCell>
                             <TableHeaderCell align="center" sx={{ color: '#707070' }}>Unit Price</TableHeaderCell>
-                            <TableHeaderCell align="center" sx={{ color: '#707070' }}>Commission Rate</TableHeaderCell>
                             <TableHeaderCell align="center" sx={{ color: '#707070' }}>Amount</TableHeaderCell>
                           </TableRow>
                         </TableHead>
@@ -353,7 +352,6 @@ export function OrderTransactionDetails() {
                               <TableCell align='center'>{op.product.unit}</TableCell>
                               <TableCell align='center'>{op.product.name}</TableCell>
                               <TableCell align='center'>{op.product.price}</TableCell>
-                              <TableCell align='center'>{op.product.commissionrate}</TableCell>
                               <TableCell align='center'>{op.product.price * op.quantity}</TableCell>
                             </TableRow>
                           ))}

@@ -154,7 +154,6 @@ export default function OrderTransactionDetailsPrint({ order}: { order: IOrder})
                                         <TableHeaderCell align="center">Unit</TableHeaderCell>
                                         <TableHeaderCell align="center">Product Name</TableHeaderCell>
                                         <TableHeaderCell align="center">Unit Price</TableHeaderCell>
-                                        <TableHeaderCell align="center">Commission Rate</TableHeaderCell>
                                         <TableHeaderCell align="center">Amount</TableHeaderCell>
                                     </TableRow>
                                 </TableHead>
@@ -165,7 +164,6 @@ export default function OrderTransactionDetailsPrint({ order}: { order: IOrder})
                                             <TableCell align='center'>{op.product.unit}</TableCell>
                                             <TableCell align='center'>{op.product.name}</TableCell>
                                             <TableCell align='center'>{op.product.price}</TableCell>
-                                            <TableCell align='center'>{op.product.commissionrate}</TableCell>
                                             <TableCell align='center'>Php {op.product.price * op.quantity}</TableCell>
                                         </TableRow>
                                     ))}

@@ -153,7 +153,7 @@ export interface IOrder {
 
 export interface IProduct {
     productid: string;
-    commissionrate: number;
+    quantity: number;
     name: string;
     price: number;
     unit: string;

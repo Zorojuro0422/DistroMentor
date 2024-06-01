@@ -625,7 +625,6 @@ export default function ProductDistributionList() {
                       <TableHeaderCell align="center" sx={{ color: '#707070', fontWeight: 550 }}>Unit</TableHeaderCell>
                       <TableHeaderCell align="center" sx={{ color: '#707070', fontWeight: 550 }}>Product Name</TableHeaderCell>
                       <TableHeaderCell align="center" sx={{ color: '#707070', fontWeight: 550 }}>Unit Price</TableHeaderCell>
-                      <TableHeaderCell align="center" sx={{ color: '#707070', fontWeight: 550 }}>Commission Rate</TableHeaderCell>
                       <TableHeaderCell align="center" sx={{ color: '#707070', fontWeight: 550 }}>Amount</TableHeaderCell>
                       <TableHeaderCell align="center" sx={{ color: '#707070', fontWeight: 550 }}></TableHeaderCell>
                     </TableRow>
@@ -666,7 +665,6 @@ export default function ProductDistributionList() {
                         <TableCell align='center' sx={{ color: "#203949" }}>{product.product.unit}</TableCell>
                         <TableCell align='center' sx={{ color: "#203949" }}>{product.product.name}</TableCell>
                         <TableCell align='center' sx={{ color: "#203949" }}>{product.product.price}</TableCell>
-                        <TableCell align='center' sx={{ color: "#203949" }}>{product.product.commissionrate}</TableCell>
                         <TableCell align='center' sx={{ color: "#203949" }}>{product.product.price * product.quantity}</TableCell>
                         <TableCell align='center' sx={{ color: "#203949" }}><RemoveButton onClick={() => handleRemoveFromCart(product)}><RemoveCircleIcon /></RemoveButton></TableCell>
                       </TableRow>
