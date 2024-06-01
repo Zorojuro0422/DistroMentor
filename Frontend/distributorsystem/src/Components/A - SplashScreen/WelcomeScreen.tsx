@@ -1,12 +1,11 @@
 import { Button, Grid, Icon, Typography, styled } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Splash from '../../Global Components/Images/Splash.png'
-import logo4 from '../../Global Components/Images/logo4.png'
-import logo6 from '../../Global Components/Images/logo6.png'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import axios from "axios";
 import { IDistributor } from "../../RestCalls/Interfaces";
 import { useEffect, useState } from "react";
+
 const Logo=styled(Typography)({
     margin:'5% 10% 0 5% ',
     display: 'flex',
@@ -140,7 +139,7 @@ export default function WelcomeScreen(){
             <Button variant="contained" onClick={signInHandler}>Sign in</Button> */}
             {/** Logo*/}
             <Logo>
-                <img src={logo6} style={{ height: '150px', width: '270px', marginTop: '-5%' }} />
+                <div style={{ height: '150px', width: '270px', marginTop: '-5%' }}></div>  {/* Placeholder */}
                 {/** Sign-In*/}
                 <SignInButton onClick={signInHandler}>Sign In</SignInButton>
             </Logo>
@@ -148,7 +147,7 @@ export default function WelcomeScreen(){
                 <ContentFieldGrid container spacing={8}>
                     <Grid item>
                         <ImageStyles2>
-                            <img src={logo4} style={{ width: 'auto', height: '220px' }} />
+                            <div style={{ height: '150px', width: '270px', marginTop: '-5%' }}></div>  {/* Placeholder */}
                         </ImageStyles2>
                     </Grid>
                 </ContentFieldGrid>

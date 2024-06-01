@@ -3,10 +3,7 @@ import { Routes, Route, Navigate  } from 'react-router-dom'
 
 import PaymentList from "../Components/Module 8 - Payments/PaymentsListUI";
 // import DealerProfileList from "./Components/Profiles/DealerProfiles/DealerProfileList";
-// import EmployeeProfileDetails from "./Components/Profiles/EmployeeProfiles/EmployeeProfileDetails";
-// import EmployeeProfileList from "./Components/Profiles/EmployeeProfiles/EmployeeProfileList";
 import DealerRegistration from "../Components/Module 2 - Registrations/DealerRegistrationUI";
-import EmployeeRegistration from "../Components/Module 2 - Registrations/EmployeeRegistrationUI";
 import Schedules from "../Components/Module 7 - Schedules/ScheduleOrderTransactionUI";
 import DistributorOrderForm from "../Components/Module 5 - Product Distribution and Confirmation/DistributorOrderFormUI";
 import DealerOrderForm from "../Components/Module 5 - Product Distribution and Confirmation/DealerOrderFormUI";
@@ -29,9 +26,7 @@ import SplashscreenContent from './ContentsSplashscreen';
 import WelcomeScreen from '../Components/A - SplashScreen/WelcomeScreen';
 import DealerProfileDetails from '../Components/Module 4 - Profiles & Approval/DealerProfileDetailsUI';
 import CollectorAssignment from '../Components/Module 6 - Collector Assignment/CollectorAssignmentUI';
-import EmployeeProfileListUI from '../Components/Module 4 - Profiles & Approval/EmployeeProfilesListUI';
 import DealerProfileListUI from '../Components/Module 4 - Profiles & Approval/DealerProfilesListUI';
-import { EmployeeProfileDetails } from '../Components/Module 4 - Profiles & Approval/EmployeeProfileDetailsUI';
 import OrderConfirmation from '../Components/Module 5 - Product Distribution and Confirmation/OrderConfirmationUI';
 import { OrderTransactionDetails } from '../Components/Module 5 - Product Distribution and Confirmation/OrderTransactionDetails';
 import DistributorRegistration from '../Components/Module 2 - Registrations/DistributorRegistrationUI';
@@ -69,7 +64,6 @@ export default function MainRoutes() {
                     <Route path="/" element={<Navigate replace to="SignUpScreen" />} />
                     <Route path="/SignUpScreen" element={<SignupScreen />} />
                     <Route path="/DealerRegistration" element={<DealerRegistration />} />
-                    <Route path="/EmployeeRegistration" element={<EmployeeRegistration />} />
                     <Route path="/DistributorRegistration" element={<DistributorRegistration />} />
                     <Route path="/addproduct" element={<AddProduct />} />
                     <Route path="/productlist" element={<ProductList />} />
@@ -107,15 +101,10 @@ export default function MainRoutes() {
                             <Route path="/dealerProfileDetails/:objectId" element={<><ScrollToTop/><DealerProfileDetails /></>}></Route>
                             <Route path="/dealerRegistration" element={<DealerRegistration/>} />
 
-                            <Route path="/employeeProfileList" element={<EmployeeProfileListUI />} />
-                            <Route path="/employeeProfileDetails/:objectId" element={<><ScrollToTop/><EmployeeProfileDetails /></>}></Route>
-                            <Route path="/employeeRegistrationn" element={<EmployeeRegistration />} />
-
                             <Route path="/schedules/:objectId" element={<><ScrollToTop/><Schedules /></>} />
 
                             <Route path="/recordDirectPayment" element={<><ScrollToTop/><RecordDirectPayment /></>} />
                             <Route path="/dealerApproval" element={<><ScrollToTop/><DealerApproval /></>} />
-                            <Route path="/employeeRegistration" element={<EmployeeRegistration />} />
 
                             <Route path="/collectorAssignment" element={<CollectorAssignment />} />
                             <Route path="/orderDetails/:objectId" element={<><ScrollToTop/><OrderDetails /></>} />
@@ -129,7 +118,6 @@ export default function MainRoutes() {
                         <Route path="/" element={<ContentSalesAssociate />}>
                             <Route path="/" element={<Navigate replace to="salesAssociateDashboard" />} />
                             <Route path="/salesAssociateDashboard" element={<><ScrollToTop/><SalesAssociateDashboard /></>} />
-                            <Route path="/employeeProfileDetails/:objectId" element={<><ScrollToTop/><EmployeeProfileDetails /></>} />
                             <Route path="/productDistributionList" element={<ProductDistributionList />} />
                             <Route path="/orderTransactionDetails/:objectId" element={<><ScrollToTop/><OrderTransactionDetails /></>} />
                             <Route path="/distributorOrderForm" element={<><ScrollToTop/><DistributorOrderForm /></>} />
@@ -143,7 +131,6 @@ export default function MainRoutes() {
                         <Route path="/" element={<ContentCashier />}>
                             <Route path="/" element={<Navigate replace to="cashierDashboard" />} />
                             <Route path="/cashierDashboard" element={<><ScrollToTop/><CashierDashboard /></>} />
-                            <Route path="/employeeProfileDetails/:objectId" element={<><ScrollToTop/><EmployeeProfileDetails /></>} />
                             <Route path="/paymentList" element={<PaymentList />} />
                             <Route path="/recordDirectPayment" element={<><ScrollToTop/><RecordDirectPayment /></>} />
                             <Route path="/paymentReceiptDetails/:objectId" element={<><ScrollToTop/><PaymentReceiptDetails /></>}></Route>
@@ -154,7 +141,6 @@ export default function MainRoutes() {
                         <Route path="/" element={<ContentBothSalesCashier />}>
                             <Route path="/" element={<Navigate replace to="sales&cashierDashboard" />} />
                             <Route path="/sales&cashierDashboard" element={<><ScrollToTop/><SalesAndCashierDashboard/></>} />
-                            <Route path="/employeeProfileDetails/:objectId" element={<><ScrollToTop/><EmployeeProfileDetails /></>} />
                             <Route path="/productDistributionList" element={<ProductDistributionList />} />
                             <Route path="/orderTransactionDetails/:objectId" element={<><ScrollToTop/><OrderTransactionDetails /></>} />
                             <Route path="/distributorOrderForm" element={<><ScrollToTop/><DistributorOrderForm /></>} />
