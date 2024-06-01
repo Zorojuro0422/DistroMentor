@@ -220,9 +220,14 @@ export default function NewNavBar() {
                         </StyledButton1>
                         <Collapse in={dropDownProducts} timeout="auto" unmountOnExit>
                             <List>
-                                <Link to="/AddProductUI">
+                                <Link to="/addproduct">
                                     <StyledButton1 onClick={() => handleButtonClick1(5)} selected1={selectedButton1 === 5}>
                                         <StyledText1 selected1={selectedButton1 === 5} sx={{ marginLeft: 3 }} primary="Product Entry" />
+                                    </StyledButton1>
+                                </Link>
+                                <Link to="/productlist">
+                                    <StyledButton1 onClick={() => handleButtonClick1(5)} selected1={selectedButton1 === 5}>
+                                        <StyledText1 selected1={selectedButton1 === 5} sx={{ marginLeft: 3 }} primary="Product List" />
                                     </StyledButton1>
                                 </Link>
                                 <Link to="/productDistributionList">
