@@ -1,7 +1,6 @@
 import logo5 from '../../Global Components/Images/logo5.png'
 import dealer from '../../Global Components/Images/dealer.png'
 import distributor from '../../Global Components/Images/distributor.png'
-import employee from '../../Global Components/Images/employee.png'
 
 
 import { Button, Card, Typography, styled } from '@mui/material'
@@ -69,9 +68,6 @@ const ButtonStyle=styled(Button)({
 export default function SignupScreen(){
      
     const navigate = useNavigate();
-    const handleEmployeeButtonClick = () => {
-       navigate(`/EmployeeRegistration`)
-    };
     const handleDealerButtonClick = () => {
         navigate(`/DealerRegistration`)
     };
@@ -89,7 +85,7 @@ export default function SignupScreen(){
         <div>
             {/** Logo*/}
             <Logo sx={{cursor:'pointer'}}>
-                    <img onClick={welcomehandler} src={logo5} style={{height:'150px',width:'270px',marginTop:'-5%'}}/>
+                <img onClick={welcomehandler} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" style={{ height: '150px', width: '270px', marginTop: '-5%' }} /> {/**Placeholder */}
             {/** Sign-In*/}
                     <ButtonStyle onClick={signInHandler}>Sign In</ButtonStyle>
             </Logo>
@@ -104,15 +100,6 @@ export default function SignupScreen(){
                     </CardStyle>
                     <LabelTypography>
                         Sign Up as Distributor
-                    </LabelTypography>
-                </ButtonCard>
-                {/** Sign Up as Employee */}
-                <ButtonCard variant='contained' style={{flexDirection:'column'}} onClick={handleEmployeeButtonClick}>
-                    <CardStyle>
-                        <img src={employee} style={{height:'215px',width:'415px',margin:'-14px 0 0 -28px'}}/>
-                    </CardStyle>
-                    <LabelTypography>
-                        Sign Up as Employee
                     </LabelTypography>
                 </ButtonCard>
                  {/** Sign Up as Dealer */}
