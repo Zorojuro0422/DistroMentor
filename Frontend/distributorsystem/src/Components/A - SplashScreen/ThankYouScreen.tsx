@@ -93,7 +93,7 @@ export default function ThankYouScreen() {
 
                     <ContentFieldGrid container spacing={8}>
                         <Grid item>
-                            <SubHeaderTypo>Thank you for registering with Distrilink. </SubHeaderTypo>
+                            <SubHeaderTypo>Thank you for registering with DistroMentor. </SubHeaderTypo>
                             <SubHeaderTypo style={{ marginTop: 20 }}>Please wait for distributor confirmation to become an authorized dealer. We'll notify you via email once confirmed.</SubHeaderTypo>
                         </Grid>
 

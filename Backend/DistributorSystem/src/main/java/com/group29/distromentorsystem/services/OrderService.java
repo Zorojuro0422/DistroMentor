@@ -58,7 +58,7 @@ public class OrderService {
         Set<OrderedProduct> savedOrderedProducts = new HashSet<>();
 
         for(OrderedProduct op :newOrderedProducts) {
-            String productid = op.getProduct().getProductId();
+            String productid = op.getProduct().getProductid();
             int quantity = op.getQuantity();
 
 
@@ -78,7 +78,7 @@ public class OrderService {
                 orderamount += subtotal;
 
                 newOrderedProduct.setProduct(product);
-                product.getOrderedProductIds().add(newOrderedProduct.getOrderedproductid());
+                product.getOrderedproductids().add(newOrderedProduct.getOrderedproductid());
                 productRepository.save(product);
                 orderedProductRepository.save(newOrderedProduct);
 
@@ -573,4 +573,3 @@ public class OrderService {
 
 
 }
-

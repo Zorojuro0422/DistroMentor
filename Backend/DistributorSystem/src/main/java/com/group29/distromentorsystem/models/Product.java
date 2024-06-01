@@ -1,43 +1,52 @@
 package com.group29.distromentorsystem.models;
 
-import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.util.Set;
+
 
 @Document("Products")
 public class Product {
 
     @Id
-    private String productId;
+    private String productid;
+
     private String name;
+
+    private int quantity;
+
     private String unit;
+
     private float price;
-    private int quantity; // New field for quantity
-    private Set<String> orderedProductIds;
-    private String productPicture;
+
+    private Set<String> orderedproductids;
+
+    //private Set<OrderedProduct> orderedProducts;
+
+    /*@OneToMany(mappedBy = "product")
+    @JsonIgnore
+    //@JsonBackReference // you inform Jackson to handle the serialization appropriately and break the infinite recursion.
+    private Set<OrderedProduct> orderedProducts;*/
+
 
     public Product() {
-        // Default constructor
     }
 
-    public Product(String name, String unit, float price, int quantity, Set<String> orderedProductIds, String productPicture) {
+    public Product(String productid, String name, int quantity, String unit, float price, Set<String> orderedproductids) {
+        this.productid = productid;
         this.name = name;
+        this.quantity = quantity;
         this.unit = unit;
         this.price = price;
-        this.quantity = quantity;
-        this.orderedProductIds = orderedProductIds;
-        this.productPicture = productPicture;
+        this.orderedproductids = orderedproductids;
     }
 
-    // Getters and setters
-
-    public String getProductId() {
-        return productId;
+    public String getProductid() {
+        return productid;
     }
 
-    public void setProductId(String productId) {
-        this.productId = productId;
+    public void setProductid(String productid) {
+        this.productid = productid;
     }
 
     public String getName() {
@@ -46,6 +55,14 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public String getUnit() {
@@ -64,27 +81,11 @@ public class Product {
         this.price = price;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public Set<String> getOrderedproductids() {
+        return orderedproductids;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public Set<String> getOrderedProductIds() {
-        return orderedProductIds;
-    }
-
-    public void setOrderedProductIds(Set<String> orderedProductIds) {
-        this.orderedProductIds = orderedProductIds;
-    }
-
-    public String getProductPicture() {
-        return productPicture;
-    }
-
-    public void setProductPicture(String productPicture) {
-        this.productPicture = productPicture;
+    public void setOrderedproductids(Set<String> orderedproductids) {
+        this.orderedproductids = orderedproductids;
     }
 }

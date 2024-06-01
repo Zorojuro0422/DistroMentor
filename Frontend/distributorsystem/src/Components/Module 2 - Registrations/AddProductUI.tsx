@@ -1,17 +1,11 @@
 import styled from "@emotion/styled";
 import { Autocomplete, Alert, AlertTitle, Button, FormControlLabel, FormHelperText, Grid, Icon, IconButton, InputAdornment, Radio, RadioGroup, Snackbar, Switch, TextField, TextFieldProps, Typography, Card, Stepper, StepLabel, Step, Box, Menu, MenuItem } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import UploadIcon from '@mui/icons-material/Upload';
 import dealer1 from '../../Global Components/Images/dealer1-2.png'
 import logo4 from '../../Global Components/Images/logo4.png'
 import { useNavigate } from "react-router-dom";
-import { useRestDealer } from "../../RestCalls/DealerUseRest";
-import { IDealer, IDealerDocument, IDistributor, IProduct } from "../../RestCalls/Interfaces";
-import moment from "moment";
-import { v4 as uuidv4 } from 'uuid';
-import dayjs, { Dayjs } from "dayjs";
 import axios from "axios";
 //// import Autosuggest, { SuggestionSelectedEventData, SuggestionsFetchRequestedParams, } from 'react-autosuggest';
 
