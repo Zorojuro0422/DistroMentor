@@ -65,9 +65,6 @@ export default function MainRoutes() {
                     <Route path="/SignUpScreen" element={<SignupScreen />} />
                     <Route path="/DealerRegistration" element={<DealerRegistration />} />
                     <Route path="/DistributorRegistration" element={<DistributorRegistration />} />
-                    <Route path="/addproduct" element={<AddProduct />} />
-                    <Route path="/productlist" element={<ProductList />} />
-                    <Route path="/update_product/:productId" element={<UpdateProduct />} />
                     <Route path="/ThankYou" element={<><ScrollToTop/><ThankYouScreen /></>} />
                 </Route>
 
@@ -95,6 +92,11 @@ export default function MainRoutes() {
                             <Route path="/" element={<Navigate replace to="dashboard" />} />
                             <Route path="/dashboard" element={<><ScrollToTop/><Dashboard /></>} />
                             <Route path="/paymentList" element={<PaymentList />} />
+
+                            {/* CRUD PRODUCTS */}
+                            <Route path="/addproduct" element={<AddProduct />} />
+                            <Route path="/productlist" element={<ProductList />} />
+                            <Route path="/update_product/:productId" element={<UpdateProduct />} />
 
                             <Route path="/distributorOrderForm" element={<><ScrollToTop/><DistributorOrderForm/></>} />
                             <Route path="/orderConfirmation/:objectId" element={<><ScrollToTop/><OrderConfirmation /></>} />
