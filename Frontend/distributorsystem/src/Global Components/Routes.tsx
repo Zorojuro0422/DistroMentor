@@ -66,9 +66,6 @@ export default function MainRoutes() {
                     <Route path="/SignUpScreen" element={<SignupScreen />} />
                     <Route path="/DealerRegistration" element={<DealerRegistration />} />
                     <Route path="/DistributorRegistration" element={<DistributorRegistration />} />
-                    <Route path="/addproduct" element={<AddProduct />} />
-                    <Route path="/productlist" element={<ProductList />} />
-                    <Route path="/update_product/:productId" element={<UpdateProduct />} />
                     <Route path="/ThankYou" element={<><ScrollToTop/><ThankYouScreen /></>} />
                     <Route path="/customerRegistration" element={<CustomerRegistration />} />
                 </Route>
@@ -88,12 +85,21 @@ export default function MainRoutes() {
 
                     {user && user!.tableName === "Distributor" && (
                         <Route path="/" element={<Content />}>
+                            {/* Temporarily Removed Routes
+                            <Route path="/schedules/:objectId" element={<><ScrollToTop/><Schedules /></>} />
+                            <Route path="/collectorAssignment" element={<CollectorAssignment />} />
+                            <Route path="/dealerOrderForm" element={<DealerOrderForm />} />
+                            */}
+
                             <Route path="/" element={<Navigate replace to="dashboard" />} />
                             <Route path="/dashboard" element={<><ScrollToTop/><Dashboard /></>} />
                             <Route path="/paymentList" element={<PaymentList />} />
 
+                            {/* CRUD PRODUCTS */}
+                            <Route path="/addproduct" element={<AddProduct />} />
+                            <Route path="/productlist" element={<ProductList />} />
+                            <Route path="/update_product/:productId" element={<UpdateProduct />} />
 
-                           {/*  <Route path="/dealerOrderForm" element={<DealerOrderForm />} /> */}
                             <Route path="/distributorOrderForm" element={<><ScrollToTop/><DistributorOrderForm/></>} />
                             <Route path="/orderConfirmation/:objectId" element={<><ScrollToTop/><OrderConfirmation /></>} />
                             <Route path="/productDistributionList" element={<ProductDistributionList />} />
@@ -103,12 +109,9 @@ export default function MainRoutes() {
                             <Route path="/dealerProfileDetails/:objectId" element={<><ScrollToTop/><DealerProfileDetails /></>}></Route>
                             <Route path="/dealerRegistration" element={<DealerRegistration/>} />
 
-                            <Route path="/schedules/:objectId" element={<><ScrollToTop/><Schedules /></>} />
-
                             <Route path="/recordDirectPayment" element={<><ScrollToTop/><RecordDirectPayment /></>} />
                             <Route path="/dealerApproval" element={<><ScrollToTop/><DealerApproval /></>} />
 
-                            <Route path="/collectorAssignment" element={<CollectorAssignment />} />
                             <Route path="/orderDetails/:objectId" element={<><ScrollToTop/><OrderDetails /></>} />
                             <Route path="/paymentReceiptDetails/:objectId" element={<><ScrollToTop/><PaymentReceiptDetails /></>}></Route>
                         
