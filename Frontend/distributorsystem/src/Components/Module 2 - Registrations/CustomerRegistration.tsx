@@ -1,11 +1,18 @@
-import React, { useState } from "react";
-import { Button, FormHelperText, Grid, Snackbar, TextField, Typography, Card } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Button, FormHelperText, Grid, Snackbar, TextField, Typography, Card, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
 import { Alert, AlertTitle } from "@mui/material";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import dealer1 from '../../Global Components/Images/dealer1-2.png';
 import logo4 from '../../Global Components/Images/logo4.png';
+
+
+interface Dealer {
+  dealerid: string;
+  firstname: string;
+  lastname: string;
+}
 
 // Styled components
 const StyledCard = styled(Card)({
@@ -91,6 +98,18 @@ export default function ProductRegistration() {
     customerAddress: '',
     customerSalesAmount: '',
   });
+  const [dealers, setDealers] = useState<Dealer[]>([]);
+
+  useEffect(() => {
+    // Fetch the list of dealers from the backend
+    axios.get('https://distromentor-capstone.onrender.com/dealer/getAllDealers')
+      .then(response => {
+        setDealers(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching dealers:', error);
+      });
+  }, []);
 
   const handleSubmit = () => {
     if (!customerID || !dealerID || !customerName || !customerContactNumber || !customerAddress || !customerSalesAmount) {
@@ -195,9 +214,22 @@ export default function ProductRegistration() {
                     {fieldWarning.customerID}
                   </FormHelperText>
                 </Grid>
-                {/* Textfield For Dealer ID */}
+                {/* Dropdown For Dealer ID */}
                 <Grid item xs={12}>
-                  <StyledTextField variant="outlined" label="Dealer ID" style={{ width: '700px' }} value={dealerID} onChange={(e) => setDealerID(e.target.value)} />
+                  <FormControl variant="outlined" style={{ width: '700px' }}>
+                    <InputLabel>Dealer ID</InputLabel>
+                    <Select
+                      value={dealerID}
+                      onChange={(e) => setDealerID(e.target.value)}
+                      label="Dealer ID"
+                    >
+                      {dealers.map((dealer) => (
+                        <MenuItem key={dealer.dealerid} value={dealer.dealerid}>
+                          {dealer.firstname} - {dealer.lastname}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                   <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
                     {fieldWarning.dealerID}
                   </FormHelperText>
@@ -249,4 +281,3 @@ export default function ProductRegistration() {
       </div>
     );
   }
-
