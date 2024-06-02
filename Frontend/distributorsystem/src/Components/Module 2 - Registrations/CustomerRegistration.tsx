@@ -73,70 +73,76 @@ const ButtonStyle = styled(Button)({
 
 export default function ProductRegistration() {
   const navigate = useNavigate();
-  const [productID, setProductID] = useState('');
-  const [productName, setProductName] = useState('');
-  const [unit, setUnit] = useState('');
-  const [price, setPrice] = useState('');
-  const [quantity, setQuantity] = useState('');
+  const [customerID, setCustomerID] = useState('');
+  const [dealerID, setDealerID] = useState('');
+  const [customerName, setCustomerName] = useState('');
+  const [customerContactNumber, setCustomerContactNumber] = useState('');
+  const [customerAddress, setCustomerAddress] = useState('');
+  const [customerSalesAmount, setCustomerSalesAmount] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [alertTitle, setAlertTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState('success');
   const [fieldWarning, setFieldWarning] = useState({
-    productID: '',
-    productName: '',
-    unit: '',
-    price: '',
-    quantity: '',
+    customerID: '',
+    dealerID: '',
+    customerName: '',
+    customerContactNumber: '',
+    customerAddress: '',
+    customerSalesAmount: '',
   });
 
   const handleSubmit = () => {
-    if (!productID || !productName || !unit || !price || !quantity) {
+    if (!customerID || !dealerID || !customerName || !customerContactNumber || !customerAddress || !customerSalesAmount) {
       setFieldWarning({
-        productID: !productID ? 'Product ID is required' : '',
-        productName: !productName ? 'Product Name is required' : '',
-        unit: !unit ? 'Unit is required' : '',
-        price: !price ? 'Price is required' : '',
-        quantity: !quantity ? 'Quantity is required' : '',
+        customerID: !customerID ? 'Customer ID is required' : '',
+        dealerID: !dealerID ? 'Dealer ID is required' : '',
+        customerName: !customerName ? 'Customer Name is required' : '',
+        customerContactNumber: !customerContactNumber ? 'Contact Number is required' : '',
+        customerAddress: !customerAddress ? 'Address is required' : '',
+        customerSalesAmount: !customerSalesAmount ? 'Sales Amount is required' : '',
       });
       return;
     }
 
-    const productData = {
-      productid: productID,
-      name: productName,
-      unit: unit,
-      price: parseFloat(price),
-      quantity: parseInt(quantity, 10),
+    const customerData = {
+      customerID: customerID,
+      dealerID: dealerID,
+      customerName: customerName,
+      customerContactNumber: customerContactNumber,
+      customerAddress: customerAddress,
+      customerSalesAmount: parseFloat(customerSalesAmount),
     };
 
-    const url = 'http://localhost:8080/product/AddProduct';
+    const url = 'http://localhost:8080/customer/createCustomer';
 
     axios
-      .post(url, productData)
+      .post(url, customerData)
       .then((response) => {
         // Clear form fields after successful submission
-        setProductID('');
-        setProductName('');
-        setUnit('');
-        setPrice('');
-        setQuantity('');
+        setCustomerID('');
+        setDealerID('');
+        setCustomerName('');
+        setCustomerContactNumber('');
+        setCustomerAddress('');
+        setCustomerSalesAmount('');
         setFieldWarning({
-          productID: '',
-          productName: '',
-          unit: '',
-          price: '',
-          quantity: '',
+          customerID: '',
+          dealerID: '',
+          customerName: '',
+          customerContactNumber: '',
+          customerAddress: '',
+          customerSalesAmount: '',
         });
         setAlertTitle('Success');
-        setAlertMessage('Product Added Successfully!');
+        setAlertMessage('Customer Added Successfully!');
         setAlertSeverity('success');
         setOpenSnackbar(true);
       })
       .catch((error) => {
-        console.error('Error submitting product:', error);
+        console.error('Error submitting customer:', error);
         setAlertTitle('Error');
-        setAlertMessage('An error occurred while submitting the product. Please try again later.');
+        setAlertMessage('An error occurred while submitting the customer. Please try again later.');
         setAlertSeverity('error');
         setOpenSnackbar(true);
       });
@@ -179,59 +185,68 @@ export default function ProductRegistration() {
           </div>
 
           <div style={{ padding: '1px 1px 1px 30px', display: 'flex', flexDirection: 'column' }}>
-            <ContentNameTypography>Add Product</ContentNameTypography>
+            <ContentNameTypography>Add Customer</ContentNameTypography>
             <div style={{ paddingTop: 30, paddingBottom: 50 }}>
               <Grid container spacing={3}>
-                {/* Textfield For Product ID */}
+                {/* Textfield For Customer ID */}
                 <Grid item xs={12}>
-                  <StyledTextField variant="outlined" label="Product ID" style={{ width: '700px' }} value={productID} onChange={(e) => setProductID(e.target.value)} />
+                  <StyledTextField variant="outlined" label="Customer ID" style={{ width: '700px' }} value={customerID} onChange={(e) => setCustomerID(e.target.value)} />
                   <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
-                    {fieldWarning.productID}
+                    {fieldWarning.customerID}
                   </FormHelperText>
                 </Grid>
-                {/* Textfield For Product Name */}
+                {/* Textfield For Dealer ID */}
                 <Grid item xs={12}>
-                  <StyledTextField variant="outlined" label="Product Name" style={{ width: '700px' }} value={productName} onChange={(e) => setProductName(e.target.value)} />
+                  <StyledTextField variant="outlined" label="Dealer ID" style={{ width: '700px' }} value={dealerID} onChange={(e) => setDealerID(e.target.value)} />
                   <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
-                    {fieldWarning.productName}
+                    {fieldWarning.dealerID}
                   </FormHelperText>
                 </Grid>
+                {/* Textfield For Customer Name */}
                 <Grid item xs={12}>
-                  <StyledTextField variant="outlined" label="Unit" style={{ width: '700px' }} value={unit} onChange={(e) => setUnit(e.target.value)} />
+                  <StyledTextField variant="outlined" label="Customer Name" style={{ width: '700px' }} value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
                   <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
-                    {fieldWarning.unit}
+                    {fieldWarning.customerName}
                   </FormHelperText>
                 </Grid>
-                {/* Textfield For Price */}
+                {/* Textfield For Customer Contact Number */}
                 <Grid item xs={12}>
-                  <StyledTextField variant="outlined" label="Price" style={{ width: '700px' }} value={price} onChange={(e) => setPrice(e.target.value)} />
+                  <StyledTextField variant="outlined" label="Contact Number" style={{ width: '700px' }} value={customerContactNumber} onChange={(e) => setCustomerContactNumber(e.target.value)} />
                   <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
-                    {fieldWarning.price}
+                    {fieldWarning.customerContactNumber}
                   </FormHelperText>
                 </Grid>
-                {/* Textfield For Quantity */}
+                {/* Textfield For Customer Address */}
                 <Grid item xs={12}>
-                  <StyledTextField variant="outlined" label="Quantity" style={{ width: '700px' }} value={quantity} onChange={(e) => setQuantity(e.target.value)} />
-                  <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
-                    {fieldWarning.quantity}
-                  </FormHelperText>
+                  <StyledTextField variant="outlined" label="Address" style={{ width: '700px' }} value={customerAddress} onChange={(e) => setCustomerAddress(e.target.value)} />
+                    <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
+                      {fieldWarning.customerAddress}
+                    </FormHelperText>
+                  </Grid>
+                  {/* Textfield For Customer Sales Amount */}
+                  <Grid item xs={12}>
+                    <StyledTextField variant="outlined" label="Sales Amount" style={{ width: '700px' }} value={customerSalesAmount} onChange={(e) => setCustomerSalesAmount(e.target.value)} />
+                    <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
+                      {fieldWarning.customerSalesAmount}
+                    </FormHelperText>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button variant="contained" color="primary" onClick={handleSubmit} style={{ marginTop: '20px', width: '700px' }}>
+                      Add Customer
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <Button variant="contained" color="primary" onClick={handleSubmit} style={{ marginTop: '20px', width: '700px' }}>
-                    Add Product
-                  </Button>
-                </Grid>
-              </Grid>
+              </div>
             </div>
-          </div>
-        </StyledCard>
-        <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
-          <Alert onClose={handleCloseSnackbar} severity={alertSeverity as 'success' | 'error'} sx={{ width: '100%' }}>
-            <AlertTitle>{alertTitle}</AlertTitle>
-            {alertMessage}
-          </Alert>
-        </Snackbar>
-      </StyleGrid>
-    </div>
-  );
-}
+          </StyledCard>
+          <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+            <Alert onClose={handleCloseSnackbar} severity={alertSeverity as 'success' | 'error'} sx={{ width: '100%' }}>
+              <AlertTitle>{alertTitle}</AlertTitle>
+              {alertMessage}
+            </Alert>
+          </Snackbar>
+        </StyleGrid>
+      </div>
+    );
+  }
+

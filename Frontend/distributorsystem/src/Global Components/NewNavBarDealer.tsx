@@ -28,9 +28,9 @@ const ColorBox = styled(Box)({
     background:'linear-gradient(to right bottom, #004AAD, #5DE0E6)',
     // backgroundColor:'#2D85E7',
     width: '80px',
-    position:'fixed', 
-    display: 'flex', 
-    flexDirection: 'column', 
+    position:'fixed',
+    display: 'flex',
+    flexDirection: 'column',
     height: '100vh',
     transition:"ease-in-out 0.3s",
     overflow: 'hidden',
@@ -38,7 +38,7 @@ const ColorBox = styled(Box)({
         width: '360px',
         height: '100vh',
     },
-   
+
 })
 
 {/** Styled typo for app name */}
@@ -61,7 +61,7 @@ const StyledText = styled(ListItemText)<StyledButtonProps>(({selected})=>({
     '& .MuiTypography-body1':{
         fontSize:'15px',
     },
-    
+
 }))
 
 {/** Styled list items in the drawer */}
@@ -77,7 +77,7 @@ const StyledButton = styled(Button)<StyledButtonProps>(({selected})=>({
     height:60,
     ':hover':{
         backgroundColor: 'rgb(135, 186, 243, 0.5)',
-    },    
+    },
     backgroundColor: selected ? '#f5f5f5' : '',
     borderRadius: selected? '100px 0px 0px 100px': '0px 0px 0px 0px ',
 }))
@@ -119,7 +119,7 @@ export default function NewNavBarDealer(props: navProps) {
             navigate("/SignIn")
         }
 
-            
+
     }
     const getIconColor = (buttonId: number): string => {
         return buttonId === selectedButton ? '#2D85E7' : '#FFFFFF';

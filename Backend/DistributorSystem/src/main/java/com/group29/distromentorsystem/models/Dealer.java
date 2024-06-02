@@ -1,13 +1,11 @@
 package com.group29.distromentorsystem.models;
 
-
-import org.springframework.data.annotation.*;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-
 
 @Document("Dealers")
 public class Dealer {
@@ -53,18 +51,18 @@ public class Dealer {
 
     private String remarks;
 
-
     private Distributor distributor;
 
-
-    private Set<String> orderids = new HashSet<>();;
+    private Set<String> orderids = new HashSet<>();
 
     private Set<String> documentids = new HashSet<>();
+
+    private Set<String> customerids = new HashSet<>();
 
     public Dealer() {
     }
 
-    public Dealer(String dealerid, String firstname, String middlename, String lastname, String emailaddress, String password, LocalDate birthdate, String gender, String currentaddress, String permanentaddress, String contactnumber, boolean hasbusiness, String businessname, String businessaddress, String businessphone, String businesstin, double creditlimit, LocalDate submissiondate, Boolean isconfirmed, String remarks, Distributor distributor, Set<String> orderids, Set<String> documentids) {
+    public Dealer(String dealerid, String firstname, String middlename, String lastname, String emailaddress, String password, LocalDate birthdate, String gender, String currentaddress, String permanentaddress, String contactnumber, boolean hasbusiness, String businessname, String businessaddress, String businessphone, String businesstin, double creditlimit, LocalDate submissiondate, Boolean isconfirmed, String remarks, Distributor distributor, Set<String> orderids, Set<String> documentids, Set<String> customerids) {
         this.dealerid = dealerid;
         this.firstname = firstname;
         this.middlename = middlename;
@@ -88,6 +86,7 @@ public class Dealer {
         this.distributor = distributor;
         this.orderids = orderids;
         this.documentids = documentids;
+        this.customerids = customerids;
     }
 
     public String getDealerid() {
@@ -282,5 +281,11 @@ public class Dealer {
         this.documentids = documentids;
     }
 
+    public Set<String> getCustomerids() {
+        return customerids;
+    }
 
+    public void setCustomerids(Set<String> customerids) {
+        this.customerids = customerids;
+    }
 }

@@ -46,6 +46,7 @@ import SalesAssociateDashboard from '../Components/Module 3 - Dashboards/SalesAs
 import AddProduct from '../Components/Module 2 - Registrations/AddProductUI';
 import ProductList from '../Components/Module 4 - Profiles & Approval/ProductListUI';
 import UpdateProduct from '../Components/Module 2 - Registrations/UpdateProduct';
+import CustomerRegistration from '../Components/Module 2 - Registrations/CustomerRegistration';
 
 
 export default function MainRoutes() {
@@ -69,6 +70,7 @@ export default function MainRoutes() {
                     <Route path="/productlist" element={<ProductList />} />
                     <Route path="/update_product/:productId" element={<UpdateProduct />} />
                     <Route path="/ThankYou" element={<><ScrollToTop/><ThankYouScreen /></>} />
+                    <Route path="/customerRegistration" element={<CustomerRegistration />} />
                 </Route>
 
                 {/* <SigninScreen/> */}
@@ -80,7 +82,7 @@ export default function MainRoutes() {
                         <Route path="/" element={<ContentDealer/>}>
                             <Route path="/" element={<><ScrollToTop/><Navigate replace to="dealerOrderForm" /></>} />
                             <Route path="/dealerOrderForm" element={<><ScrollToTop/><DealerOrderForm /></>} />
-                             <Route path="/dealerProfileDetails/:objectId" element={<><ScrollToTop/><DealerProfileDetails/></>} />         
+                             <Route path="/dealerProfileDetails/:objectId" element={<><ScrollToTop/><DealerProfileDetails/></>} />
                         </Route>
                     )}
 
