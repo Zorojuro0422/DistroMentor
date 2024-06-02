@@ -79,7 +79,8 @@ export default function MainRoutes() {
                         <Route path="/" element={<ContentDealer/>}>
                             <Route path="/" element={<><ScrollToTop/><Navigate replace to="dealerOrderForm" /></>} />
                             <Route path="/dealerOrderForm" element={<><ScrollToTop/><DealerOrderForm /></>} />
-                             <Route path="/dealerProfileDetails/:objectId" element={<><ScrollToTop/><DealerProfileDetails/></>} />
+                            <Route path="/customerRegistration" element={<><ScrollToTop/><CustomerRegistration/></>} />
+                            <Route path="/dealerProfileDetails/:objectId" element={<><ScrollToTop/><DealerProfileDetails/></>} />
                         </Route>
                     )}
 

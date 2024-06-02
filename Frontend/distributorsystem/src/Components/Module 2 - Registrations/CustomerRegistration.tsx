@@ -12,6 +12,7 @@ interface Dealer {
   dealerid: string;
   firstname: string;
   lastname: string;
+  customerids: string[]; // Add this line to include customerids property
 }
 
 // Styled components
@@ -138,6 +139,19 @@ export default function ProductRegistration() {
     axios
       .post(url, customerData)
       .then((response) => {
+        // Update the dealer's customerids array
+        const updatedDealers = dealers.map((dealer) => {
+          if (dealer.dealerid === dealerID) {
+            return {
+              ...dealer,
+              customerids: [customerID]
+            };
+          }
+          return dealer;
+        });
+
+        setDealers(updatedDealers);
+
         // Clear form fields after successful submission
         setCustomerID('');
         setDealerID('');

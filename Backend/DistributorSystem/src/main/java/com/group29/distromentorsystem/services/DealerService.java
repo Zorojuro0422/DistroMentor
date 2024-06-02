@@ -4,6 +4,7 @@ package com.group29.distromentorsystem.services;
 import com.group29.distromentorsystem.models.*;
 import com.group29.distromentorsystem.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -239,6 +240,42 @@ public class DealerService {
             System.out.println("Dealer with ID " + dealerId + " deleted successfully.");
         } else {
             throw new IllegalArgumentException("Dealer with ID " + dealerId + " does not exist.");
+        }
+    }
+
+    public Dealer updateDealer(String dealerId, Dealer updatedDealer) {
+        Dealer existingDealer = dealerRepository.findById(dealerId).orElse(null);
+        if (existingDealer != null) {
+            // Update fields of existing dealer with new information
+            existingDealer.setFirstname(updatedDealer.getFirstname());
+            existingDealer.setMiddlename(updatedDealer.getMiddlename());
+            existingDealer.setLastname(updatedDealer.getLastname());
+            existingDealer.setEmailaddress(updatedDealer.getEmailaddress());
+            existingDealer.setPassword(updatedDealer.getPassword());
+            existingDealer.setBirthdate(updatedDealer.getBirthdate());
+            existingDealer.setGender(updatedDealer.getGender());
+            existingDealer.setCurrentaddress(updatedDealer.getCurrentaddress());
+            existingDealer.setPermanentaddress(updatedDealer.getPermanentaddress());
+            existingDealer.setContactnumber(updatedDealer.getContactnumber());
+            existingDealer.setHasbusiness(updatedDealer.isHasbusiness());
+            existingDealer.setBusinessname(updatedDealer.getBusinessname());
+            existingDealer.setBusinessaddress(updatedDealer.getBusinessaddress());
+            existingDealer.setBusinessphone(updatedDealer.getBusinessphone());
+            existingDealer.setBusinesstin(updatedDealer.getBusinesstin());
+            existingDealer.setCreditlimit(updatedDealer.getCreditlimit());
+            existingDealer.setSubmissiondate(updatedDealer.getSubmissiondate());
+            existingDealer.setIsconfirmed(updatedDealer.getIsconfirmed());
+            existingDealer.setRemarks(updatedDealer.getRemarks());
+            existingDealer.setDistributor(updatedDealer.getDistributor());
+            existingDealer.setOrderids(updatedDealer.getOrderids());
+            existingDealer.setDocumentids(updatedDealer.getDocumentids());
+            existingDealer.setCustomerids(updatedDealer.getCustomerids());
+
+            // Save the updated dealer
+            return dealerRepository.save(existingDealer);
+        } else {
+            // Handle case when dealer with given ID is not found
+            throw new IllegalArgumentException("Dealer with ID " + dealerId + " not found.");
         }
     }
 

@@ -42,6 +42,7 @@ public class DealerController {
         return new ResponseEntity<>(dealerService.getAllDealers(), HttpStatus.OK);
     }
 
+
     @GetMapping("/getDealerByID/{dealerid}")
     public ResponseEntity<Object> getDealerByID(@PathVariable String dealerid){
         return new ResponseEntity<>(dealerService.getDealerByID(dealerid), HttpStatus.OK);
@@ -112,6 +113,11 @@ public class DealerController {
         } catch (Exception e) {
             return new ResponseEntity<>("Failed to delete dealer: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PutMapping("/{dealerId}")
+    public Dealer updateDealer(@PathVariable String dealerId, @RequestBody Dealer dealer) {
+        return dealerService.updateDealer(dealerId, dealer);
     }
 
 }
