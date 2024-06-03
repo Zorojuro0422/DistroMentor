@@ -12,9 +12,11 @@ export default function Content() {
     const path=location.pathname;
     const navPageNameMapping: Record<string,string>={
         '/dashboard':'Dashboard',
+        '/productlist': 'Product List',
         '/collectorAssignment':'Collector Assignment',
         '/dealerProfileList': 'Dealer Profiles List',
         '/employeeProfileList': 'Employee Profiles List',
+        '/addproduct': 'Add Product',
         '/productDistributionList':'Product Distribution List',
         '/paymentList':'Payment Receipts',
         '/distributorOrderForm': 'Product Distribution Form',
@@ -38,6 +40,9 @@ const getNavContentPage=()=>{
 
   const navPageContentMapping: Record<string,string>={
       '/dashboard':'Your pendings overview',
+      '/addproduct': 'Product Entry',
+      '/productlist': 'Viewing of Products',
+      '/update_product': 'Viewing of Products',
       '/collectorAssignment':'Assign, reassign, or unassign collector to your order',
       '/dealerProfileList': 'View unconfirmed & confirmed Dealers, awaiting for your confirmation.',
       '/employeeProfileList': 'List of your emplooyes',

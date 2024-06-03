@@ -47,6 +47,7 @@ import AddProduct from '../Components/Module 2 - Registrations/AddProductUI';
 import ProductList from '../Components/Module 4 - Profiles & Approval/ProductListUI';
 import UpdateProduct from '../Components/Module 2 - Registrations/UpdateProduct';
 import CustomerRegistration from '../Components/Module 2 - Registrations/CustomerRegistration';
+import CustomerList from '../Components/Module 4 - Profiles & Approval/CustomerList';
 
 
 export default function MainRoutes() {
@@ -99,6 +100,7 @@ export default function MainRoutes() {
                             {/* CRUD PRODUCTS */}
                             <Route path="/addproduct" element={<AddProduct />} />
                             <Route path="/productlist" element={<ProductList />} />
+                            <Route path="/customerlist" element={<CustomerList />} />
                             <Route path="/update_product/:productId" element={<UpdateProduct />} />
 
                             <Route path="/distributorOrderForm" element={<><ScrollToTop/><DistributorOrderForm/></>} />

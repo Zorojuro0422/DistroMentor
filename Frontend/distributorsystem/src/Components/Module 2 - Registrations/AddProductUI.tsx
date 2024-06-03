@@ -225,7 +225,7 @@ export default function ProductRegistration() {
             </div>
           </div>
         </StyledCard>
-        <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+        <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
           <Alert onClose={handleCloseSnackbar} severity={alertSeverity as 'success' | 'error'} sx={{ width: '100%' }}>
             <AlertTitle>{alertTitle}</AlertTitle>
             {alertMessage}

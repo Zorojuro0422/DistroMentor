@@ -458,56 +458,64 @@ export default function ProductDistributionList() {
   }
 
   const handleSaveOrder = () => {
-    // Calculate the total order amount based on orderedProducts
-    if (orderedProducts.length === 0) {
-      saveHandleAlert('No Ordered Products', "Please add products to your order before saving.", 'warning')
-    }
+      // Calculate the total order amount based on orderedProducts
+      if (orderedProducts.length === 0) {
+        headerHandleAlert('No Ordered Products', "Please add products to your order before saving.", 'warning');
+      } else if (orderedProducts.length > 0 && isDealerFound === true) {
+        const orderAmount = orderedProducts.reduce((total, product) => {
+          return total + product.product.price * product.quantity;
+        }, 0);
 
-    if (!selectedDate || !penaltyRateRef.current?.value || !paymentTerm) {
-     
-      saveHandleAlert('Fill all the required fields','Please fill all required fields.', 'warning')
-      return;
-    }
+        if (orderAmount < dealerRemainingCredit!) {
+          newOrder({
+            orderid: uuidv4().slice(0, 8),
+            distributiondate: selectedDate?.format('YYYY-MM-DD') || '',
+            orderdate: moment().format('YYYY-MM-DD'),
+            penaltyrate: Number(penaltyRateRef.current?.value),
+            paymentterms: paymentTerm,
+            orderamount: orderAmount,
+            distributor: dealer!.distributor!,
+            collector: null,
+            dealer: dealer!,
+            orderedproducts: orderedProducts,
+            paymenttransactions: [],
+            confirmed: false,
+            isclosed: false
+          });
 
+          // Update product quantities
+          orderedProducts.forEach(async (orderedProduct) => {
+            try {
+              const product = orderedProduct.product;
+              const response = await axios.get<IProduct>(`http://localhost:8080/product/getAllProducts/${product.productid}`);
+              const existingQuantity = response.data.quantity; // Fetch the quantity from the response data
 
-    // Create an order object with the necessary data
-    else if (orderedProducts.length > 0 && isDealerFound) {
-      const orderAmount = orderedProducts.reduce((total, product) => {
-        return total + product.product.price * product.quantity;
-      }, 0);
+              const updatedQuantity = existingQuantity - orderedProduct.quantity;
 
-      if (orderAmount < dealerRemainingCredit!) {
-        newOrder({
-          orderid: uuidv4().slice(0, 8),
-          distributiondate: selectedDate?.format('YYYY-MM-DD') || '',
-          //moment ang gamit ani para maka generate og date today
-          orderdate: moment().format('YYYY-MM-DD'),
-          penaltyrate: Number(penaltyRateRef.current?.value),
-          paymentterms: paymentTerm,
-          orderamount: orderAmount,
-          distributor: dealer!.distributor,
-          collector: null,
-          dealer: dealer!,
-          orderedproducts: orderedProducts,
-          paymenttransactions: [],
-          confirmed: true,
-          isclosed: false
-        });
-        //if possible kay ara na siya mo clear after sa snackbar
-        saveHandleAlert('Success Saving Order', "The Dealer's ordered products have been successfully saved!", 'success')
-        clearInputValues();
+              await axios.put(`http://localhost:8080/product/${product.productid}`, {
+                name: product.name,
+                quantity: updatedQuantity,
+                unit: product.unit,
+                price: product.price
 
+              });
+
+              // Successfully updated product quantity in the database
+            } catch (error) {
+              // Handle error
+              console.error('Error updating product quantity:', error);
+            }
+          });
+
+          headerHandleAlert('Success Saving Order', "Your ordered products have been successfully saved!", 'success');
+          clearInputValues();
+        } else {
+          headerHandleAlert('Order Amount Exceeded Remaining Credit', `Total order amount exceeded the remaining credit ( ₱${dealerRemainingCredit}). Please adjust order amount accordingly.`, 'warning');
+        }
+      } else {
+        headerHandleAlert('Cart is Empty.', "Order hasn't been confirmed because cart is empty. Add a product before confirming order", 'error');
       }
-      else {
-        saveHandleAlert('Order Amount Exceeded Remaining Credit', "Total order amount exceeded the remaining credit ( ₱" + dealerRemainingCredit + "). Please adjust order amount accordingly.", 'warning')
-      }
-    }
-
-    else {
-      saveHandleAlert('Cart is Empty.', "Order hasn't been saved because cart is empty. Add a product before saving order", 'error')
-    }
-
-  };
+    };
 
 
 

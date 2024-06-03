@@ -148,10 +148,10 @@ const ProductList: React.FC = () => {
     setOpenDialog(true);
   };
 
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-    setSelectedProductId(null);
-  };
+      const handleCloseDialog = () => {
+        setOpenDialog(false);
+        setSelectedProductId(null);
+      };
 
   return (
     <div style={{ background: 'linear-gradient(#004AAD, #5DE0E6)', width: '100vw', height: '100vh', position: 'fixed' }}>
