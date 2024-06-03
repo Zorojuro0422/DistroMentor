@@ -211,6 +211,11 @@ export default function NewNavBar() {
                                 </Link>
 
                                 {/** CUSTOMER PROFILES LIST */}
+                                <Link to="/customerList">
+                                <StyledButton1 onClick={() => handleButtonClick1(1)} selected1={selectedButton1 === 1}>
+                                    <StyledText1 selected1={selectedButton1 === 1} sx={{ marginLeft: -2 }} primary="Customer List" />
+                                </StyledButton1>
+                            </Link>
                             </List>
                         </Collapse>
 

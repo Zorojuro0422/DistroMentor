@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from "@emotion/styled";
+import dealer1 from '../../Global Components/Images/dealer1-2.png'
+import logo4 from '../../Global Components/Images/logo4.png'
 import {
   Button,
   Grid,
@@ -123,7 +125,7 @@ const CustomerList: React.FC = () => {
   const handleDeleteCustomer = async () => {
     if (selectedCustomerID) {
       try {
-        await axios.delete(`http://localhost:8080/customer/delete/${selectedCustomerID}`);
+        await axios.delete(`http://localhost:8080/customer/${selectedCustomerID}`);
         setAlertMessage('Customer deleted successfully');
         setAlertSeverity('success');
         setOpenSnackbar(true);
@@ -140,11 +142,33 @@ const CustomerList: React.FC = () => {
 
   return (
     <div style={{ background: 'linear-gradient(#004AAD, #5DE0E6)', width: '100vw', height: '100vh', position: 'fixed' }}>
-      <StyleGrid>
-        <StyledCard>
-          <div style={{ backgroundColor: 'rgb(45, 133, 231, 0.8)', width: '40%', height: 1000, marginLeft: -10 }}>
-            {/* Dealer and Logo Images */}
-          </div>
+                    <StyleGrid>
+                        <StyledCard>
+                            <div style={{ backgroundColor: 'rgb(45, 133, 231, 0.8)', width: '40%', height: 1000, marginLeft: -10 }}>
+                                <img src={logo4}
+                                    style={{
+                                        width: 'auto',
+                                        marginLeft: 0,
+                                        padding: '170px 20px 0px 75px',
+                                        height: '180px',
+                                        alignItems: 'center',
+                                        display: 'flex',
+                                        position: 'relative',
+                                        zIndex: 2
+                                    }}
+                                />
+                                <img src={dealer1}
+                                    style={{
+                                        width: 'auto',
+                                        height: '600px',
+                                        marginTop: -130,
+                                        marginLeft: 30,
+                                        display: 'flex',
+                                        position: 'relative',
+                                        zIndex: 1
+                                    }} />
+                            </div>
+
 
           <div style={{ padding: '1px 1px 1px 30px', display: 'flex', flexDirection: 'column' }}>
             <ContentNameTypography>Customer List</ContentNameTypography>
@@ -173,7 +197,7 @@ const CustomerList: React.FC = () => {
                           <td style={{ border: '1px solid black', padding: '10px', textAlign: 'left', fontWeight: 'bold', color: '#333' }}>{customer.customerContactNumber}</td>
                           <td style={{ border: '1px solid black', padding: '10px', textAlign: 'left', fontWeight: 'bold', color: '#333' }}>{customer.customerAddress}</td>
                           <td style={{ border: '1px solid black', padding: '10px', textAlign: 'left', fontWeight: 'bold', color: '#333' }}>
-                            <a href={`/update_product/${customer.customerID}`} style={{ color: 'green' }}>Edit</a>
+                            <a href={`/update_customer/${customer.customerID}`} style={{ color: 'green' }}>Edit</a>
                             <a href="#" onClick={() => handleOpenDialog(customer.customerID)} style={{ color: 'red', marginLeft: '10px' }}>Delete</a>
                           </td>
                         </tr>
