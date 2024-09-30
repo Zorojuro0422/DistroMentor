@@ -55,10 +55,6 @@ public class OrderedProductService {
     }
 
 
-    /*public Set<OrderedProduct> findByOrderid(String orderid){
-       return orderedProductRepository.findByOrderid(orderid);
-    }*/
-
 
 
 }

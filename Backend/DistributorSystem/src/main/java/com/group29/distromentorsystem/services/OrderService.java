@@ -107,6 +107,10 @@ public class OrderService {
 
     }
 
+    public List<Order> getAllConfirmedOrdersByDealerId(String dealerId) {
+        return orderRepository.findAllByDealerDealeridAndIsconfirmedTrue(dealerId);
+    }
+
     public Optional<Order> getOrderByID(String orderid){
 
         return orderRepository.findById(orderid);
@@ -116,29 +120,6 @@ public class OrderService {
         PaymentTransaction paymentTransaction = paymentTransactionRepository.findById(paymenttransactionid).get();
         return orderRepository.findById(paymentTransaction.getOrderid()).get();
     }
-
-    /*public ResponseEntity assignCollector(String orderid, Employee collector) {
-        Order order = orderRepository.findById(orderid).get();
-        Employee employee = employeeRepository.findById(collector.getEmployeeid()).get();
-
-        if (order.getCollector() == null) {
-            order.setCollector(employee);
-        }else{
-            Employee prevEmployee = order.getCollector();
-            prevEmployee.getOrders().remove(order);
-            employeeRepository.save(prevEmployee);
-            order.setCollector(employee);
-        }
-
-
-        employee.getOrders().add(order);
-
-        orderRepository.save(order);
-        employeeRepository.save(employee);
-
-        return new ResponseEntity("Collector assigned successfully", HttpStatus.OK);
-    }
-*/
 
     public List<Order> getAllOrdersByDistributorID(String distributorid) {
         return orderRepository.findAllByDistributor_Distributorid(distributorid);
@@ -233,34 +214,6 @@ public class OrderService {
         return new ResponseEntity<>("Order closed status updated successfully", HttpStatus.OK);
     }
 
-  /*  @Scheduled(cron = "0 0 0 * * *") // Run every day at midnight
-    public void applyPenaltyForLatePayments(String orderId) {
-        LocalDate currentDate = LocalDate.of(2023, Month.NOVEMBER, 30);
-
-        // Find the specific order
-        Order order = orderRepository.findById(orderId).orElse(null);
-
-        if (order != null) {
-            Set<PaymentTransaction> paymentTransactions = order.getPaymenttransactions();
-
-            for (PaymentTransaction paymentTransaction : paymentTransactions) {
-                LocalDate endDate = paymentTransaction.getEnddate();
-
-                if (!paymentTransaction.isPaid() && currentDate.isAfter(endDate)) {
-                    double penaltyRate = order.getPenaltyrate();
-
-                    // Calculate the penalty and update the payment transaction
-                    double penaltyAmount = (paymentTransaction.getAmountdue() * penaltyRate) / 100;
-                    double newAmountDue = paymentTransaction.getAmountdue() + penaltyAmount;
-
-                    paymentTransaction.setAmountdue(newAmountDue);
-                    paymentTransactionRepository.save(paymentTransaction);
-                }
-            }
-            order.setPaymenttransactions(paymentTransactions);
-            orderRepository.save(order);
-        }
-    }*/
 
     @Scheduled(cron = "0 0 0 */15 * ?")
     public void applyPenaltyForAllLatePayments() {
@@ -344,232 +297,6 @@ public class OrderService {
         return completeOrders;
 
     }
-
-
-
-    //feb 9 2024
-    //test function if i can get data from deployed collectify
-    //   @Scheduled(cron = "*/10 * * * * ?")
-  /*  public void getAllCollectionDataFromCollectify() {
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        ParameterizedTypeReference<List<Map<String, Object>>> responseType = new ParameterizedTypeReference<List<Map<String, Object>>>() {
-        };
-
-        //get sa tanan objects ana nga endpoint
-        ResponseEntity<List<Map<String, Object>>> responseEntity = restTemplate.exchange("https://collectify-backend-sre6.onrender.com/contracts", HttpMethod.GET, null, responseType);
-
-
-
-        for (Map<String, Object> entry : responseEntity.getBody()) {
-           // System.out.println(entry.get("contract_id") + "contract_id ni dol");
-
-            //System.out.println(entry.get("fullPrice") + "price ni dol");
-            Order newOrderFromCollectify = new Order();
-
-            newOrderFromCollectify.setOrderid(entry.get("contract_id").toString());
-           newOrderFromCollectify.setOrderamount(Double.parseDouble(String.valueOf(entry.get("fullPrice"))));
-           newOrderFromCollectify.setDistributiondate(LocalDate.parse(String.valueOf(entry.get("distributiondate"))));
-           //if naa mga null, pwede mani butangan og condition nga mo continue lang sa next value if null
-
-            orderRepository.save(newOrderFromCollectify);
-
-            }
-        }*/
-
-        /*if (paymentTransactionsArray != null) {
-            for (Map<String, Object> item : paymentTransactionsArray) {
-
-                if ((boolean) item.get("paid") != false) {
-                    System.out.println("paid already. payment transaction id: " + item.get("payment_transactionid"));
-
-                    CollectionPaymentReceipt newCPR = new CollectionPaymentReceipt();
-
-                    newCPR.setPaymentreceiptid(item.get("payment_transactionid").toString());
-                    newCPR.setPaymenttype("collection");
-
-                    newCPR.setCollectiondate(LocalDate.parse((String) item.get("enddate")));
-                    newCPR.setCollectionamount((double) item.get("amountdue"));
-                    newCPR.setRemitteddate(LocalDate.parse((String) item.get("enddate")));
-                    newCPR.setRemittedamount((double) item.get("amountdue"));
-
-
-
-                    Map<String, Object> details = (Map<String, Object>) item.get("transactionProof");
-
-                    List<String> collectorproofid = new ArrayList<>(Arrays.asList((String) details.get("id")));
-                    List<String> collectordocumentNames = new ArrayList<>(Arrays.asList((String) details.get("name")));
-                    List<String> collectordocumentTypes = new ArrayList<>(Arrays.asList((String) details.get("type")));
-                    List<MultipartFile> collectordocumentContents = new ArrayList<>();
-
-
-                    byte[] decodedBytes = Base64.getDecoder().decode((String) details.get("data"));
-
-                    MockMultipartFile multipartFile = new MockMultipartFile(
-                            "file",            // parameter name
-                            "filename.txt",    // original filename
-                            "image/png",      // content type
-                            decodedBytes        // content as byte array
-                    );
-
-                    collectordocumentContents.add(multipartFile);
-
-                    createCollectionPaymentReceipt(
-                            newCPR,
-                            collectorproofid, collectorproofid,
-                            collectordocumentNames, collectordocumentNames,
-                            collectordocumentTypes, collectordocumentTypes,
-                            collectordocumentContents, collectordocumentContents
-                    );
-
-                    System.out.println("bast mo print ni, na trigger ang function sa pag himo og proof huehue");
-                } else {
-                    System.out.println("not paid yet. payment transaction id:" + item.get("payment_transactionid"));
-                }
-                // String paytid = (String) item.get("payment_transactionid");
-                //  PaymentTransaction ptfromDistriLinkDB = paymentTransactionRepository.findById(paytid).get();
-
-
-            }
-
-
-            //maghimo ko payment transaction nga objects? ako
-            // tagsa- tagsaon ang sa ila kay di man ko kakuah directly
-            // nope dili gihapon
-
-        *//*if(collectors != null){
-            for(Employee collectifyCollector : collectors){
-
-                CollectionPaymentReceipt collectionPaymentReceipt = new CollectionPaymentReceipt();
-
-                Set<String> collectifyCollectorPR = collectifyCollector.getPaymentreceiptids();
-
-                List<PaymentReceipt> currentcollectorpaymentReceipt = paymentReceiptRepository.findAllById(collectifyCollectorPR);
-
-                for(PaymentReceipt pr : currentcollectorpaymentReceipt ){
-                    if(pr.)
-                }
-
-            }
-        }*//*
-
-
-        }*/
-
-
-
-    //feb 9 2024
-    //test function if i can get data from deployed collectify
- //   @Scheduled(cron = "*/10 * * * * ?")
-  /*  public void getAllCollectionDataFromCollectify() {
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        ParameterizedTypeReference<List<Map<String, Object>>> responseType = new ParameterizedTypeReference<List<Map<String, Object>>>() {
-        };
-
-        //get sa tanan objects ana nga endpoint
-        ResponseEntity<List<Map<String, Object>>> responseEntity = restTemplate.exchange("https://collectify-backend-sre6.onrender.com/contracts", HttpMethod.GET, null, responseType);
-
-
-
-        for (Map<String, Object> entry : responseEntity.getBody()) {
-           // System.out.println(entry.get("contract_id") + "contract_id ni dol");
-
-            //System.out.println(entry.get("fullPrice") + "price ni dol");
-            Order newOrderFromCollectify = new Order();
-
-            newOrderFromCollectify.setOrderid(entry.get("contract_id").toString());
-           newOrderFromCollectify.setOrderamount(Double.parseDouble(String.valueOf(entry.get("fullPrice"))));
-           newOrderFromCollectify.setDistributiondate(LocalDate.parse(String.valueOf(entry.get("distributiondate"))));
-           //if naa mga null, pwede mani butangan og condition nga mo continue lang sa next value if null
-
-            orderRepository.save(newOrderFromCollectify);
-
-            }
-        }*/
-
-        /*if (paymentTransactionsArray != null) {
-            for (Map<String, Object> item : paymentTransactionsArray) {
-
-                if ((boolean) item.get("paid") != false) {
-                    System.out.println("paid already. payment transaction id: " + item.get("payment_transactionid"));
-
-                    CollectionPaymentReceipt newCPR = new CollectionPaymentReceipt();
-
-                    newCPR.setPaymentreceiptid(item.get("payment_transactionid").toString());
-                    newCPR.setPaymenttype("collection");
-
-                    newCPR.setCollectiondate(LocalDate.parse((String) item.get("enddate")));
-                    newCPR.setCollectionamount((double) item.get("amountdue"));
-                    newCPR.setRemitteddate(LocalDate.parse((String) item.get("enddate")));
-                    newCPR.setRemittedamount((double) item.get("amountdue"));
-
-
-
-                    Map<String, Object> details = (Map<String, Object>) item.get("transactionProof");
-
-                    List<String> collectorproofid = new ArrayList<>(Arrays.asList((String) details.get("id")));
-                    List<String> collectordocumentNames = new ArrayList<>(Arrays.asList((String) details.get("name")));
-                    List<String> collectordocumentTypes = new ArrayList<>(Arrays.asList((String) details.get("type")));
-                    List<MultipartFile> collectordocumentContents = new ArrayList<>();
-
-
-                    byte[] decodedBytes = Base64.getDecoder().decode((String) details.get("data"));
-
-                    MockMultipartFile multipartFile = new MockMultipartFile(
-                            "file",            // parameter name
-                            "filename.txt",    // original filename
-                            "image/png",      // content type
-                            decodedBytes        // content as byte array
-                    );
-
-                    collectordocumentContents.add(multipartFile);
-
-                    createCollectionPaymentReceipt(
-                            newCPR,
-                            collectorproofid, collectorproofid,
-                            collectordocumentNames, collectordocumentNames,
-                            collectordocumentTypes, collectordocumentTypes,
-                            collectordocumentContents, collectordocumentContents
-                    );
-
-                    System.out.println("bast mo print ni, na trigger ang function sa pag himo og proof huehue");
-                } else {
-                    System.out.println("not paid yet. payment transaction id:" + item.get("payment_transactionid"));
-                }
-                // String paytid = (String) item.get("payment_transactionid");
-                //  PaymentTransaction ptfromDistriLinkDB = paymentTransactionRepository.findById(paytid).get();
-
-
-            }
-
-
-            //maghimo ko payment transaction nga objects? ako
-            // tagsa- tagsaon ang sa ila kay di man ko kakuah directly
-            // nope dili gihapon
-
-        *//*if(collectors != null){
-            for(Employee collectifyCollector : collectors){
-
-                CollectionPaymentReceipt collectionPaymentReceipt = new CollectionPaymentReceipt();
-
-                Set<String> collectifyCollectorPR = collectifyCollector.getPaymentreceiptids();
-
-                List<PaymentReceipt> currentcollectorpaymentReceipt = paymentReceiptRepository.findAllById(collectifyCollectorPR);
-
-                for(PaymentReceipt pr : currentcollectorpaymentReceipt ){
-                    if(pr.)
-                }
-
-            }
-        }*//*
-
-
-        }*/
-
-
 
 
 }

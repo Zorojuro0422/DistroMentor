@@ -15,10 +15,9 @@ import java.util.Optional;
 @CrossOrigin
 @RequestMapping("/product")
 public class ProductController {
-
+    @Autowired
     private final ProductService productService;
 
-    @Autowired
     public ProductController(ProductService productService) {
         this.productService = productService;
     }

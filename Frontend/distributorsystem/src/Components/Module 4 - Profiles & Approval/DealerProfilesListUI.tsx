@@ -1,43 +1,11 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { IArchivedDealer, IDealer, IDistributor, IDealerDocument } from "../../RestCalls/Interfaces";
+import { useEffect, useState } from "react";
+import { IArchivedDealer, IDealer } from "../../RestCalls/Interfaces";
 import axios from "axios";
-import { Alert, AlertTitle, Box, Button, Card, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Modal, Slide, SlideProps, Snackbar, Tab, Tabs, TextField, TextFieldProps, Typography, styled } from "@mui/material";
+import { Box, Button, Card, CircularProgress, Dialog, DialogContent, DialogTitle, Tab, Tabs, styled } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import React from "react";
-import { useRestDealer } from "../../RestCalls/DealerUseRest";
-import moment from "moment";
-import { ToastContainer, toast } from "react-toastify";
-import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
-import DeleteIcon from '@mui/icons-material/Delete';
-import profilepicture from "../../Global Components/Images/profilepicture.png"
 
-
-
-
-interface TabPanelProps {
-    children?: React.ReactNode;
-    index: number;
-    value: number;
-}
-
-function SlideTransitionDown(props: SlideProps) {
-    return <Slide {...props} direction="down" />;
-}
-
-const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
 
 const StyledDeleteButton = styled(Button)(({ theme }) => ({
     backgroundColor: 'rgba(255, 0, 0, 0.8)', // Red color with opacity
@@ -70,16 +38,6 @@ const StyledCard = styled(Card)({
     justifyContent: 'center',
     position: 'fixed'
 })
-const ContentNameTypography = styled(Typography)({
-    marginTop: 60,
-    marginBottom: 35,
-    marginLeft: 65,
-    fontFamily: 'Inter, sans-serif',
-    fontWeight: 'bold',
-    textAlign: 'left',
-    fontSize: '25px',
-    color: '#203949'
-})
 
 const StyledButton = styled(Button)({
     backgroundColor: 'rgb(45, 133, 231,0.8)',
@@ -91,20 +49,6 @@ const StyledButton = styled(Button)({
     height: 35,
     ':hover': {
         backgroundColor: '#2D85E7',
-        transform: 'scale(1.1)'
-    },
-    transition: 'all 0.4s'
-})
-const StyledButtonDecline = styled(Button)({
-    backgroundColor: 'rgb(221, 91, 91,0.8)',
-    borderRadius: 20,
-    color: '#FFFFFF',
-    fontFamily: 'Inter, sans-serif',
-    fontSize: '15px',
-    width: '100px',
-    height: 35,
-    ':hover': {
-        backgroundColor: '#de5b5b',
         transform: 'scale(1.1)'
     },
     transition: 'all 0.4s'
@@ -142,38 +86,14 @@ const DataGridStyle = styled(DataGrid)({
 
 export default function DealerProfileListUI() {
     const navigate = useNavigate();
-
-    const [getDealerByID, getDealerByDistributor, newDealer, confirmDealer, markDealerAsPending, declineDealer, resetDealer, updateDealerCreditLimit, isDealerFound, isDealerConfirmed, dealer, dealerRemainingCredit, getDealerByIDForProfile] = useRestDealer();
-
     const [dealers, setDealers] = useState<IDealer[] | null>(null);
     const [archivedDealer, setArchivedDealer] = useState<IArchivedDealer[] | null>(null);
-    const [openPending, setOpenPending] = useState(false);
-    const handlePendingOpen = () => setOpenPending(true);
-    const handlePendingClose = () => setOpenPending(false);
-    const [openDeclinedModal, setOpenDeclinedModal] = useState(false);
-    const handleDeclinedOpen = () => setOpenDeclinedModal(true);
-    const handleDeclinedClose = () => setOpenDeclinedModal(false);
-    const [creditLimitModalOpen, setCreditLimitModalOpen] = useState(false);
-
-    const [openAlert, setOpenAlert] = useState(false);
-    const [alerttitle, setTitle] = useState('');
-    const [alertMessage, setAlertMessage] = useState('');
-    const [alertSeverity, setAlertSeverity] = useState('success');
-    const [value, setValue] = useState(0);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const handleCancelDelete = () => {
         setIsDialogOpen(false);
     };
     const [dealerId, setDealerId] = useState<string | null>(null);
 
-
-    {/*Tabs*/ }
-
-    const [selectedDealerId, setSelectedDealerId] = useState<string>("");
-
-    const creditLimitRef = useRef<TextFieldProps>(null);
-    const pendingReasonRef = useRef<TextFieldProps>(null);
-    const declineReasonRef = useRef<TextFieldProps>(null);
 
     const userFromStorage = JSON.parse(localStorage.getItem("user")!);
     //userFromStorage.distributor.
@@ -240,9 +160,6 @@ export default function DealerProfileListUI() {
             });
         
     }
-
-    const handleConfirmOpen = () => setCreditLimitModalOpen(true);
-    const handleConfirmClose = () => setCreditLimitModalOpen(false);
     const [tabValue, setTabValue] = React.useState('unconfirmed');
 
 
@@ -270,150 +187,11 @@ export default function DealerProfileListUI() {
                     <StyledButton
                         onClick={() => {
 
-                            handleViewButtonClick(dealer.id);
+                            handleViewButtonClick(dealer.id, !dealer.confirmed);
                         }}
                     >
                         View
                     </StyledButton>)
-            }
-        },
-        {
-            field: 'pending', headerName: '', width: 150,
-            renderCell: (params: { row: any; }) => {
-
-                return (
-                    <>
-                        <StyledButton variant='contained'
-                            onClick={() => {
-                                setSelectedDealerId(params.row.id);
-                                handlePendingOpen();
-                            }} >
-                            Pending
-                        </StyledButton>
-                        <Grid item>
-                            <Modal
-                                open={openPending}
-                                onClose={handlePendingClose}
-                                aria-labelledby="modal-title"
-                                aria-describedby="Comment"
-                            >
-                                <Box sx={style}>
-                                    <Typography style={{ color: "#2D85E7", fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }} id="modal-title"> Reasons </Typography>
-                                    <TextField
-                                        id="filled-multiline-static"
-                                        label="State the Reason for Pending"
-                                        multiline
-                                        rows={4}
-                                        variant="filled"
-                                        style={{ width: '400px' }}
-                                        inputRef={pendingReasonRef}
-                                    />
-                                    <StyledButton onClick={() => handlePendingClick(selectedDealerId)} sx={{ marginTop: '20px', marginLeft: '150px' }}>
-                                        Submit
-                                    </StyledButton>
-                                </Box>
-                            </Modal>
-                        </Grid>
-                    </>
-
-                )
-            }
-        },
-        {
-            field: 'confirm', headerName: '', width: 150,
-            renderCell: (params: { row: any; }) => {
-
-
-                return (
-                    <><StyledButton
-                        style={{
-                            width: 120
-                        }}
-                        onClick={() => {
-                            setSelectedDealerId(params.row.id);
-                            handleConfirmOpen();
-                        }}
-                    >
-                        <CheckIcon style={{ marginTop: -5, marginLeft: -3, height: 20, width: 'auto', color: 'rgb(116, 254, 189)', fontWeight: 'bolder' }} />
-                        Confirm
-                    </StyledButton>
-                        <Grid item>
-                            <Modal
-                                open={creditLimitModalOpen}
-                                onClose={handleConfirmClose}
-                                aria-labelledby="credit-limit-modal-title"
-                                aria-describedby="Credit Limit"
-                            >
-                                <Box sx={style}>
-                                    <Typography
-                                        style={{ color: "#2D85E7", fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}
-                                        id="credit-limit-modal-title"
-                                    >
-                                        Set Credit Limit
-                                    </Typography>
-                                    <TextField
-                                        label="Credit Limit"
-                                        variant="filled"
-                                        style={{ width: '400px' }}
-
-                                        inputRef={creditLimitRef}
-
-                                    />
-                                    <StyledButton
-                                        onClick={() =>
-                                            handleConfirmButton(selectedDealerId)
-                                        }
-                                        sx={{ marginTop: '20px', marginLeft: '150px' }}
-                                    >
-                                        Set
-                                    </StyledButton>
-                                </Box>
-                            </Modal>
-                        </Grid>
-                    </>
-                );
-            }
-        },
-        {
-            field: 'decline', headerName: '', width: 150,
-            renderCell: (params: { row: any; }) => {
-                return (
-                    <>
-                        <StyledButton
-                            style={{ width: 120 }}
-                            onClick={() => {
-                                setSelectedDealerId(params.row.id);
-                                handleDeclinedOpen();
-                            }} >
-                            <CloseIcon style={{ marginTop: -3, paddingLeft: -8, height: 20, width: 'auto', color: 'rgb(227, 80, 155)', fontWeight: 'bolder' }} />
-                            Decline
-                        </StyledButton>
-                        <Grid item>
-                            <Modal
-                                open={openDeclinedModal}
-                                onClose={handleDeclinedClose}
-                                aria-labelledby="modal-title"
-                                aria-describedby="Comment"
-                            >
-                                <Box sx={style}>
-                                    <Typography style={{ color: "#2D85E7", fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }} id="decline-modal-title"> Reasons </Typography>
-                                    <TextField
-                                        label="State the Reason for Decline"
-                                        multiline
-                                        rows={4}
-                                        variant="filled"
-                                        style={{ width: '400px' }}
-                                        inputRef={declineReasonRef}
-                                    />
-                                    <StyledButton onClick={() => handleDeclineClick(selectedDealerId)}
-                                        sx={{ marginTop: '20px', marginLeft: '150px' }}>
-                                        Submit
-                                    </StyledButton>
-                                </Box>
-                            </Modal>
-                        </Grid>
-                    </>
-                );
             }
         },
 
@@ -441,7 +219,7 @@ export default function DealerProfileListUI() {
                   return (
                       <StyledButton
                           onClick={() => {
-                              handleViewButtonClick(dealer.id);
+                              handleViewButtonClick(dealer.id, !dealer.confirmed);
                           }}
                       >
                           View
@@ -449,6 +227,21 @@ export default function DealerProfileListUI() {
                   );
               }
           },
+          {
+            field: 'customer', headerName: '', width: 150,
+            renderCell: (params: { row: any; }) => {
+                const dealer = params.row;
+                return (
+                    <StyledButton
+                        onClick={() => {
+                            handleCustomerButtonClick(dealer.id);
+                        }}
+                    >
+                        Customer
+                    </StyledButton>
+                );
+            }
+        },
           {
               field: 'delete', headerName: '', width: 150,
               renderCell: (params: { row: any; }) => {
@@ -530,56 +323,14 @@ export default function DealerProfileListUI() {
 
 
     // const filterRows= showConfirmDealers ? rows.filter((dealer1)?.map(dealerList)=>())
-    const handleViewButtonClick = (objectId: string) => {
-        // Use the `navigate` function to navigate to the details page with the objectId as a parameter
+    const handleViewButtonClick = (objectId: string, isUnconfirmed: boolean) => {
         navigate(`/dealerProfileDetails/${objectId}`);
     };
 
-
-
-    const handleConfirmButton = (objectId: string) => {
-
-        // Call the confirmDealer function to update the dealer's status and credit limit on the server
-        confirmDealer(objectId, Number(creditLimitRef.current?.value));
-
-        // Close the modal after submitting
-        handleConfirmClose();
-
-
-
-
-        //window.location.reload();
-
-    };
-
-    const handlePendingClick = (objectId: string) => {
-
-        // Call the markDealerAsPending function to update the dealer's status on the server
-        markDealerAsPending(objectId, pendingReasonRef.current!.value + "");
-
-        // Close the modal after submitting
-        handlePendingClose();
-
-
-    };
-
-    const handleDeclineClick = (objectId: string) => {
-        // Find the dealer to mark as pending in the list
-
-        const dateArchive = moment().format('YYYY-MM-DD');
-
-
-        // Call the declineDealer function to update the dealer's status on the server
-        declineDealer(objectId, declineReasonRef.current!.value + "", dateArchive);
-
-        handleDeclinedClose();
-        getAllArchivedDealers();
-    };
-
-
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        setValue(newValue);
-    };
+    const handleCustomerButtonClick = (objectId: string) => {
+            // Use the `navigate` function to navigate to the details page with the objectId as a parameter
+            navigate(`/customer/${objectId}`);
+        };
 
     useEffect(() => {
         getAllDealers();
@@ -591,7 +342,6 @@ export default function DealerProfileListUI() {
     return (
         <div>
             <StyledCard>
-                {/* <ContentNameTypography>Dealer Profile List</ContentNameTypography> */}
 
                 <Box sx={{ width: '100%', marginTop: 4, marginLeft: 0.5 }}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -702,22 +452,6 @@ export default function DealerProfileListUI() {
 
 
             </StyledCard>
-
-            {/* Alerts */}
-            <ToastContainer
-                position="bottom-right"
-                autoClose={5000}
-                limit={3}
-                hideProgressBar
-                newestOnTop
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                style={{ width: 450 }}
-                theme="colored"
-            />
         </div>
 
     );

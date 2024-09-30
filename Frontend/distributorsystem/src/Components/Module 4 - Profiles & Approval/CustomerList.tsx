@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from "@emotion/styled";
-import dealer1 from '../../Global Components/Images/dealer1-2.png'
-import logo4 from '../../Global Components/Images/logo4.png'
+import dealer1 from '../../Global Components/Images/dealer1-2.png';
+import logo4 from '../../Global Components/Images/logo4.png';
 import {
   Button,
   Grid,
@@ -20,8 +20,8 @@ import {
 
 interface Customer {
   customerID: string;
-  dealerID: string;
-  customerName: string;
+  firstName: string;
+  lastName: string;
   customerContactNumber: string;
   customerAddress: string;
 }
@@ -31,7 +31,7 @@ const StyledCard = styled(Card)({
   display: 'flex',
   marginTop: 50,
   width: '1280px',
-  height: '800px',
+  height: '600px',
   alignItems: 'center',
   borderRadius: '25px',
   justifyContent: 'left',
@@ -60,10 +60,10 @@ const ContentNameTypography = styled(Typography)({
 
 const StyledTextField = styled(TextField)({
   borderRadius: "22px",
-  width: '343px',
   height: 10,
   marginTop: "10px",
   marginBottom: '55px',
+  width: '100%',
   input: {
     color: '#707070',
     fontFamily: 'Inter'
@@ -89,6 +89,13 @@ const ButtonStyle = styled(Button)({
   transition: 'all 0.4s'
 });
 
+const Container = styled.div({
+  width: '100%',
+  padding: '1px 1px 1px 30px',
+  display: 'flex',
+  flexDirection: 'column',
+});
+
 const CustomerList: React.FC = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [search, setSearch] = useState('');
@@ -99,13 +106,16 @@ const CustomerList: React.FC = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedCustomerID, setSelectedCustomerID] = useState<string | null>(null);
 
+  const userFromStorage = JSON.parse(localStorage.getItem("user")!);
+  const dealerID = userFromStorage.dealer.dealerid;
+
   useEffect(() => {
     fetchCustomers();
   }, []);
 
   const fetchCustomers = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/customer/getAllCustomer');
+      const response = await axios.get(`http://localhost:8080/customer/dealer/${dealerID}`);
       setCustomers(response.data);
     } catch (error) {
       console.error('Error fetching customers:', error);
@@ -140,38 +150,51 @@ const CustomerList: React.FC = () => {
     }
   };
 
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
+  };
+
+  const filteredCustomers = customers.filter(
+    (customer) =>
+      customer.firstName.toLowerCase().includes(search.toLowerCase()) ||
+      customer.lastName.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div style={{ background: 'linear-gradient(#004AAD, #5DE0E6)', width: '100vw', height: '100vh', position: 'fixed' }}>
-                    <StyleGrid>
-                        <StyledCard>
-                            <div style={{ backgroundColor: 'rgb(45, 133, 231, 0.8)', width: '40%', height: 1000, marginLeft: -10 }}>
-                                <img src={logo4}
-                                    style={{
-                                        width: 'auto',
-                                        marginLeft: 0,
-                                        padding: '170px 20px 0px 75px',
-                                        height: '180px',
-                                        alignItems: 'center',
-                                        display: 'flex',
-                                        position: 'relative',
-                                        zIndex: 2
-                                    }}
-                                />
-                                <img src={dealer1}
-                                    style={{
-                                        width: 'auto',
-                                        height: '600px',
-                                        marginTop: -130,
-                                        marginLeft: 30,
-                                        display: 'flex',
-                                        position: 'relative',
-                                        zIndex: 1
-                                    }} />
-                            </div>
-
-
-          <div style={{ padding: '1px 1px 1px 30px', display: 'flex', flexDirection: 'column' }}>
+      <StyleGrid>
+        <StyledCard>
+          <div style={{ backgroundColor: 'rgb(45, 133, 231, 0.8)', width: '40%', height: 1000, marginLeft: -10 }}>
+            <img src={logo4}
+              style={{
+                width: 'auto',
+                marginLeft: 0,
+                padding: '170px 20px 0px 75px',
+                height: '180px',
+                alignItems: 'center',
+                display: 'flex',
+                position: 'relative',
+                zIndex: 2
+              }}
+            />
+            <img src={dealer1}
+              style={{
+                width: 'auto',
+                height: '600px',
+                marginTop: -130,
+                marginLeft: 30,
+                display: 'flex',
+                position: 'relative',
+                zIndex: 1
+              }} />
+          </div>
+          <Container>
             <ContentNameTypography>Customer List</ContentNameTypography>
+            <StyledTextField
+              label="Search by Name"
+              value={search}
+              onChange={handleSearchChange}
+            />
             <div style={{ paddingTop: 30, paddingBottom: 50 }}>
               <Grid container spacing={3}>
                 {/* Table Header */}
@@ -180,8 +203,8 @@ const CustomerList: React.FC = () => {
                     <thead style={{ backgroundColor: '#f2f2f2' }}>
                       <tr>
                         <th style={{ border: '1px solid black', padding: '10px', textAlign: 'left', fontWeight: 'bold', color: '#333' }}>Customer ID</th>
-                        <th style={{ border: '1px solid black', padding: '10px', textAlign: 'left', fontWeight: 'bold', color: '#333' }}>Dealer ID</th>
-                        <th style={{ border: '1px solid black', padding: '10px', textAlign: 'left', fontWeight: 'bold', color: '#333' }}>Customer Name</th>
+                        <th style={{ border: '1px solid black', padding: '10px', textAlign: 'left', fontWeight: 'bold', color: '#333' }}>First Name</th>
+                        <th style={{ border: '1px solid black', padding: '10px', textAlign: 'left', fontWeight: 'bold', color: '#333' }}>Last Name</th>
                         <th style={{ border: '1px solid black', padding: '10px', textAlign: 'left', fontWeight: 'bold', color: '#333' }}>Contact Number</th>
                         <th style={{ border: '1px solid black', padding: '10px', textAlign: 'left', fontWeight: 'bold', color: '#333' }}>Customer Address</th>
                         <th style={{ border: '1px solid black', padding: '10px', textAlign: 'left', fontWeight: 'bold', color: '#333' }}>Actions</th>
@@ -189,11 +212,11 @@ const CustomerList: React.FC = () => {
                     </thead>
                     <tbody>
                       {/* Render customers data */}
-                      {customers.map((customer) => (
+                      {filteredCustomers.map((customer) => (
                         <tr key={customer.customerID}>
                           <td style={{ border: '1px solid black', padding: '10px', textAlign: 'left', fontWeight: 'bold', color: '#333' }}>{customer.customerID}</td>
-                          <td style={{ border: '1px solid black', padding: '10px', textAlign: 'left', fontWeight: 'bold', color: '#333' }}>{customer.dealerID}</td>
-                          <td style={{ border: '1px solid black', padding: '10px', textAlign: 'left', fontWeight: 'bold', color: '#333' }}>{customer.customerName}</td>
+                          <td style={{ border: '1px solid black', padding: '10px', textAlign: 'left', fontWeight: 'bold', color: '#333' }}>{customer.firstName}</td>
+                          <td style={{ border: '1px solid black', padding: '10px', textAlign: 'left', fontWeight: 'bold', color: '#333' }}>{customer.lastName}</td>
                           <td style={{ border: '1px solid black', padding: '10px', textAlign: 'left', fontWeight: 'bold', color: '#333' }}>{customer.customerContactNumber}</td>
                           <td style={{ border: '1px solid black', padding: '10px', textAlign: 'left', fontWeight: 'bold', color: '#333' }}>{customer.customerAddress}</td>
                           <td style={{ border: '1px solid black', padding: '10px', textAlign: 'left', fontWeight: 'bold', color: '#333' }}>
@@ -207,7 +230,7 @@ const CustomerList: React.FC = () => {
                 </Grid>
               </Grid>
             </div>
-          </div>
+          </Container>
         </StyledCard>
       </StyleGrid>
 

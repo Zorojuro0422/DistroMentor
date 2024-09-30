@@ -16,7 +16,7 @@ public interface OrderRepository extends MongoRepository<Order, String> {
 
     List<Order> findAllByDistributor_Distributorid(String distributorId);
 
-
+    List<Order> findAllByDealerDealeridAndIsconfirmedTrue(String dealerid);
 
     Order findByDistributor_Distributorid(String distributorId);
 

@@ -47,9 +47,11 @@ import AddProduct from '../Components/Module 2 - Registrations/AddProductUI';
 import ProductList from '../Components/Module 4 - Profiles & Approval/ProductListUI';
 import UpdateProduct from '../Components/Module 2 - Registrations/UpdateProduct';
 import UpdateCustomer from '../Components/Module 4 - Profiles & Approval/UpdateCustomer';
-import CustomerRegistration from '../Components/Module 2 - Registrations/CustomerRegistration';
+import CustomerRegistration from '../Components/Module 5 - Product Distribution and Confirmation/CustomerRegistration';
+import DealerProductList from '../Components/Module 5 - Product Distribution and Confirmation/DealerProductList';
+import CustomerOrderForm from '../Components/Module 5 - Product Distribution and Confirmation/CustomerOrderForm';
 import CustomerList from '../Components/Module 4 - Profiles & Approval/CustomerList';
-
+import Customer from '../Components/Module 4 - Profiles & Approval/Customer';
 
 export default function MainRoutes() {
 
@@ -69,7 +71,6 @@ export default function MainRoutes() {
                     <Route path="/DealerRegistration" element={<DealerRegistration />} />
                     <Route path="/DistributorRegistration" element={<DistributorRegistration />} />
                     <Route path="/ThankYou" element={<><ScrollToTop/><ThankYouScreen /></>} />
-                    <Route path="/customerRegistration" element={<CustomerRegistration />} />
                 </Route>
 
                 {/* <SigninScreen/> */}
@@ -81,8 +82,13 @@ export default function MainRoutes() {
                         <Route path="/" element={<ContentDealer/>}>
                             <Route path="/" element={<><ScrollToTop/><Navigate replace to="dealerOrderForm" /></>} />
                             <Route path="/dealerOrderForm" element={<><ScrollToTop/><DealerOrderForm /></>} />
-                            <Route path="/customerRegistration" element={<><ScrollToTop/><CustomerRegistration/></>} />
+                            <Route path="/customerOrderForm" element={<><ScrollToTop/><CustomerOrderForm /></>} />
+                            <Route path="/customerRegistration" element={<CustomerRegistration />} />
+                            <Route path="/dealerProduct" element={<DealerProductList />} />
+                            <Route path="/customerlist" element={<CustomerList />} />
+                            <Route path="/update_customer/:customerID" element={<UpdateCustomer />} />
                             <Route path="/dealerProfileDetails/:objectId" element={<><ScrollToTop/><DealerProfileDetails/></>} />
+
                         </Route>
                     )}
 
@@ -101,14 +107,12 @@ export default function MainRoutes() {
                             {/* CRUD PRODUCTS */}
                             <Route path="/addproduct" element={<AddProduct />} />
                             <Route path="/productlist" element={<ProductList />} />
-                            <Route path="/customerlist" element={<CustomerList />} />
                             <Route path="/update_product/:productId" element={<UpdateProduct />} />
-                            <Route path="/update_customer/:customerID" element={<UpdateCustomer />} />
                             <Route path="/distributorOrderForm" element={<><ScrollToTop/><DistributorOrderForm/></>} />
                             <Route path="/orderConfirmation/:objectId" element={<><ScrollToTop/><OrderConfirmation /></>} />
                             <Route path="/productDistributionList" element={<ProductDistributionList />} />
                             <Route path="/orderTransactionDetails/:objectId" element={<><ScrollToTop/><OrderTransactionDetails /></>} />
-
+                            <Route path="/customer/:objectId" element={<Customer />} />
                             <Route path="/dealerProfileList" element={<DealerProfileListUI />} />
                             <Route path="/dealerProfileDetails/:objectId" element={<><ScrollToTop/><DealerProfileDetails /></>}></Route>
                             <Route path="/dealerRegistration" element={<DealerRegistration/>} />

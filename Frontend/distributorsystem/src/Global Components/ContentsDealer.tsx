@@ -12,6 +12,7 @@ export default function ContentDealer() {
         const navPageMapping: Record<string, string> = {
             '/dealerProfile': 'Dealer Profile',
             '/dealerOrderForm': 'Dealer Order Form',
+            '/customerRegistration': 'Customer Registration Form',
         };
         const navpage = navPageMapping[path] || 'Unknown';
         return navpage;
@@ -21,7 +22,12 @@ export default function ContentDealer() {
       const path=location.pathname;
       const navPageNameMapping: Record<string,string>={
           '/dealerOrderForm':'Product Distribution Form',
+          '/customerRegistration': 'Customer Registration Form',
+          '/dealerProduct': 'Dealer Products',
+          '/customerlist': 'Customer List',
+          '/customerOrderForm': 'Customer Order',
           [`/dealerProfileDetails/${objectId}`] : 'Dealer Information',
+          [`/update_customer/${objectId}`] : 'Update a Customer',
           [`/employeeProfileDetails/${objectId}`] : 'Employee Information',
           [`/orderDetails/${objectId}`] : 'Order Transaction Details',
           [`/orderTransactionDetails/${objectId}`] : 'Order Transaction Details',
@@ -39,8 +45,13 @@ export default function ContentDealer() {
     const path=location.pathname;
   
     const navPageContentMapping: Record<string,string>={
-        '/dealerOrderForm':'Allocate a product to generate a your order.',
+        '/dealerOrderForm':'Allocate a product to generate your order.',
+        '/customerRegistration':'Creating Customer of the dealer',
+        '/dealerProduct':'Dealer available products',
+        '/customerlist': 'Viewing of customer of the specific dealer',
+        '/customerOrderForm': 'Creating an Order of the customer',
         [`/dealerProfileDetails/${objectId}`]  : `View dealer profile details - ${objectId}`,
+        [`/update_customer/${objectId}`]  : `Updating the customer selected - ${objectId}`,
         [`/employeeProfileDetails/${objectId}`] : `View employee profile details - ${objectId}`,
         [`/orderDetails/${objectId}`] : `View dealer's order transaction details - Order Transaction ID: ${objectId}`,
         [`/orderTransactionDetails/${objectId}`] : `View dealer's order transaction details - Order Transaction ID:  ${objectId}`  ,

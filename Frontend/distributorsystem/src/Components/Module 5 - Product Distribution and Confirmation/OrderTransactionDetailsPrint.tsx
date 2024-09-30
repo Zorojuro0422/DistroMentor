@@ -1,6 +1,5 @@
-import { Button, Grid, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, styled } from "@mui/material"
+import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, styled } from "@mui/material";
 import { IOrder } from "../../RestCalls/Interfaces";
-
 
 const ContentNameTypography = styled(Typography)({
     marginTop: 60,
@@ -14,75 +13,34 @@ const ContentNameTypography = styled(Typography)({
 
 const StyldeInfoHeader = styled(Typography)({
     marginTop: '35px',
-    marginBottom: '130px',
-    marginLeft: 120,
+    marginLeft: '80px',
     fontFamily: 'Inter',
     fontWeight: 'bold',
     textAlign: 'left',
     fontSize: '20px',
     color: '#203949'
 })
-const StackStyle = styled(Stack)({
-    position: 'absolute',
-    top: '230px',
-    left: '-12%',
-    fontFamily: 'Inter',
 
-})
-const StyleLabel = styled(Typography)({
-    position: 'absolute',
-    textAlign: 'left',
+const InfoGrid = styled(Grid)({
+    marginTop: '20px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '0 10%',
+});
+
+const InfoLabel = styled(Typography)({
     fontWeight: '550',
-    left: '32px',
     color: '#707070',
     fontSize: '15px',
-    width: 'max-content',
     fontFamily: 'Inter',
-    top:-80,
-})
-const StyleData = styled(Typography)({
-    position: 'absolute',
-    textAlign: 'left',
-    width: 200,
-    left: '50px',
-    top: '-50px',
+});
+
+const InfoData = styled(Typography)({
     color: '#203949',
     fontSize: '15px',
     fontFamily: 'Inter',
-  })
-
-const StyleTotalLabel = styled(Typography)({
-    position: 'absolute',
-    textAlign: 'left',
-    fontWeight: '550',
-    top: '2px',
-    left: '-225px',
-    color: '#707070',
-    fontSize: '20px',
-    width: 'max-content',
-    fontFamily: 'Inter',
-})
-
-const StyleTotalData = styled(Typography)({
-    position: 'absolute',
-    textAlign: 'center',
-    left: '33px',
-    top: '1px',
-    color: '#203949',
-    fontSize: '20px',
-    fontWeight: '250',
-    fontFamily: 'Inter'
-})
-
-const StyleTotalPaper = styled(Paper)({
-    backgroundColor: '#ffffff',
-    border: 'light',
-    borderRadius: '20px',
-    position: 'absolute',
-    width: '150px',
-    height: '35px',
-    left: '5px',
-})
+    fontWeight: '400',
+});
 
 const TableHeaderCell = styled(TableCell)({
     fontSize: 15,
@@ -91,64 +49,72 @@ const TableHeaderCell = styled(TableCell)({
     textAlign: 'center'
 });
 
-export default function OrderTransactionDetailsPrint({ order}: { order: IOrder}) {
-
-  
-    
+export default function OrderTransactionDetailsPrint({ order }: { order: IOrder }) {
     return (
         <div>
             <StyldeInfoHeader>Dealer Contact Information</StyldeInfoHeader>
-            <StackStyle sx={{ left: '8%' }}>
-                <StyleLabel>Dealer Name</StyleLabel>
-                <StyleData>{order?.dealer.firstname} {order?.dealer.middlename} {order?.dealer.lastname}</StyleData>
-            </StackStyle>
-            <StackStyle sx={{ left: '28%' }}>
-                <StyleLabel>Dealer ID</StyleLabel>
-                <StyleData>{order?.dealer.dealerid}</StyleData>
-            </StackStyle>
-            <StackStyle sx={{ left: '42%' }}>
-                <StyleLabel>Contact Number</StyleLabel>
-                <StyleData>{order?.dealer.contactnumber}</StyleData>
-            </StackStyle>
-            <StackStyle sx={{ left: '59%' }}>
-                <StyleLabel>Email Address</StyleLabel>
-                <StyleData>{order?.dealer.emailaddress}</StyleData>
-            </StackStyle>
-            <StackStyle sx={{ left: '76%' }}>
-                <StyleLabel>Current Address</StyleLabel>
-                <StyleData>{order?.dealer.currentaddress}</StyleData>
-            </StackStyle>
-            <StyldeInfoHeader>Order Transaction Information</StyldeInfoHeader>
-            {/* set style left and top manually here in stack */}
-            <StackStyle sx={{ left: '8%', top: '390px' }}>
-                <StyleLabel>Order Transaction ID</StyleLabel>
-                <StyleData>{order?.orderid}</StyleData>
-            </StackStyle>
-            <StackStyle sx={{ left: '25%', top: '390px' }}>
-                <StyleLabel>Order Distribution Date</StyleLabel>
-                <StyleData>{order?.orderdate}</StyleData>
-            </StackStyle>
-            <StackStyle sx={{ left: '45%', top: '390px' }}>
-                <StyleLabel>Total Ordered Amount</StyleLabel>
-                <StyleData>Php {order?.orderamount}</StyleData>
-            </StackStyle>
-            <StackStyle sx={{ left: '63%', top: '390px' }}>
-                <StyleLabel>Penalty Rate</StyleLabel>
-                <StyleData>{order?.penaltyrate} %</StyleData>
-            </StackStyle>
-            <StackStyle sx={{ left: '76%', top: '390px' }}>
-                <StyleLabel>Payment Terms</StyleLabel>
-                <StyleData>{order?.paymentterms} Gives</StyleData>
-            </StackStyle>
-            <StyldeInfoHeader sx={{marginTop: '24px',}}>Order Breakdown</StyldeInfoHeader>
 
-            <Grid container sx={{ display: "flex", justifyContent: "center", marginTop: '-100px' }}>
-                <Grid item >
-                    <Paper sx={{ marginLeft:9,backgroundColor: '#ffffff', borderRadius: "22px", height: "215px", justifyContent: 'center', display: 'flex', alignItems: 'left', position: 'relative', width: '950px' }}>
+            {/* Dealer Info Grid */}
+            <InfoGrid container>
+                <Grid item>
+                    <InfoLabel>Dealer Name:</InfoLabel>
+                    <InfoData>{order?.dealer.firstname} {order?.dealer.middlename} {order?.dealer.lastname}</InfoData>
+                </Grid>
+                <Grid item>
+                    <InfoLabel>Dealer ID:</InfoLabel>
+                    <InfoData>{order?.dealer.dealerid}</InfoData>
+                </Grid>
+                <Grid item>
+                    <InfoLabel>Contact Number:</InfoLabel>
+                    <InfoData>{order?.dealer.contactnumber}</InfoData>
+                </Grid>
+                <Grid item>
+                    <InfoLabel>Email Address:</InfoLabel>
+                    <InfoData>{order?.dealer.emailaddress}</InfoData>
+                </Grid>
+                <Grid item>
+                    <InfoLabel>Current Address:</InfoLabel>
+                    <InfoData>{order?.dealer.currentaddress}</InfoData>
+                </Grid>
+            </InfoGrid>
 
+            <StyldeInfoHeader sx={{ marginTop: '24px' }}>Order Transaction Information</StyldeInfoHeader>
+
+            {/* Order Info Grid */}
+            <InfoGrid container>
+                <Grid item>
+                    <InfoLabel>Order Transaction ID:</InfoLabel>
+                    <InfoData>{order?.orderid}</InfoData>
+                </Grid>
+                <Grid item>
+                    <InfoLabel>Order Distribution Date:</InfoLabel>
+                    <InfoData>{order?.orderdate}</InfoData>
+                </Grid>
+                <Grid item>
+                    <InfoLabel>Total Ordered Amount:</InfoLabel>
+                    <InfoData>₱ {order?.orderamount}</InfoData>
+                </Grid>
+            </InfoGrid>
+
+            <StyldeInfoHeader>Order Breakdown</StyldeInfoHeader>
+
+            <Grid container sx={{ display: "flex", justifyContent: "center", marginTop: '-50px' }}>
+                <Grid item>
+                    <Paper
+                        sx={{
+                            marginTop: 8,
+                            backgroundColor: '#ffffff',
+                            borderRadius: "22px",
+                            justifyContent: 'center',
+                            width: '840px',
+                            maxHeight: '80vh',  // Limit the maximum height to fit on a single page
+                            overflowY: 'auto',    // Allow scrolling if content exceeds the height
+                            pageBreakInside: 'avoid'
+                        }}
+                    >
                         <TableContainer>
                             <Table aria-label='simple table'>
-                                <TableHead >
+                                <TableHead>
                                     <TableRow>
                                         <TableHeaderCell align="center">Quantity</TableHeaderCell>
                                         <TableHeaderCell align="center">Unit</TableHeaderCell>
@@ -158,27 +124,28 @@ export default function OrderTransactionDetailsPrint({ order}: { order: IOrder})
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {order.orderedproducts.map((op,) => (
-                                        <TableRow>
+                                    {order.orderedproducts.map((op, index) => (
+                                        <TableRow key={index}>
                                             <TableCell align='center'>{op.quantity}</TableCell>
                                             <TableCell align='center'>{op.product.unit}</TableCell>
                                             <TableCell align='center'>{op.product.name}</TableCell>
-                                            <TableCell align='center'>{op.product.price}</TableCell>
-                                            <TableCell align='center'>Php {op.product.price * op.quantity}</TableCell>
+                                            <TableCell align='center'>₱ {op.product.price.toFixed(2)}</TableCell>
+                                            <TableCell align='center'>₱ {(op.product.price * op.quantity).toFixed(2)}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
                             </Table>
                         </TableContainer>
-                        <StackStyle sx={{ left: '80%', top: '230px' }}>
-                            <StyleTotalLabel>Total Ordered Amount:</StyleTotalLabel>
-                            <StyleTotalPaper>
-                                <StyleTotalData>Php {order?.orderamount}</StyleTotalData>
-                            </StyleTotalPaper>
-                        </StackStyle>
+
+                        {/* Total Ordered Amount */}
+                        <Grid container sx={{ justifyContent: 'flex-end', paddingRight: '20px', paddingTop: '20px' }}>
+                            <Typography sx={{ fontWeight: 'bold', fontSize: '18px', color: '#203949' }}>
+                                Total Ordered Amount: ₱ {order?.orderamount?.toFixed(2)}
+                            </Typography>
+                        </Grid>
                     </Paper>
                 </Grid>
             </Grid>
         </div>
-    )
+    );
 }

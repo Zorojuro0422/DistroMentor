@@ -335,18 +335,12 @@ export default function ProductDistributionList() {
     return (
         <div>
             <StyledCard>
-                <StyledAddButton onClick={() => {
-                    navigate("/distributorOrderForm");
-                }}>
-                    Add new Product Distribution
-                    <AddIcon style={{ marginTop: -5, marginLeft: 3, height: 20, width: 'auto', fontWeight: 'bolder' }} />
-                </StyledAddButton>
+
                 <Box sx={{ width: '100%', marginTop: 2, marginLeft: 0.5 }}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" style={{ marginLeft: 40 }}>
                             <TabStyle label="Confirmed Orders" {...a11yProps(0)} />
                             <TabStyle label="Pending Orders" {...a11yProps(1)} />
-                            <TabStyle label="Closed Orders" {...a11yProps(2)} />
                         </Tabs>
                     </Box>
                     <CustomTabPanel value={value} index={0}>

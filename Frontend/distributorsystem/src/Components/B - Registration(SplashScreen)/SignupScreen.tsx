@@ -5,15 +5,17 @@ import distributor from '../../Global Components/Images/distributor.png'
 
 import { Button, Card, Typography, styled } from '@mui/material'
 import { Link, useNavigate } from 'react-router-dom'
-const Logo=styled(Typography)({
-    margin:'5% 10% 0 5% ',
+
+const Logo = styled(Typography)({
+    margin: '5% 10% 0 5%',
     display: 'flex',
-    fontFamily:'Inter, sans-serif',
-    fontWeight:'bold',
-    fontSize:'25px',
-    color:'#203949',
-    justifyContent:'space-between',
+    fontFamily: 'Inter, sans-serif',
+    fontWeight: 'bold',
+    fontSize: '25px',
+    color: '#203949',
+    justifyContent: 'space-between',
 })
+
 const ContentNameTypography = styled(Typography)({
     marginTop: 10,
     fontFamily: 'Inter, sans-serif',
@@ -49,12 +51,12 @@ const CardStyle=styled(Card)({
     display:'flex',
     borderRadius:25,
     backgroundColor:'#2D85E7',
-    
+
 })
 const ButtonStyle=styled(Button)({
-    width:200, 
+    width:200,
     height:50,
-    color:'#203949', 
+    color:'#203949',
     fontWeight:'bold',
     fontFamily:'Inter, sans-serif',
     fontSize:'20px',
@@ -66,7 +68,7 @@ const ButtonStyle=styled(Button)({
     transition: 'all 0.4s'
 })
 export default function SignupScreen(){
-     
+
     const navigate = useNavigate();
     const handleDealerButtonClick = () => {
         navigate(`/DealerRegistration`)
@@ -80,14 +82,14 @@ export default function SignupScreen(){
     const welcomehandler=()=>{
         navigate(`/WelcomeScreen`)
     }
-   
+
     return(
         <div>
-            {/** Logo*/}
-            <Logo sx={{cursor:'pointer'}}>
-                <img onClick={welcomehandler} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" style={{ height: '150px', width: '270px', marginTop: '-5%' }} /> {/**Placeholder */}
-            {/** Sign-In*/}
-                    <ButtonStyle onClick={signInHandler}>Sign In</ButtonStyle>
+             {/** Logo */}
+            <Logo sx={{ cursor: 'pointer' }}>
+                <img onClick={welcomehandler} src={logo5} alt="Logo" style={{ height: '150px', width: '270px', marginTop: '-3.5%' }} /> {/** Updated logo5 */}
+                {/** Sign-In */}
+                <ButtonStyle onClick={signInHandler}>Sign In</ButtonStyle>
             </Logo>
             <ContentNameTypography>Tell us About Yourself</ContentNameTypography>
             <LabelTypography>Choose Who You Want to Sign Up As</LabelTypography>

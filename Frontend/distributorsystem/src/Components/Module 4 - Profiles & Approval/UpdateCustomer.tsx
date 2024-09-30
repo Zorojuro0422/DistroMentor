@@ -1,15 +1,16 @@
 import styled from "@emotion/styled";
 import { Alert, AlertTitle, Button, FormHelperText, Grid, Snackbar, TextField, Typography, Card } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import dealer1 from '../../Global Components/Images/dealer1-2.png'
-import logo4 from '../../Global Components/Images/logo4.png'
+import dealer1 from '../../Global Components/Images/dealer1-2.png';
+import logo4 from '../../Global Components/Images/logo4.png';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from "axios";
 
 interface Customer {
   customerID: string;
   dealerID: string;
-  customerName: string;
+  firstName: string;
+  lastName: string;
   customerContactNumber: string;
   customerAddress: string;
 }
@@ -19,7 +20,7 @@ const StyledCard = styled(Card)({
   display: 'flex',
   marginTop: 50,
   width: '1280px',
-  height: '800px',
+  height: '600px',
   alignItems: 'center',
   borderRadius: '25px',
   justifyContent: 'left',
@@ -69,21 +70,23 @@ const UpdateCustomer: React.FC = () => {
   const [customer, setCustomer] = useState<Customer>({
     customerID: '',
     dealerID: '',
-    customerName: '',
+    firstName: '',
+    lastName: '',
     customerContactNumber: '',
     customerAddress: '',
   });
   const [updateSuccess, setUpdateSuccess] = useState<boolean>(false);
   const [fieldWarning, setFieldWarning] = useState({
-    customerName: '',
+    firstName: '',
+    lastName: '',
     dealerID: '',
     customerContactNumber: '',
     customerAddress: '',
   });
 
   useEffect(() => {
-    fetchCustomer();
-  }, []);
+      fetchCustomer();
+    }, []);
 
   const fetchCustomer = async () => {
     try {
@@ -95,9 +98,10 @@ const UpdateCustomer: React.FC = () => {
   };
 
   const handleUpdate = async () => {
-    if (!customer.customerName || !customer.dealerID || !customer.customerContactNumber || !customer.customerAddress) {
+    if (!customer.firstName || !customer.lastName || !customer.dealerID || !customer.customerContactNumber || !customer.customerAddress) {
       setFieldWarning({
-        customerName: !customer.customerName ? 'Customer Name is required' : '',
+        firstName: !customer.firstName ? 'First Name is required' : '',
+        lastName: !customer.lastName ? 'Last Name is required' : '',
         dealerID: !customer.dealerID ? 'Dealer ID is required' : '',
         customerContactNumber: !customer.customerContactNumber ? 'Customer Contact Number is required' : '',
         customerAddress: !customer.customerAddress ? 'Customer Address is required' : '',
@@ -157,9 +161,15 @@ const UpdateCustomer: React.FC = () => {
             <div style={{ paddingTop: 30, paddingBottom: 50 }}>
               <Grid container spacing={3}>
                 <Grid item xs={12}>
-                  <StyledTextField variant="outlined" label="Customer Name" name="customerName" style={{ width: '700px' }} value={customer.customerName} onChange={handleChange} />
+                  <StyledTextField variant="outlined" label="First Name" name="firstName" style={{ width: '700px' }} value={customer.firstName} onChange={handleChange} />
                   <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
-                    {fieldWarning.customerName}
+                    {fieldWarning.firstName}
+                  </FormHelperText>
+                </Grid>
+                <Grid item xs={12}>
+                  <StyledTextField variant="outlined" label="Last Name" name="lastName" style={{ width: '700px' }} value={customer.lastName} onChange={handleChange} />
+                  <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
+                    {fieldWarning.lastName}
                   </FormHelperText>
                 </Grid>
                 <Grid item xs={12}>
@@ -189,15 +199,18 @@ const UpdateCustomer: React.FC = () => {
             </div>
           </div>
         </StyledCard>
-        <Snackbar open={updateSuccess} autoHideDuration={3000} onClose={() => setUpdateSuccess(false)} anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center'
-        }}>
-          <Alert onClose={() => setUpdateSuccess(false)} severity="success" sx={{ width: 500 }}>
-            <AlertTitle style={{ textAlign: 'left', fontWeight: 'bold' }}>Success</AlertTitle>
-            Customer Updated Successfully!
-          </Alert>
-        </Snackbar>
+       <Snackbar
+         open={updateSuccess}
+         autoHideDuration={3000}
+         onClose={() => setUpdateSuccess(false)}
+         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+         style={{ marginTop: 60 }} // Adjust the value as needed
+       >
+         <Alert onClose={() => setUpdateSuccess(false)} severity="success" sx={{ width: 500 }}>
+           <AlertTitle style={{ textAlign: 'left', fontWeight: 'bold' }}>Success</AlertTitle>
+           Customer Updated Successfully!
+         </Alert>
+       </Snackbar>
       </StyleGrid>
     </div>
   );

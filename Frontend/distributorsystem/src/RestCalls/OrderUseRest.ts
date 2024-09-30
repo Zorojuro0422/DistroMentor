@@ -41,9 +41,10 @@ export const useRestOrder = (): [
             penaltyrate: order.penaltyrate,
             paymentterms: order.paymentterms,
             orderdate: order.orderdate,
+            orderamount: order.orderamount,
             orderedproducts: order.orderedproducts,
             distributor: {
-                dealerid: order.distributor.distributorid,
+                distributorid: order.distributor.distributorid,
                 firstname: order.distributor.firstname,
                 middlename: order.distributor.middlename,
                 lastname: order.distributor.lastname,

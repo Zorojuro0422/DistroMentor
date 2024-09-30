@@ -21,12 +21,6 @@ public class Product {
 
     private Set<String> orderedproductids;
 
-    //private Set<OrderedProduct> orderedProducts;
-
-    /*@OneToMany(mappedBy = "product")
-    @JsonIgnore
-    //@JsonBackReference // you inform Jackson to handle the serialization appropriately and break the infinite recursion.
-    private Set<OrderedProduct> orderedProducts;*/
 
 
     public Product() {

@@ -1,20 +1,26 @@
 import { Button, Grid, Icon, Typography, styled } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import Splash from '../../Global Components/Images/Splash.png'
+import Splash from '../../Global Components/Images/Splash.png';
+import logo4 from '../../Global Components/Images/logo4.png';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import axios from "axios";
 import { IDistributor } from "../../RestCalls/Interfaces";
 import { useEffect, useState } from "react";
 
-const Logo=styled(Typography)({
-    margin:'5% 10% 0 5% ',
-    display: 'flex',
-    fontFamily: 'Inter, sans-serif',
-    fontWeight: 'bold',
-    fontSize: '25px',
-    color: '#203949',
-    justifyContent: 'space-between',
-})
+const LogoContainer = styled('div')({
+  display: 'flex',
+  alignItems: 'center', // Vertically align the logo and button
+  justifyContent: 'space-between', // Spread the logo and button apart
+  width: '100%',
+  padding: '20px', // Adjust padding as needed
+});
+
+const LogoImage = styled('img')({
+  height: '170px',
+  width: '300px',
+});
+
+
 const ImageStyles = styled(Typography)({
     position: 'relative',
     display: 'flex',
@@ -75,25 +81,20 @@ const SignUpButton = styled(Button)({
     },
     transition: 'all 0.4s'
 })
+
 const SignInButton = styled(Button)({
-    width: 200,
-    height: 0,
-    color: '#ffffff',
-    fontWeight: 'bold',
-    fontFamily: 'Inter, sans-serif',
-    fontSize: '20px',
-    top:10,
-    left: 60,
-    position: 'relative',
-    display: 'flex',
-    justifyContent:'center' ,
-    textDecorationLine: 'underline',
-    ':hover': {
-        backgroundColor: 'rgba(45, 133, 231, 0)',
-        transform: 'scale(1.1)'
-    },
-    transition: 'all 0.4s'
-})
+  color: '#ffffff',
+  fontWeight: 'bold',
+  fontFamily: 'Inter, sans-serif',
+  fontSize: '20px',
+  right: '150px',
+  textDecoration: 'underline',
+  ':hover': {
+    backgroundColor: 'rgba(45, 133, 231, 0)',
+    transform: 'scale(1.1)',
+  },
+  transition: 'all 0.4s',
+});
 
 const ContentFieldGrid = styled(Grid)({
     position: 'relative',
@@ -103,14 +104,14 @@ const ContentFieldGrid = styled(Grid)({
 })
 export default function WelcomeScreen(){
    const navigate=useNavigate();
-  
+
    const signUpHandler=()=>{
     navigate(`/SignUpScreen`)
    }
    const signInHandler=()=>{
     navigate(`/SignIn`)
    }
-   
+
 
    const [distributorsss, setDistributorsss] = useState<IDistributor[]>([]);
     function getAllDistributors() {
@@ -123,26 +124,22 @@ export default function WelcomeScreen(){
 
                 // alert("Error retrieving payment receipts. Please try again.");
             });
-    } 
-    
+    }
+
 
     useEffect(() => {
-      
+
 
         getAllDistributors();
         console.log(distributorsss);
     }, []);
-   
+
     return(
         <div style={{ background: 'linear-gradient(#004AAD,#5DE0E6  )', width: '100vw', height: '100vh', position: 'fixed', }}>
-            {/* <Button variant="contained" onClick={signUpHandler}>Sign up</Button>
-            <Button variant="contained" onClick={signInHandler}>Sign in</Button> */}
-            {/** Logo*/}
-            <Logo>
-                <div style={{ height: '150px', width: '270px', marginTop: '-5%' }}></div>  {/* Placeholder */}
-                {/** Sign-In*/}
-                <SignInButton onClick={signInHandler}>Sign In</SignInButton>
-            </Logo>
+           <LogoContainer>
+                  <LogoImage src={logo4} alt="Logo" />
+                  <SignInButton onClick={signInHandler}>Sign In</SignInButton>
+           </LogoContainer>
             <SplashGrid item container>
                 <ContentFieldGrid container spacing={8}>
                     <Grid item>

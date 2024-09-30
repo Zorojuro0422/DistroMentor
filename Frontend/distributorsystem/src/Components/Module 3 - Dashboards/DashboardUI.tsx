@@ -52,7 +52,6 @@ const ViewOrdersTypo = styled(Typography)({
     position: 'absolute',
     top: '85%',
     cursor:'pointer',
-    left: '30%',
     fontFamily: 'Inter, sans - serif',
     fontWeight: 'bold',
     fontSize: '15px',
@@ -175,10 +174,20 @@ const PendingDealerGrid = styled(Grid)({
 export default function Dashboard() {
 
     const navigate = useNavigate();
-
+    const [page, setPage] = useState(0);
+    const rowsPerPage = 5;
     const [unconfirmedDealers, setUnconfirmedDealers] = useState<IDealer[]>();
     const [unconfirmedOrders, setUnconfirmedOrders] = useState<IOrder[]>();
     const [unconfirmedCollectionPaymentReceipts, setUnconfirmedCollectionPaymentReceipts] = useState<ICollectionPaymentReceipt[]>();
+    const paginatedOrders = unconfirmedOrders?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+    const emptyRows = rowsPerPage - (paginatedOrders?.length || 0);
+    const handleRowClick = (orderId: string) => {
+            navigate(`/orderConfirmation/${orderId}`);
+        };
+    const handleChangePage = (event: unknown, newPage: number) => {
+            setPage(newPage);
+        };
+    const [hoveredRow, setHoveredRow] = useState<string | null>(null);
 
 
     const userFromStorage = JSON.parse(localStorage.getItem("user")!);
@@ -252,20 +261,56 @@ export default function Dashboard() {
                                             <TableHeaderCell align='center'>Dealer Name</TableHeaderCell>
                                         </TableRow>
                                     </TableHead>
-                                    <TableBody>
+                                     <TableBody>
                                         {unconfirmedOrders?.slice(0, 5).map((order) => (
-                                            <TableRow key={order.orderid}>
-                                                <TableCell align="left">{order.orderid}</TableCell>
-                                                <TableCell align="left">{order.orderdate}</TableCell>
-                                                <TableCell align="left">{order.orderamount}</TableCell>
-                                                <TableCell align="left">{order.dealer.firstname + " " + order.dealer.lastname}</TableCell>
-
+                                            <TableRow
+                                                key={order.orderid}
+                                                onClick={() => handleRowClick(order.orderid)}
+                                                onMouseEnter={() => setHoveredRow(order.orderid)} // Set hovered row ID
+                                                onMouseLeave={() => setHoveredRow(null)} // Reset hovered row ID
+                                                style={{
+                                                    cursor: 'pointer',
+                                                    transition: 'color 0.3s ease', // Smooth transition for text color change
+                                                }}
+                                            >
+                                                <TableCell
+                                                    align="center"
+                                                    style={{
+                                                        color: hoveredRow === order.orderid ? 'blue' : 'inherit', // Change text color on hover
+                                                    }}
+                                                >
+                                                    {order.orderid}
+                                                </TableCell>
+                                                <TableCell
+                                                    align="center"
+                                                    style={{
+                                                        color: hoveredRow === order.orderid ? 'blue' : 'inherit', // Change text color on hover
+                                                    }}
+                                                >
+                                                    {order.orderdate}
+                                                </TableCell>
+                                                <TableCell
+                                                    align="center"
+                                                    style={{
+                                                        color: hoveredRow === order.orderid ? 'blue' : 'inherit', // Change text color on hover
+                                                    }}
+                                                >
+                                                    ₱{order.orderamount}
+                                                </TableCell>
+                                                <TableCell
+                                                    align="center"
+                                                    style={{
+                                                        color: hoveredRow === order.orderid ? 'blue' : 'inherit', // Change text color on hover
+                                                    }}
+                                                >
+                                                    {order.dealer.firstname + " " + order.dealer.lastname}
+                                                </TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>
                                 </Table>
                             </TableContainer>
-                            <ViewOrdersTypo onClick={() => handleOrdersListClick()}> View all unconfirmed orders </ViewOrdersTypo>
+                            <ViewOrdersTypo onClick={() => handleOrdersListClick()}> View all orders </ViewOrdersTypo>
 
                         </PendingOrdersPaper>
                     </PendingOrdersGrid>

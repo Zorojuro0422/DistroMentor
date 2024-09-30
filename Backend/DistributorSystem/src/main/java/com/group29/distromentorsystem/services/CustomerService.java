@@ -26,12 +26,17 @@ public class CustomerService {
         return customerRepository.findById(customerID);
     }
 
+    public List<Customer> getCustomersByDealerId(String dealerId) {
+        return customerRepository.findByDealerID(dealerId);
+    }
+
     public Customer updateCustomer(String customerID, Customer customerDetails) {
         Customer customer = customerRepository.findById(customerID)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
 
         customer.setDealerID(customerDetails.getDealerID());
-        customer.setCustomerName(customerDetails.getCustomerName());
+        customer.setFirstName(customerDetails.getFirstName());
+        customer.setLastName(customerDetails.getLastName());
         customer.setCustomerContactNumber(customerDetails.getCustomerContactNumber());
         customer.setCustomerAddress(customerDetails.getCustomerAddress());
         customer.setCustomerSalesAmount(customerDetails.getCustomerSalesAmount());

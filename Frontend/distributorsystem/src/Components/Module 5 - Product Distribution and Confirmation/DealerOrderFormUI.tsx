@@ -140,7 +140,7 @@ const OverallGrid = styled(Grid)({
   justifyContent: "center",
   top: 50
 })
-const PaperStyle = styled(Paper)({  
+const PaperStyle = styled(Paper)({
   background: 'linear-gradient(50deg, rgba(255,255,255,0.4) 12%,rgba(255,255,255,0.1) 77% )',
   backgroundBlendMode: '',
   // backgroundColor:'rgb(245, 247, 249,0.4)',
@@ -390,65 +390,51 @@ export default function DealerOrderForm() {
   }
 
   const handleSaveOrder = () => {
-    // Calculate the total order amount based on orderedProducts
     if (orderedProducts.length === 0) {
       headerHandleAlert('No Ordered Products', "Please add products to your order before saving.", 'warning');
-    } else if (orderedProducts.length > 0 && isDealerFound === true) {
-      const orderAmount = orderedProducts.reduce((total, product) => {
-        return total + product.product.price * product.quantity;
-      }, 0);
+      return;
+    }
 
-      if (orderAmount < dealerRemainingCredit!) {
-        newOrder({
-          orderid: uuidv4().slice(0, 8),
-          distributiondate: selectedDate?.format('YYYY-MM-DD') || '',
-          orderdate: moment().format('YYYY-MM-DD'),
-          penaltyrate: Number(penaltyRateRef.current?.value),
-          paymentterms: paymentTerm,
-          orderamount: orderAmount,
-          distributor: dealer!.distributor!,
-          collector: null,
-          dealer: dealer!,
-          orderedproducts: orderedProducts,
-          paymenttransactions: [],
-          confirmed: false,
-          isclosed: false
-        });
+    if (!isDealerFound) {
+      headerHandleAlert('Dealer Not Found', "Cannot find the dealer. Please ensure the dealer is selected.", 'error');
+      return;
+    }
 
-        // Update product quantities
-        orderedProducts.forEach(async (orderedProduct) => {
-          try {
-            const product = orderedProduct.product;
-            const response = await axios.get<IProduct>(`http://localhost:8080/product/getAllProducts/${product.productid}`);
-            const existingQuantity = response.data.quantity; // Fetch the quantity from the response data
+    const orderAmount = orderedProducts.reduce((total, product) => {
+      return total + product.product.price * product.quantity;
+    }, 0);
 
-            const updatedQuantity = existingQuantity - orderedProduct.quantity;
 
-            await axios.put(`http://localhost:8080/product/${product.productid}`, {
-              name: product.name,
-              quantity: updatedQuantity,
-              unit: product.unit,
-              price: product.price
+    if (orderAmount > dealerRemainingCredit!) {
+      headerHandleAlert('Order Amount Exceeded Remaining Credit', "Total order amount exceeded the remaining credit (₱" + dealerRemainingCredit + "). Please adjust order amount accordingly.", 'warning');
+      return;
+    }
 
-            });
+    const newOrderObj = {
+      orderid: uuidv4().slice(0, 8),
+      distributiondate: selectedDate?.format('YYYY-MM-DD') || '',
+      orderdate: moment().format('YYYY-MM-DD'),
+      penaltyrate: Number(penaltyRateRef.current?.value),
+      paymentterms: paymentTerm,
+      orderamount: orderAmount,
+      distributor: dealer?.distributor!,
+      collector: null,
+      dealer: dealer!,
+      orderedproducts: orderedProducts,
+      paymenttransactions: [],
+      confirmed: false,
+      isclosed: false
+    };
 
-            // Successfully updated product quantity in the database
-          } catch (error) {
-            // Handle error
-            console.error('Error updating product quantity:', error);
-          }
-        });
-
-        headerHandleAlert('Success Saving Order', "Your ordered products have been successfully saved!", 'success');
-        clearInputValues();
-      } else {
-        headerHandleAlert('Order Amount Exceeded Remaining Credit', `Total order amount exceeded the remaining credit ( ₱${dealerRemainingCredit}). Please adjust order amount accordingly.`, 'warning');
-      }
-    } else {
-      headerHandleAlert('Cart is Empty.', "Order hasn't been confirmed because cart is empty. Add a product before confirming order", 'error');
+    try {
+      newOrder(newOrderObj);
+      headerHandleAlert('Success Saving Order', "Your ordered products have been successfully saved!", 'success');
+      clearInputValues();
+    } catch (error) {
+      console.error('Error saving order:', error);
+      headerHandleAlert('Error', 'Error saving order. Please try again.', 'error');
     }
   };
-
 
 
 
@@ -499,9 +485,21 @@ export default function DealerOrderForm() {
                   {orderedProducts.map((product, index) => (
                     <TableRow sx={{ backgroundColor: index % 2 === 0 ? 'inherit' : 'rgb(45, 133, 231, 0.08)' }} key={product.product.productid}>
                       <TableCell align='center' sx={{  color: "#203949" }}>
+                        {/* <input
+                          type="number"
+                          value={product.quantity}
+                          onChange={(e) => {
+                            const newValue = Number(e.target.value);
+                            if (newValue < 0) {
+                              handleUpdateQuantity(product, 0);
+                            } else {
+                              handleUpdateQuantity(product, newValue);
+                            }
+                          }}
+                        /> */}
                           <StyledNumber
                             variant="outlined"
-                            
+
                             type='number'
                             value={product.quantity}
                             style={{width:90}}
@@ -531,7 +529,8 @@ export default function DealerOrderForm() {
             <br></br>
           </Grid>
         </Grid>
-
+        <div>
+              </div>
         <SaveButton variant='contained' onClick={handleSaveOrder} disabled={!isDealerFound}>Save</SaveButton>
         {/* Alerts */}
         <Snackbar open={open} autoHideDuration={3000} onClose={handleClose} anchorOrigin={{

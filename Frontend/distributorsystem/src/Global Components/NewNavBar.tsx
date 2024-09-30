@@ -1,15 +1,9 @@
-import { Box, Button, Collapse, Drawer, List, ListItem, ListItemIcon, ListItemText, Typography, styled } from "@mui/material"
+import { Box, Button, Collapse, Drawer, List, ListItem, ListItemIcon, ListItemText, Typography, styled } from "@mui/material";
+import { ExpandLess, ExpandMore } from '@mui/icons-material/';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import logo7 from "./Images/logo7.png";
 
-import { ExpandLess, ExpandMore, Height, StarBorder } from '@mui/icons-material/';
-import { useEffect, useState } from "react"
-import { Link, useLocation, useNavigate } from "react-router-dom";
-// import logo from "./logo.png"
-import logo1 from ".Images/logo1.png"
-import logo2 from ".Images/logo2.png"
-import logo3 from ".Images/logo3.png"
-import logo7 from "./Images/logo7.png"
-
-{/** Functions for page routing */ }
 type navProps = {
     moduleName: String;
 }
@@ -21,10 +15,8 @@ interface StyledButtonProps1 {
     selected1: boolean;
 }
 
-{/** Styled box for background color of drawer */ }
 const ColorBox = styled(Box)({
     background: 'linear-gradient(to right bottom, #004AAD, #5DE0E6)',
-    // backgroundColor:'#2D85E7',
     width: '80px',
     position: 'fixed',
     display: 'flex',
@@ -36,10 +28,8 @@ const ColorBox = styled(Box)({
         width: '360px',
         height: '100vh',
     },
+});
 
-})
-
-{/** Styled typo for app name */ }
 const AppNameTypography = styled(Typography)({
     marginTop: '-65px',
     marginBottom: '-70px',
@@ -48,8 +38,8 @@ const AppNameTypography = styled(Typography)({
     alignItems: 'center',
     fontFamily: 'Inter, Sans-serif',
     fontSize: '35px'
-})
-{/** Styled item labels in drawer */ }
+});
+
 const StyledText = styled(ListItemText)<StyledButtonProps>(({ selected }) => ({
     marginTop: 10,
     marginLeft: 20,
@@ -59,8 +49,8 @@ const StyledText = styled(ListItemText)<StyledButtonProps>(({ selected }) => ({
     '& .MuiTypography-body1': {
         fontSize: '15px',
     },
+}));
 
-}))
 const StyledText1 = styled(ListItemText)<StyledButtonProps1>(({ selected1 }) => ({
     marginTop: 10,
     marginLeft: 20,
@@ -70,13 +60,12 @@ const StyledText1 = styled(ListItemText)<StyledButtonProps1>(({ selected1 }) => 
     '& .MuiTypography-body1': {
         fontSize: '15px',
     },
+}));
 
-}))
-{/** Styled list items in the drawer */ }
 const StyledListItem = styled(ListItem)({
     marginLeft: '-35px',
     marginBottom: 8,
-})
+});
 
 const StyledButton = styled(Button)<StyledButtonProps>(({ selected }) => ({
     marginLeft: -1,
@@ -87,7 +76,8 @@ const StyledButton = styled(Button)<StyledButtonProps>(({ selected }) => ({
     },
     backgroundColor: selected ? '#f5f5f5' : '',
     borderRadius: selected ? '100px 0px 0px 100px' : '0px 0px 0px 0px ',
-}))
+}));
+
 const StyledButton1 = styled(Button)<StyledButtonProps1>(({ selected1 }) => ({
     marginLeft: -1,
     width: 390,
@@ -97,43 +87,36 @@ const StyledButton1 = styled(Button)<StyledButtonProps1>(({ selected1 }) => ({
     },
     backgroundColor: selected1 ? '#f5f5f5' : '',
     borderRadius: selected1 ? '100px 0px 0px 100px' : '0px 0px 0px 0px ',
-}))
-
+}));
 
 export default function NewNavBar() {
 
     const navigate = useNavigate();
-    const route = useLocation();
-    {/** For Payments Drop Down */ }
     const [dropDownPayments, setDropDownPayments] = useState(false);
     const [dropDownProfiles, setDropDownProfiles] = useState(false);
     const [dropDownProducts, setDropDownProducts] = useState(false);
     const [selectedButton, setSelectedButton] = useState<number | null>(null);
     const [selectedButton1, setSelectedButton1] = useState<number | null>(null);
-    const [iconColor, setIconColor] = useState('#FFFFFF')
 
     function handleDropDownPayments() {
         setDropDownPayments(!dropDownPayments);
         setDropDownProfiles(false);
         setDropDownProducts(false);
-        handleButtonClick(6)
+        handleButtonClick(6);
     }
 
-
-    {/** For Profiles Drop Down */ }
     function handleDropDownProfiles() {
         setDropDownProfiles(!dropDownProfiles);
         setDropDownPayments(false);
         setDropDownProducts(false);
-        handleButtonClick(2)
+        handleButtonClick(2);
     }
 
-    {/** For Products Drop Down */ }
     function handleDropDownProducts() {
         setDropDownProducts(!dropDownProducts);
         setDropDownProfiles(false);
         setDropDownPayments(false);
-        handleButtonClick(3)
+        handleButtonClick(3);
     }
 
     const handleButtonClick = (buttonId: number) => {
@@ -141,37 +124,36 @@ export default function NewNavBar() {
 
         if (buttonId === 7) {
             localStorage.clear();
-            navigate("/SignIn")
+            navigate("/SignIn");
         }
+    };
 
-
-    }
     const handleButtonClick1 = (buttonId1: number) => {
-        setSelectedButton1(buttonId1 === selectedButton1 ? null : buttonId1);
-    }
-
+        setSelectedButton1(buttonId1 === selectedButton1 ? buttonId1 : buttonId1);
+    };
 
     const getIconColor = (buttonId: number): string => {
         return buttonId === selectedButton ? '#2D85E7' : '#FFFFFF';
-    }
+    };
 
     const handleCloseDropDownList = () => {
         setDropDownProfiles(false);
         setDropDownPayments(false);
         setDropDownProducts(false);
-    }
-    const homeHandler=()=>{
-        navigate(`/dashboard`)
-       }
+    };
+
+    const homeHandler = () => {
+        navigate(`/dashboard`);
+    };
 
     return (
         <div>
-            {/*THIS IS THE NAVBAR CONTENTS*/}
             <Drawer open={true} variant="permanent">
                 <ColorBox onMouseLeave={handleCloseDropDownList}>
-                    <AppNameTypography ><img src={logo7} onClick={homeHandler} style={{ height: '230px', width: 'auto', cursor:'pointer' }} /></AppNameTypography>
+                    <AppNameTypography>
+                        <img src={logo7} onClick={homeHandler} style={{ height: '230px', width: 'auto', cursor: 'pointer' }} />
+                    </AppNameTypography>
                     <List>
-                        {/** HOME */}
                         <Link to="/dashboard">
                             <StyledButton onClick={() => handleButtonClick(1)} selected={selectedButton === 1} focusRipple>
                                 <StyledListItem>
@@ -186,9 +168,7 @@ export default function NewNavBar() {
                             </StyledButton>
                         </Link>
 
-
-                        {/** PROFILES */}
-                        <StyledButton onClick={handleDropDownProfiles} selected={selectedButton === 2} >
+                        <StyledButton onClick={handleDropDownProfiles} selected={selectedButton === 2}>
                             <StyledListItem>
                                 <ListItemIcon>
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={getIconColor(2)} className="w-6 h-6" style={{ marginLeft: 23, width: 25, height: 25 }}>
@@ -202,25 +182,14 @@ export default function NewNavBar() {
                         </StyledButton>
                         <Collapse in={dropDownProfiles} timeout="auto" unmountOnExit>
                             <List>
-
-                                {/** DEALER PROFILES LIST */}
                                 <Link to="/dealerProfileList">
                                     <StyledButton1 onClick={() => handleButtonClick1(1)} selected1={selectedButton1 === 1}>
                                         <StyledText1 selected1={selectedButton1 === 1} sx={{ marginLeft: -2 }} primary="Dealer Profiles List" />
                                     </StyledButton1>
                                 </Link>
-
-                                {/** CUSTOMER PROFILES LIST */}
-                                <Link to="/customerList">
-                                <StyledButton1 onClick={() => handleButtonClick1(1)} selected1={selectedButton1 === 1}>
-                                    <StyledText1 selected1={selectedButton1 === 1} sx={{ marginLeft: -2 }} primary="Customer List" />
-                                </StyledButton1>
-                            </Link>
                             </List>
                         </Collapse>
 
-
-                        {/** PRODUCTS */}
                         <StyledButton1 onClick={handleDropDownProducts} selected1={selectedButton === 3}>
                             <StyledListItem>
                                 <ListItemIcon>
@@ -234,68 +203,25 @@ export default function NewNavBar() {
                         </StyledButton1>
                         <Collapse in={dropDownProducts} timeout="auto" unmountOnExit>
                             <List>
-
-                                {/* PRODUCT ENTRY */}
                                 <Link to="/addproduct">
-                                    <StyledButton1 onClick={() => handleButtonClick1(5)} selected1={selectedButton1 === 5}>
-                                        <StyledText1 selected1={selectedButton1 === 5} sx={{ marginLeft: 3 }} primary="Product Entry" />
+                                    <StyledButton1 onClick={() => handleButtonClick1(3)} selected1={selectedButton1 === 3}>
+                                        <StyledText1 selected1={selectedButton1 === 3} sx={{ marginLeft: 3 }} primary="Product Entry" />
                                     </StyledButton1>
                                 </Link>
 
-
-                                {/* PRODUCT LIST */}
                                 <Link to="/productlist">
-                                    <StyledButton1 onClick={() => handleButtonClick1(5)} selected1={selectedButton1 === 5}>
-                                        <StyledText1 selected1={selectedButton1 === 5} sx={{ marginLeft: 3 }} primary="Product List" />
-                                    </StyledButton1>
-                                </Link>
-
-
-                                {/* PRODUCT DISTRIBUTION LIST */}
-                                <Link to="/productDistributionList">
                                     <StyledButton1 onClick={() => handleButtonClick1(4)} selected1={selectedButton1 === 4}>
-                                        <StyledText1 selected1={selectedButton1 === 4} sx={{ marginLeft: 5 }} primary="Product Distribution List" />
+                                        <StyledText1 selected1={selectedButton1 === 4} sx={{ marginLeft: 3 }} primary="Product List" />
                                     </StyledButton1>
                                 </Link>
 
-
-                                {/* DISTRIBUTOR ORDER FORM */}
-                                <Link to="/distributorOrderForm">
+                                <Link to="/productDistributionList">
                                     <StyledButton1 onClick={() => handleButtonClick1(5)} selected1={selectedButton1 === 5}>
-                                        <StyledText1 selected1={selectedButton1 === 5} sx={{ marginLeft: 3 }} primary="Distributor Order Form" />
+                                        <StyledText1 selected1={selectedButton1 === 5} sx={{ marginLeft: 5 }} primary="Product Distribution List" />
                                     </StyledButton1>
                                 </Link>
                             </List>
                         </Collapse>
-
-
-                        {/** PAYMENTS */}
-                        <Link to="/paymentList">
-                            <StyledButton onClick={() => handleButtonClick(6)} selected={selectedButton === 6}>
-                                <StyledListItem>
-                                    <ListItemIcon>
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={getIconColor(6)} className="w-6 h-6" style={{ marginLeft: 23, width: 25, height: 25 }}>
-                                            <path d="M12 7.5a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5z" />
-                                            <path fillRule="evenodd" d="M1.5 4.875C1.5 3.839 2.34 3 3.375 3h17.25c1.035 0 1.875.84 1.875 1.875v9.75c0 1.036-.84 1.875-1.875 1.875H3.375A1.875 1.875 0 011.5 14.625v-9.75zM8.25 9.75a3.75 3.75 0 117.5 0 3.75 3.75 0 01-7.5 0zM18.75 9a.75.75 0 00-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 00.75-.75V9.75a.75.75 0 00-.75-.75h-.008zM4.5 9.75A.75.75 0 015.25 9h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H5.25a.75.75 0 01-.75-.75V9.75z" clipRule="evenodd" />
-                                            <path d="M2.25 18a.75.75 0 000 1.5c5.4 0 10.63.722 15.6 2.075 1.19.324 2.4-.558 2.4-1.82V18.75a.75.75 0 00-.75-.75H2.25z" />
-                                        </svg>
-                                    </ListItemIcon>
-                                    <StyledText selected={selectedButton === 6} primary="Payments" />
-                                </StyledListItem>
-                            </StyledButton>
-                        </Link>
-
-                        {/** Sign out */}
-                        <StyledButton onClick={() => handleButtonClick(7)} selected={selectedButton === 7} sx={{ marginTop: 5 }}>
-                            <StyledListItem>
-                                <ListItemIcon>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#FFFFFF" className="w-6 h-6" style={{ marginLeft: 23, width: 25, height: 25 }}>
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-                                    </svg>
-                                </ListItemIcon>
-                                <StyledText selected={selectedButton === 7} primary="Sign out" />
-                            </StyledListItem>
-                        </StyledButton>
                     </List>
                 </ColorBox>
             </Drawer>

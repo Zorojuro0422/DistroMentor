@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/DistriLink-main.iml" filepath="$PROJECT_DIR$/.idea/DistriLink-main.iml" />
       <module fileurl="file://$PROJECT_DIR$/Backend/DistributorSystem/DistributorSystem.iml" filepath="$PROJECT_DIR$/Backend/DistributorSystem/DistributorSystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/DistroMentor-Capstone.iml" filepath="$PROJECT_DIR$/.idea/DistroMentor-Capstone.iml" />
     </modules>
   </component>
 </project>

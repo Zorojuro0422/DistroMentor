@@ -31,7 +31,7 @@ const StyledCard = styled(Card)({
     display: 'flex',
     marginTop: 50,
     width: '1280px',
-    height: '800px',
+    height: '600px',
     alignItems: 'center',
     borderRadius: '25px',
     justifyContent: 'left',
@@ -342,15 +342,18 @@ const UpdateProduct: React.FC = () => {
                                     </div>
                                 </div>
                     </StyledCard>
-                          <Snackbar open={updateSuccess} autoHideDuration={3000} onClose={() => setUpdateSuccess(false)} anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'center'
-                          }}>
-                            <Alert onClose={() => setUpdateSuccess(false)} severity="success" sx={{ width: 500 }}>
-                              <AlertTitle style={{ textAlign: 'left', fontWeight: 'bold' }}>Success</AlertTitle>
-                              Product Updated Successfully!
-                            </Alert>
-                          </Snackbar>
+                      <Snackbar
+                           open={updateSuccess}
+                           autoHideDuration={3000}
+                           onClose={() => setUpdateSuccess(false)}
+                           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                           style={{ marginTop: 60 }} // Adjust the value as needed
+                         >
+                           <Alert onClose={() => setUpdateSuccess(false)} severity="success" sx={{ width: 500 }}>
+                             <AlertTitle style={{ textAlign: 'left', fontWeight: 'bold' }}>Success</AlertTitle>
+                             Product Updated Successfully!
+                           </Alert>
+                        </Snackbar>
                 </StyleGrid>
             </div>
     );

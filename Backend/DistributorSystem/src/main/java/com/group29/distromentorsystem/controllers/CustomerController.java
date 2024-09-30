@@ -7,14 +7,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 @RestController
 @CrossOrigin
-@RequestMapping("customer")
+@RequestMapping("/customer")
 public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
+
+    private static final Logger logger = Logger.getLogger(CustomerController.class.getName());
 
     @PostMapping("/createCustomer")
     public Customer createCustomer(@RequestBody Customer customer) {
@@ -42,5 +45,16 @@ public class CustomerController {
     public ResponseEntity<Void> deleteCustomer(@PathVariable String id) {
         customerService.deleteCustomer(id);
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/dealer/{dealerId}")
+    public ResponseEntity<List<Customer>> getCustomersByDealerId(@PathVariable String dealerId) {
+        logger.info("Fetching customers for dealerId: " + dealerId);
+        List<Customer> customers = customerService.getCustomersByDealerId(dealerId);
+        if (customers.isEmpty()) {
+            logger.warning("No customers found for dealerId: " + dealerId);
+            return ResponseEntity.notFound().build();
+        }
+        logger.info("Found customers for dealerId: " + dealerId);
+        return ResponseEntity.ok(customers);
     }
 }

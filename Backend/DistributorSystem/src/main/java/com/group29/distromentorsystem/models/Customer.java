@@ -1,14 +1,15 @@
 package com.group29.distromentorsystem.models;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 
 @Document("Customers")
 public class Customer {
     @Id
     private String customerID;
     private String dealerID;
-    private String customerName;
+    private String firstName;
+    private String lastName;
     private String customerContactNumber;
     private String customerAddress;
     private float customerSalesAmount;
@@ -29,12 +30,20 @@ public class Customer {
         this.dealerID = dealerID;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getCustomerContactNumber() {

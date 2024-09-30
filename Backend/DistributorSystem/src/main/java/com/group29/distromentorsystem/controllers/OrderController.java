@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin
 @RequestMapping("/order")
@@ -105,6 +107,12 @@ public class OrderController {
         return new ResponseEntity<>(orderService.getAllUnconfirmedOrdersByDistributorID(distributorid), HttpStatus.OK);
     }
 
+    // Get all confirmed orders by dealer ID
+    @GetMapping("/getAllConfirmedOrdersByDealerId/{dealerId}")
+    public ResponseEntity<List<Order>> getAllConfirmedOrdersByDealerId(@PathVariable String dealerId) {
+        List<Order> orders = orderService.getAllConfirmedOrdersByDealerId(dealerId);
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
 
     @GetMapping("/getAllCompleteOrders")
     public ResponseEntity<Object> getAllCompleteOrders(){

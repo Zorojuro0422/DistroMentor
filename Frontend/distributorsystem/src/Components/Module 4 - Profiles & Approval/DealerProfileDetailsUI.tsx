@@ -10,7 +10,6 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import profilepic from "./profilepic.png"
 import profilepicture from "../../Global Components/Images/profilepicture.png"
 import { useNavigate, useParams } from "react-router-dom";
-import { relative } from "path";
 import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
@@ -19,15 +18,26 @@ import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import logo5 from '../../Global Components/Images/logo5.png';
-
-
-
+import moment from 'moment';
+import { ToastContainer, toast } from "react-toastify";
 
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
     value: number;
 }
+
+const style = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
 
 function SlideTransitionDown(props: SlideProps) {
     return <Slide {...props} direction="down" />;
@@ -42,8 +52,7 @@ const ContentNameTypography = styled(Typography)({
     textAlign: 'left',
     fontSize: '25px',
     color: '#203949'
-})
-
+});
 
 const StyldeInfoHeader = styled(Typography)({
     marginTop: '170px',
@@ -54,13 +63,15 @@ const StyldeInfoHeader = styled(Typography)({
     textAlign: 'left',
     fontSize: '20px',
     color: '#203949'
-})
+});
+
 const StyledButton = styled(Button)({
-    backgroundColor: '#2D85E7',
+    backgroundColor: 'rgb(45, 133, 231,0.8)',
+    borderRadius: 20,
     color: '#FFFFFF',
     fontFamily: 'Inter, sans-serif',
     fontSize: '15px',
-    width: '50px',
+    width: '100px',
     height: 35,
     ':hover': {
         backgroundColor: '#2D85E7',
@@ -74,20 +85,19 @@ const StackStyle = styled(Stack)({
     top: '230px',
     left: '-12%',
     fontFamily: 'Inter',
+});
 
-})
 const StyleLabel = styled(Typography)({
-    // position: 'absolute',
     textAlign: 'left',
     fontWeight: '550',
-    // left: '165px',
     marginTop: 40,
     marginLeft: 10,
     color: '#707070',
     fontSize: '17px',
     width: 'max-content',
     fontFamily: 'Inter',
-})
+});
+
 const StyleData = styled(Typography)({
     textAlign: 'left',
     width: 250,
@@ -96,22 +106,20 @@ const StyleData = styled(Typography)({
     color: '#203949',
     fontSize: '17px',
     fontFamily: 'Inter, sans - serif',
-})
+});
+
 const StyleLabel2 = styled(Typography)({
-    // position: 'absolute',
     textAlign: 'left',
     fontWeight: '550',
-    // left: '165px',
     marginTop: 30,
     marginLeft: 210,
     color: '#707070',
     fontSize: '22px',
     width: 'max-content',
     fontFamily: 'Inter',
-})
+});
 
 const StyleMainLabel = styled(Typography)({
-    //display:'flex',
     marginTop: 160,
     textAlign: 'left',
     fontWeight: '550',
@@ -120,21 +128,18 @@ const StyleMainLabel = styled(Typography)({
     color: '#707070',
     fontSize: '18px',
     fontFamily: 'Inter',
-})
+});
+
 const StyleMainInfo = styled(Typography)({
-    //display:'flex',
     position: 'relative',
     fontWeight: '550',
     textAlign: 'left',
     marginLeft: 110,
     marginRight: 10,
-
-    // left: 565,
-    // top: 220,
     color: '#203949',
     fontSize: '18px',
     fontFamily: 'Inter',
-})
+});
 
 const StyleCredit = styled(Paper)({
     backgroundColor: '#ffffff',
@@ -149,8 +154,7 @@ const StyleCredit = styled(Paper)({
     height: '25px',
     left: '-150px',
     top: '35px',
-
-})
+});
 
 const ButtonInfo = styled(Button)({
     background: "#F5F7F9",
@@ -170,6 +174,7 @@ const ButtonInfo = styled(Button)({
     },
     transition: 'all 0.4s'
 });
+
 const IconStyle = styled(Icon)({
     color: '#2A9221',
     ':hover': {
@@ -177,7 +182,8 @@ const IconStyle = styled(Icon)({
         transform: 'scale(1.1)'
     },
     transition: 'all 0.4s'
-})
+});
+
 const IconStyle2 = styled(Icon)({
     marginLeft: 5,
     color: '#E77D7D',
@@ -186,7 +192,8 @@ const IconStyle2 = styled(Icon)({
         transform: 'scale(1.1)'
     },
     transition: 'all 0.4s'
-})
+});
+
 const ButtonCredit = styled(Button)({
     background: "#F5F7F9",
     color: "#203949",
@@ -200,6 +207,7 @@ const ButtonCredit = styled(Button)({
     },
     transition: 'all 0.4s'
 });
+
 const TabStyle = styled(Tab)({
     width: 320,
     fontWeight: '550',
@@ -208,7 +216,8 @@ const TabStyle = styled(Tab)({
         fontWeight: 'bold',
         fontFamily: 'Inter',
     }
-})
+});
+
 const ButtonClose = styled(Button)({
     backgroundColor: '#E77D7D',
     width: 40,
@@ -218,7 +227,8 @@ const ButtonClose = styled(Button)({
         transform: 'scale(1.1)'
     },
     transition: 'all 0.4s'
-})
+});
+
 const ButtonDocument = styled(Button)({
     background: "#D9D9D9",
     color: "#203949",
@@ -238,6 +248,7 @@ const ButtonDocument = styled(Button)({
     },
     transition: 'all 0.4s'
 });
+
 const ProfileCard = styled(Card)({
     display: 'flex',
     borderRadius: 22,
@@ -245,7 +256,8 @@ const ProfileCard = styled(Card)({
     height: 240,
     marginTop: 75,
     marginLeft: 160
-})
+});
+
 const ModalCard = styled(Card)({
     position: 'absolute',
     top: '50%',
@@ -256,52 +268,33 @@ const ModalCard = styled(Card)({
     backgroundColor: 'background.paper',
     border: '2px',
     p: 4,
-})
+});
 
-
-export default function DealerProfileDetails() {
-
-
+const DealerProfileDetails = () => {
     const [value, setValue] = useState(0);
-
     const [getDealerByID, getDealerByDistributor, newDealer, confirmDealer, markDealerAsPending, declineDealer, resetDealer, updateDealerCreditLimit, isDealerFound, isDealerConfirmed, dealer, dealerRemainingCredit, getDealerByIDForProfile] = useRestDealer();
-
     const [dealerDocuments, setDealerDocuments] = useState<IDealerDocument[]>([]);
-
-    // const [setDealer]= useState<>
-
     const [open, setOpen] = useState(false);
-
     const [openProfile, setOpenProfile] = useState(false);
-
     const [selectedDocument, setSelectedDocument] = useState<IDealerDocument | null>(null);
-
     const [isEditing, setIsEditing] = useState(false);
-
-    const [dealers, setDealers] = useState<IDealer[] | null>(null);
-
     const [isEditIcon, setIsEditIcon] = useState(true);
-
     const [openAlert, setOpenAlert] = useState(false);
-
     const [alerttitle, setTitle] = useState('');
-
     const [alertMessage, setAlertMessage] = useState('');
-
     const [alertSeverity, setAlertSeverity] = useState('success');
-
-    const creditLimitRef = useRef(null);
-
     const [orders, setOrders] = useState<IOrder[]>([]);
-
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [openDeclinedModal, setOpenDeclinedModal] = useState(false);
+    const [dealerId, setDealerId] = useState<string | null>(null);
+    const declineReasonRef = useRef<TextFieldProps>(null);
+    const [creditLimitModalOpen, setCreditLimitModalOpen] = useState(false);
     const navigate = useNavigate();
-
     const { objectId } = useParams();
-
     const signedInDealer = JSON.parse(localStorage.getItem("user")!);
-
-
-
+    const [selectedDealerId, setSelectedDealerId] = useState<string>("");
+    const creditLimitRef = useRef<HTMLInputElement>(null);
+    const [isUnconfirmedDealer, setIsUnconfirmedDealer] = useState(false);
     {/*Tabs*/ }
     function CustomTabPanel(props: TabPanelProps) {
         const { children, value, index, ...other } = props;
@@ -321,12 +314,14 @@ export default function DealerProfileDetails() {
             </div>
         );
     }
+
     function a11yProps(index: number) {
         return {
             id: `simple-tab-${index}`,
             'aria-controls': `simple-tabpanel-${index}`,
         };
     }
+
     {/**Handler for Alert - Function to define the type of alert*/ }
     function headerHandleAlert(title: string, message: string, severity: 'success' | 'warning' | 'error') {
         setTitle(title);
@@ -343,7 +338,6 @@ export default function DealerProfileDetails() {
         setOpenAlert(false);
     };
 
-
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
@@ -352,26 +346,23 @@ export default function DealerProfileDetails() {
         if (document) {
             setSelectedDocument(document);
             setOpen(true);
-
         }
-    }
+    };
 
     const handleCloseDocument = () => {
         setOpen(false);
-        setOpenProfile(false)
-    }
-
+        setOpenProfile(false);
+    };
 
     const getOrderByDealerId = (dealerID: string) => {
         axios.get(`http://localhost:8080/order/getOrderByDealerId/${dealerID}`)
             .then((response) => {
-
                 setOrders(response.data);
             })
             .catch((error) => {
                 console.error('Error retrieving Order by Dealer Data!')
             });
-    }
+    };
 
     function getAllDealerDocuments() {
         axios.get<IDealerDocument[]>(`http://localhost:8080/dealerdocument/findAllDocumentsByDealerId/${objectId!}`)
@@ -387,10 +378,7 @@ export default function DealerProfileDetails() {
         getDealerByIDForProfile(objectId!);
         getAllDealerDocuments();
         getOrderByDealerId(objectId!);
-
-
     };
-
 
     const business = dealer?.hasbusiness ? (
         <>
@@ -415,22 +403,14 @@ export default function DealerProfileDetails() {
                 </Grid>
             </Grid>
         </>
-    ) : (<Typography>Dealer Has No Business Information.</Typography>)
-
-
+    ) : (<Typography>Dealer Has No Business Information.</Typography>);
 
     useEffect(() => {
-
-        if (objectId !== null)
-            handleFindDealer();
-
+        if (objectId !== null) handleFindDealer();
     }, [dealer]);
-
-
 
     const displayFile = (base64Content: Uint8Array | null, fileType: string, docname: string, documentid: string, dealerparam: IDealer) => {
         if (base64Content) {
-            // Determine the appropriate way to display the file based on the file type
             if (fileType === 'application/pdf') {
                 return (
                     <ButtonDocument variant={"contained"} onClick={() => handleOpenDocument({
@@ -462,7 +442,6 @@ export default function DealerProfileDetails() {
                     </ButtonDocument>
                 );
             } else {
-                // Display a generic download link for other file types
                 if (!docname.endsWith('_profilepicture')) {
                     return (
                         <a href={`data:${fileType};base64,${base64Content}`} download={`document.${fileType}`}>
@@ -470,10 +449,8 @@ export default function DealerProfileDetails() {
                         </a>
                     );
                 }
-
             }
-        }
-        else {
+        } else {
             return <div>No content available</div>;
         }
     };
@@ -483,110 +460,102 @@ export default function DealerProfileDetails() {
         setIsEditIcon(!isEditIcon);
     };
 
-
     const handleUpdateCreditLimit = (objectId: string) => {
         const newCreditLimit = Number((creditLimitRef.current as unknown as HTMLInputElement)?.value);
 
-        // Check if the newCreditLimit is a valid number before calling the updateDealerCreditLimit
         if (!isNaN(newCreditLimit)) {
             updateDealerCreditLimit(objectId, newCreditLimit);
-            setIsEditing(false); // Assuming you want to exit editing mode after updating
+            setIsEditing(false);
             setIsEditIcon(!isEditIcon);
-
         } else {
-            // Handle the case where the input is not a valid number
-            // You may want to display an error message or take other appropriate action
             console.error('Invalid credit limit input');
         }
     };
 
     const handleCancelEdit = () => {
         setIsEditing(false);
-        // Reset the edited credit limit to the current value.
         setIsEditIcon(true);
-
     };
 
     const handleViewButtonClick = (objectId: string) => {
-
-        // Use the `navigate` function to navigate to the details page with the objectId as a parameter
-
         navigate(`/orderTransactionDetails/${objectId}`);
     };
 
     const handleViewButtonFalse = (objectId: string) => {
-
         navigate(`/orderConfirmation/${objectId}`);
-    }
+    };
 
     const profilePic = dealerDocuments.find(image => image.name === dealer?.lastname + '_profilepicture');
     const imageSource = profilePic ? `data:${profilePic?.type} ;base64,${profilePic?.content}`
-        : profilepicture
+        : profilepicture;
     const handleOpenProfile = () => {
         setOpenProfile(true);
-    }
+    };
 
-    // Define columns for the orders table
+    const handleConfirmButton = (objectId: string) => {
+        confirmDealer(objectId, Number(creditLimitRef.current?.value));
+        handleConfirmClose();
+    };
+
+    const handleDeclineClick = (objectId: string) => {
+        const dateArchive = moment().format('YYYY-MM-DD');
+        declineDealer(objectId, declineReasonRef.current!.value + "", dateArchive);
+        handleDeclinedClose();
+    };
+
+    const handleConfirmOpen = () => setCreditLimitModalOpen(true);
+    const handleDeclinedOpen = () => setOpenDeclinedModal(true);
+    const handleConfirmClose = () => setCreditLimitModalOpen(false);
+    const handleDeclinedClose = () => setOpenDeclinedModal(false);
+    const handleDeleteConfirm = () => {
+        axios.delete(`http://localhost:8080/dealer/deleteDealer/${dealerId}`)
+            .then(response => {
+                console.log('Dealer deleted successfully.');
+            })
+            .catch(error => {
+                console.error('Error deleting dealer:', error);
+            })
+            .finally(() => {
+                setIsDialogOpen(false);
+            });
+    };
+
+    const handleDeleteConfirmed = () => {
+        axios.delete(`http://localhost:8080/archived/deleteArchivedDealerById/${dealerId}`)
+            .then(response => {
+                console.log('Dealer deleted successfully.');
+            })
+            .catch(error => {
+                console.error('Error deleting dealer:', error);
+            })
+            .finally(() => {
+                setIsDialogOpen(false);
+            });
+    };
+
+    const handleDeleteClick = (dealerId: string) => {
+        setDealerId(dealerId);
+        setIsDialogOpen(true);
+    };
+
     const columnsOrder: GridColDef[] = [
         { field: 'id', headerName: 'Order ID', width: 140 },
         { field: 'orderDate', headerName: 'Order Date', width: 180 },
         { field: 'distributionDate', headerName: 'Distribution Date', width: 170 },
         { field: 'orderAmount', headerName: 'Order Amount', width: 170 },
-        {
-            field: 'orderStatus',
-            headerName: 'Order Status',
-            width: 110,
-            renderCell: (params: { row: any; }) => {
-                const dealer = params.row;
-                const isClosed = params.row.orderStatus;
-                return (
-                    <div>
-                        {isClosed ? <span style={{ color: '#E77D7D' }}>Closed</span> : <span style={{ color: '#2A9221' }}>Open</span>}
-                    </div>
-                );
-            }
-        },
-        {
-            field: 'view', headerName: '', width: 100,
-            renderCell: (params: { row: any; }) => {
-               const order = params.row
-                return (
-                    <StyledButton
-                        onClick={() => {
-                            // Handle button click for this row here
-
-                            if (params.row.confirmed === true ) {
-                                
-                                handleViewButtonClick(params.row.id);
-                            }  else if( params.row.confirmed === true  || signedInDealer.tableName === 'Dealer') {
-                                handleViewButtonFalse(order.id);
-                            } 
-                        }}
-                    >
-                        View
-                    </StyledButton>
-                )
-            }
-        },
     ];
 
-    // Map orders data to rows
     const rowsOrder = orders.map((order) => ({
-
         id: order.orderid,
         orderDate: order.orderdate,
         distributionDate: order.distributiondate,
         orderAmount: `Php ${order.orderamount}`,
         orderStatus: order.isclosed,
-
     }));
-
-
 
     return (
         <div>
             {dealer ? (
-
                 <Grid style={{ position: 'relative', justifyContent: "center" }} container spacing={3}>
                     <Grid item style={{ marginRight: -70 }}>
                         <Grid>
@@ -609,11 +578,8 @@ export default function DealerProfileDetails() {
                                 </div>
                             ))}
                         </Grid>
-                        {/* Profile Picture Modal */}
-                        <Modal
-                            open={openProfile}
-                            onClose={handleCloseDocument}
-                        >
+
+                        <Modal open={openProfile} onClose={handleCloseDocument}>
                             <div>
                                 <div style={{ display: 'flex', justifyContent: 'flex-end', marginRight: 300, marginTop: 40 }}>
                                     <ButtonClose variant='contained' onClick={handleCloseDocument}><CloseIcon /></ButtonClose>
@@ -624,11 +590,7 @@ export default function DealerProfileDetails() {
                             </div>
                         </Modal>
 
-                        {/* Attachments Modal */}
-                        <Modal
-                            open={open}
-                            onClose={handleCloseDocument}
-                        >
+                        <Modal open={open} onClose={handleCloseDocument}>
                             <div>
                                 <div style={{ display: 'flex', justifyContent: 'flex-end', marginRight: 300, marginTop: 40 }}>
                                     <ButtonClose variant='contained' onClick={handleCloseDocument}><CloseIcon /></ButtonClose>
@@ -643,7 +605,6 @@ export default function DealerProfileDetails() {
                                                 height="100%"
                                             />
                                         ) : selectedDocument.type.startsWith("image") ? (
-
                                             <img
                                                 src={`data:${selectedDocument.type};base64,${selectedDocument.content}`}
                                                 alt="Document"
@@ -672,7 +633,7 @@ export default function DealerProfileDetails() {
                                 <StyleMainLabel>Dealer's Name</StyleMainLabel>
                                 <StyleMainInfo style={{ marginTop: 15 }}>{dealer?.firstname} {dealer?.middlename} {dealer?.lastname}</StyleMainInfo>
                             </Grid>
-                            <Grid item >
+                            <Grid item>
                                 <StyleMainLabel style={{ marginLeft: 91 }}>Dealer ID</StyleMainLabel>
                                 <StyleMainInfo style={{ marginTop: 15, marginLeft: 111 }}>{dealer?.dealerid}</StyleMainInfo>
                             </Grid>
@@ -700,12 +661,10 @@ export default function DealerProfileDetails() {
                                 </StyleMainLabel>
 
                                 {signedInDealer.tableName === 'Dealer' ? (
-                                    // Display this when signedInDealer.tableName !== 'Dealer'
                                     <StyleMainInfo style={{ marginTop: 15 }}>
                                         Php {dealer?.creditlimit}
                                     </StyleMainInfo>
                                 ) : (
-                                    // Display the existing content when signedInDealer.tableName === 'Dealer'
                                     <>
                                         {isEditing ? (
                                             <div>
@@ -730,22 +689,19 @@ export default function DealerProfileDetails() {
                                     </>
                                 )}
                             </Grid>
-
-
-
                         </Grid>
+
                         <Grid container>
                             <Grid item>
                                 <Box sx={{ width: 920, marginLeft: 10, marginTop: 5 }}>
                                     <Box sx={{ borderBottom: 0.5, borderColor: 'divider' }}>
-                                        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" >
+                                        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                                             <TabStyle icon={<PermIdentityIcon />} iconPosition="start" label="Basic Information" {...a11yProps(0)} />
                                             <TabStyle icon={<WorkOutlineIcon />} iconPosition="start" label="Business Information" {...a11yProps(1)} />
                                             <TabStyle icon={<ReceiptLongOutlinedIcon />} iconPosition="start" label="Orders" {...a11yProps(2)} />
                                         </Tabs>
                                     </Box>
                                     <CustomTabPanel value={value} index={0}>
-                                        {/* Basic Information */}
                                         <Grid container>
                                             <Grid item>
                                                 <StyleLabel>Gender</StyleLabel>
@@ -779,15 +735,13 @@ export default function DealerProfileDetails() {
                                             </Grid>
                                         </Grid>
                                     </CustomTabPanel>
-                                    {/* Business Information */}
+
                                     <CustomTabPanel value={value} index={1}>
                                         {business}
                                     </CustomTabPanel>
 
-                                    {/* Orders */}
                                     <CustomTabPanel value={value} index={2}>
                                         <div>
-                                            {/* Your other components for displaying order-related information */}
                                             <DataGrid
                                                 sx={{ height: 370, overflowX: 'hidden' }}
                                                 rows={rowsOrder} columns={columnsOrder}
@@ -801,10 +755,86 @@ export default function DealerProfileDetails() {
                                                 pageSizeOptions={[5]} />
                                         </div>
                                     </CustomTabPanel>
+
+                                    {/* Confirm/Decline Buttons */}
+                                    {
+                                        dealer?.confirmed === false && (
+                                            <Grid container style={{ marginTop: 10, marginLeft: 100 }} spacing={5}>
+                                                <Grid item>
+                                                    <StyledButton
+                                                        style={{ width: 120 }}
+                                                        onClick={handleConfirmOpen}
+                                                    >
+                                                        <CheckIcon style={{ marginTop: -5, marginLeft: -3, height: 20, width: 'auto', color: 'rgb(116, 254, 189)', fontWeight: 'bolder' }} />
+                                                        Confirm
+                                                    </StyledButton>
+                                                </Grid>
+                                                <Grid item>
+                                                    <StyledButton
+                                                        style={{ width: 120 }}
+                                                        onClick={handleDeclinedOpen}
+                                                    >
+                                                        <CloseIcon style={{ marginTop: -3, paddingLeft: -8, height: 20, width: 'auto', color: 'rgb(227, 80, 155)', fontWeight: 'bolder' }} />
+                                                        Decline
+                                                    </StyledButton>
+                                                </Grid>
+                                            </Grid>
+                                        )
+                                    }
+
+                                    <Modal
+                                        open={creditLimitModalOpen}
+                                        onClose={handleConfirmClose}
+                                        aria-labelledby="credit-limit-modal-title"
+                                        aria-describedby="Credit Limit"
+                                    >
+                                        <Box sx={style}>
+                                            <Typography
+                                                style={{ color: "#2D85E7", fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}
+                                                id="credit-limit-modal-title"
+                                            >
+                                                Set Credit Limit
+                                            </Typography>
+                                            <TextField
+                                                label="Credit Limit"
+                                                variant="filled"
+                                                style={{ width: '400px' }}
+                                                inputRef={creditLimitRef}
+                                            />
+                                            <StyledButton
+                                                onClick={() => handleConfirmButton(dealer!.dealerid)}
+                                                sx={{ marginTop: '20px', marginLeft: '150px' }}
+                                            >
+                                                Set
+                                            </StyledButton>
+                                        </Box>
+                                    </Modal>
+
+                                    <Modal
+                                    open={openDeclinedModal}
+                                    onClose={handleDeclinedClose}
+                                    aria-labelledby="modal-title"
+                                    aria-describedby="Comment"
+                                    >
+                                    <Box sx={style}>
+                                        <Typography style={{ color: "#2D85E7", fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }} id="decline-modal-title"> Reasons </Typography>
+                                        <TextField
+                                            label="State the Reason for Decline"
+                                            multiline
+                                            rows={4}
+                                            variant="filled"
+                                            style={{ width: '400px' }}
+                                            inputRef={declineReasonRef}
+                                        />
+                                        <StyledButton onClick={() => handleDeclineClick(dealer!.dealerid)}
+                                            sx={{ marginTop: '20px', marginLeft: '150px' }}>
+                                            Submit
+                                        </StyledButton>
+                                    </Box>
+                                </Modal>
                                 </Box>
                             </Grid>
                         </Grid>
-
                     </Grid>
 
                     {/* Alerts */}
@@ -817,15 +847,29 @@ export default function DealerProfileDetails() {
                             {alertMessage}
                         </Alert>
                     </Snackbar>
+                    <ToastContainer
+                        position="bottom-right"
+                        autoClose={5000}
+                        limit={3}
+                        hideProgressBar
+                        newestOnTop
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                        style={{ width: 450 }}
+                        theme="colored"
+                    />
                 </Grid>
-
             ) : (
                 <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '70vh', marginTop: '-20px' }}>
                     <img src={logo5} alt="Logo" style={{ width: '375px', marginBottom: '-40px' }} />
                     <LinearProgress sx={{ width: '20%' }} />
                 </Box>
-            )
-            }
-        </div >
+            )}
+        </div>
     );
-}
+};
+
+export default DealerProfileDetails;

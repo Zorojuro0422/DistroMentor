@@ -2,6 +2,7 @@ import styled from "@emotion/styled"
 import { Alert, AlertColor, Box, Button, Grid, IconButton, Link, Snackbar, TextField, TextFieldProps, Typography } from "@mui/material"
 import CloseIcon from '@mui/icons-material/Close';
 import signin from "../../Global Components/Images/Group 8 (1).png"
+import logo5 from '../../Global Components/Images/logo5.png'
 import { useNavigate } from "react-router-dom"
 import { Fragment, useContext, useEffect, useRef, useState } from "react"
 import axios from "axios"
@@ -12,6 +13,16 @@ import { useRestEmployee } from "../../RestCalls/EmployeeUseRest";
 import { useRestDistributor } from "../../RestCalls/DistributorUseRest";
 import { useRestSignIn } from "../../RestCalls/SignInUseRest";
 
+const Logo = styled(Typography)({
+    margin: '5% 10% 0 5%',
+    display: 'flex',
+    fontFamily: 'Inter, sans-serif',
+    fontWeight: 'bold',
+    fontSize: '25px',
+    color: '#203949',
+    justifyContent: 'space-between',
+    marginBottom: '-120px',
+})
 
 const HeaderTypo = styled(Typography)({
     position: "relative",
@@ -194,9 +205,10 @@ export default function SignIn() {
     return (
 
         <Box component="form" noValidate onSubmit={handleSubmit} >
-
+            <Logo sx={{ cursor: 'pointer' }}>
+                <img src={logo5} alt="Logo" style={{ height: '150px', width: '270px', marginTop: '-3.5%' }} /> {/** Updated logo5 */}
+            </Logo>
             <SignInGrid item container spacing={1}>
-
                 <Grid item>
                     <SignInFieldsGrid container spacing={8}>
                         <Grid item>

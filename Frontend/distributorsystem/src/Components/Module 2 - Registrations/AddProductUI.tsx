@@ -13,7 +13,7 @@ const StyledCard = styled(Card)({
   display: 'flex',
   marginTop: 50,
   width: '1280px',
-  height: '800px',
+  height: '600px',
   alignItems: 'center',
   borderRadius: '25px',
   justifyContent: 'left',
