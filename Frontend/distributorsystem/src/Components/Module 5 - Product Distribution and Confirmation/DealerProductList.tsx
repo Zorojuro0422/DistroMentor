@@ -65,7 +65,6 @@ const StyledTextField = styled(TextField)({
 
 const ProductList: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [search, setSearch] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>('success');
@@ -81,44 +80,18 @@ const ProductList: React.FC = () => {
     fetchProducts();
   }, []);
 
+  // Fetch products from dealer-products API
   const fetchProducts = async () => {
     try {
-      const dealerID = userFromStorage.dealer.dealerid;
-      const response = await axios.get(`http://localhost:8080/order/getAllConfirmedOrdersByDealerId/${dealerID}`);
-      const orders = response.data;
-
-      const productMap: { [key: string]: Product } = {};
-      orders.forEach((order: any) => {
-        order.orderedproducts.forEach((orderedProduct: any) => {
-          const product = orderedProduct.product;
-          const existingProduct = productMap[product.productid];
-
-          if (existingProduct) {
-            existingProduct.quantity += orderedProduct.quantity;
-          } else {
-            productMap[product.productid] = {
-              productid: product.productid,
-              name: product.name,
-              unit: product.unit,
-              price: product.price,
-              quantity: orderedProduct.quantity,
-            };
-          }
-        });
-      });
-
-      let productsArray = Object.values(productMap);
-      setProducts(productsArray);
+      const dealerID = userFromStorage.dealer.dealerid;  // Get dealerid from user storage
+      const response = await axios.get(`http://localhost:8080/api/dealer-products/dealer/${dealerID}`);
+      setProducts(response.data);  // Directly set the products from response
     } catch (error) {
       console.error('Error fetching products:', error);
       setAlertMessage('Error fetching products.');
       setAlertSeverity('error');
       setOpenSnackbar(true);
     }
-  };
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
   };
 
   const handleCloseSnackbar = () => {
@@ -241,8 +214,8 @@ const ProductList: React.FC = () => {
                   disabled={currentPage === 1}
                   style={{ padding: '10px 20px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', transition: 'transform 0.1s ease, box-shadow 0.1s ease', boxShadow: '0px 5px 10px rgba(0, 0, 0, 0.2)' }}
                   onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
-                  onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                  onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)' }
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)' }
                 >
                   Prev
                 </button>
@@ -251,9 +224,9 @@ const ProductList: React.FC = () => {
                   onClick={() => setCurrentPage(prevPage => Math.min(prevPage + 1, totalPages))}
                   disabled={currentPage === totalPages}
                   style={{ padding: '10px 20px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', transition: 'transform 0.1s ease, box-shadow 0.1s ease', boxShadow: '0px 5px 10px rgba(0, 0, 0, 0.2)' }}
-                  onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
-                  onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                  onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)' }
+                  onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)' }
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)' }
                 >
                   Next
                 </button>

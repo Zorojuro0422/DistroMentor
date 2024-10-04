@@ -105,7 +105,6 @@ export const useRestDistributor=():[(distributorID:string) => void, (distributor
     }
  */
 
-
     function getDistributorByID(distributorID:String){
         axios.get(`http://localhost:8080/distributor/getDistributorByID/${distributorID}`)
         .then((response)=>{

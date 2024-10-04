@@ -211,3 +211,13 @@ export interface IDealerPaymentProof {
     content: Uint8Array; // You can specify the correct data type for the 'content' property.
     collectionPaymentReceipt: ICollectionPaymentReceipt | null; // You can reference the 'IDealer' interface you've already defined.
 }
+
+export interface DealerProduct {
+  dealerproductid: string;
+  dealerid: string;
+  productid: string;
+  name: string;
+  quantity: number;
+  unit: string;
+  price: number;
+}
