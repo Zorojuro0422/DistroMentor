@@ -51,6 +51,7 @@ import CustomerRegistration from '../Components/Module 5 - Product Distribution 
 import DealerProductList from '../Components/Module 5 - Product Distribution and Confirmation/DealerProductList';
 import CustomerOrderForm from '../Components/Module 5 - Product Distribution and Confirmation/CustomerOrderForm';
 import CustomerList from '../Components/Module 4 - Profiles & Approval/CustomerList';
+import DepositList from '../Components/Module 4 - Profiles & Approval/DepositList';
 import Customer from '../Components/Module 4 - Profiles & Approval/Customer';
 
 export default function MainRoutes() {
@@ -86,6 +87,7 @@ export default function MainRoutes() {
                             <Route path="/customerRegistration" element={<CustomerRegistration />} />
                             <Route path="/dealerProduct" element={<DealerProductList />} />
                             <Route path="/customerlist" element={<CustomerList />} />
+                            <Route path="/depositlist" element={<DepositList />} />
                             <Route path="/update_customer/:customerID" element={<UpdateCustomer />} />
                             <Route path="/dealerProfileDetails/:objectId" element={<><ScrollToTop/><DealerProfileDetails/></>} />
 

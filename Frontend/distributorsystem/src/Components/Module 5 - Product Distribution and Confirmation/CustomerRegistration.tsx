@@ -111,7 +111,7 @@ export default function CustomerRegistration() {
     }
 
     // Fetch the list of dealers from the backend
-    axios.get('https://distromentor-capstone.onrender.com/dealer/getAllDealers')
+    axios.get('https://distromentor.onrender.com/dealer/getAllDealers')
       .then(response => {
         setDealers(response.data);
       })

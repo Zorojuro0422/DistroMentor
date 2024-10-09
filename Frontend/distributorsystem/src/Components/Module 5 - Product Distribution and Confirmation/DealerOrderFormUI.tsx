@@ -170,7 +170,7 @@ transition: 'all 0.4s'
 })
 export default function DealerOrderForm() {
 
-  const  [newOrder, getOrderByID, getOrderByPaymentTransactionID, assignCollector, removeCollector, order, orderFromPaymentTransaction, isOrderFound, assignedStatus, removeStatus, updateOrder, closedOrder, applyPenalty] = useRestOrder();
+  const [newOrder, getOrderByID, getOrderByPaymentTransactionID, assignCollector, removeCollector, order, orderFromPaymentTransaction, isOrderFound, assignedStatus, removeStatus, updateOrder, closedOrder, applyPenalty] = useRestOrder();
   const [getDealerByID, getDealerByDistributor, newDealer, confirmDealer, markDealerAsPending, declineDealer, resetDealer, updateDealerCreditLimit, isDealerFound, isDealerConfirmed, dealer, dealerRemainingCredit] = useRestDealer();
 
 
@@ -196,44 +196,10 @@ export default function DealerOrderForm() {
 
   const [open, setOpen] = useState(false);
 
-
-
   const penaltyRateRef = useRef<TextFieldProps>(null);
 
 
   const userFromStorage = JSON.parse(localStorage.getItem("user")!);
-
-
-  const paymentchoices = [
-    {
-      value: '0',
-      label: '----------',
-    },
-    {
-      value: '1',
-      label: 'Cash',
-    },
-    {
-      value: '2',
-      label: '2 Gives',
-    },
-    {
-      value: '3',
-      label: '3 Gives',
-    },
-    {
-      value: '4',
-      label: '4 Gives',
-    },
-    {
-      value: '5',
-      label: '5 Gives',
-    },
-    {
-      value: '6',
-      label: '6 Gives',
-    }
-  ];
 
   const isMounted = useRef(false);
 
@@ -338,12 +304,7 @@ export default function DealerOrderForm() {
     }
   };
 
-
-
-
   const handleUpdateQuantity = (product: IOrderedProducts, updatedQuantity: number) => {
-    // Update the quantity of a product in the cart
-    // Update the state (orderedProducts) with the updated quantity
     const updatedProducts = orderedProducts.map((item) => {
       if (item.product.productid === product.product.productid) {
         return { ...item, quantity: updatedQuantity };
@@ -436,13 +397,6 @@ export default function DealerOrderForm() {
     }
   };
 
-
-
-
-
-
-
-
   return (
     <div>
       <OverallGrid container>
@@ -517,7 +471,7 @@ export default function DealerOrderForm() {
                       <TableCell align='center' sx={{ color: "#203949" }}>{product.product.name}</TableCell>
                       <TableCell align='center' sx={{ color: "#203949" }}>{product.product.price}</TableCell>
                       <TableCell align='center' sx={{ color: "#203949" }}>{product.product.price * product.quantity}</TableCell>
-                      <TableCell align='center' sx={{ color: "#203949" }}><RemoveButton onClick={() => handleRemoveFromCart(product)}><RemoveCircleIcon/></RemoveButton></TableCell>
+                      <TableCell align='center' sx={{ color: "#203949" }}><RemoveButton onClick={() => handleRemoveFromCart(product)}><RemoveCircleIcon style={{ color: "red" }}></RemoveCircleIcon></RemoveButton></TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

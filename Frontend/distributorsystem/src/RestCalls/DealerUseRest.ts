@@ -309,7 +309,7 @@ export const useRestDealer = (): [
                 console.error('Error retrieving dealer data:', error);
             });
 
-        axios.get(`http://localhost:8080/dealer/getTotalOrderAmountByDealerID/${dealerID}`)
+        axios.get(`http://localhost:8080/order/getTotalOrderedProductsSubtotalByDealerId/${dealerID}`)
             .then((response) => {
                 setDealerCreditLimit(response.data);
                 remainingCredit = creditLimit - response.data;

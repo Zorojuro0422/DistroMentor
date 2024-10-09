@@ -3,6 +3,8 @@ package com.group29.distromentorsystem.controllers;
 import com.group29.distromentorsystem.models.DealerProduct;
 import com.group29.distromentorsystem.services.DealerProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,5 +52,13 @@ public class DealerProductController {
     @DeleteMapping("/{dealerproductid}")
     public void deleteDealerProduct(@PathVariable String dealerproductid) {
         dealerProductService.deleteDealerProduct(dealerproductid);
+    }
+
+    // Get a dealer product by dealer ID and product ID
+    @GetMapping("/dealer/{dealerid}/product/{productid}")
+    public Optional<DealerProduct> getDealerProductByDealerIdAndProductId(
+            @PathVariable String dealerid,
+            @PathVariable String productid) {
+        return dealerProductService.getDealerProductByDealerIdAndProductId(dealerid, productid);
     }
 }

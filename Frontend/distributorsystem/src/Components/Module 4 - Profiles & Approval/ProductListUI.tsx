@@ -295,11 +295,16 @@ const ProductList: React.FC = () => {
             </div>
           </StyledCard>
         </StyleGrid>
-      {/* Snackbar for alerts */}
-    <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-        <Alert onClose={handleCloseSnackbar} severity={alertSeverity}>
-          {alertMessage}
-        </Alert>
+    <Snackbar
+      open={openSnackbar}
+      autoHideDuration={6000}
+      onClose={handleCloseSnackbar}
+      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      style={{ top: '85px' }} // Adjust this value to control how far from the top
+    >
+      <Alert onClose={handleCloseSnackbar} severity={alertSeverity}>
+        {alertMessage}
+      </Alert>
     </Snackbar>
       {/* Confirmation dialog for delete */}
       <Dialog open={openDialog} onClose={handleCloseDialog}>

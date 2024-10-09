@@ -2,6 +2,9 @@ package com.group29.distromentorsystem.services;
 
 import com.group29.distromentorsystem.models.*;
 import com.group29.distromentorsystem.repositories.*;
+import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,8 @@ import java.util.*;
 
 @Service
 public class OrderService {
+
+    private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
 
     @Autowired
     OrderRepository orderRepository;
@@ -298,5 +303,9 @@ public class OrderService {
 
     }
 
+    public Double getTotalOrderedProductsSubtotalByDealerId(String dealerid) {
+        Double totalSubtotal = orderRepository.sumOrderedProductsSubtotalByDealerId(dealerid);
+        return totalSubtotal != null ? totalSubtotal : 0.0;  // Return 0 if no records found
+    }
 
 }

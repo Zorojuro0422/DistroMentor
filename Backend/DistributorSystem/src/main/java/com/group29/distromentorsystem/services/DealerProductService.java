@@ -55,4 +55,8 @@ public class DealerProductService {
     public void deleteDealerProduct(String dealerproductid) {
         dealerProductRepository.deleteById(dealerproductid);
     }
+
+    public Optional<DealerProduct> getDealerProductByDealerIdAndProductId(String dealerid, String productid) {
+        return dealerProductRepository.findByDealeridAndProductid(dealerid, productid);
+    }
 }

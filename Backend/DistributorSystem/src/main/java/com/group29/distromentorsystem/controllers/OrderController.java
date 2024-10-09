@@ -119,5 +119,11 @@ public class OrderController {
         return new ResponseEntity<>(orderService.findByCollectorIsNotNullAndPaymenttransactionsIsEmpty(), HttpStatus.OK);
     }
 
+    @GetMapping("/getTotalOrderedProductsSubtotalByDealerId/{dealerId}")
+    public ResponseEntity<Double> getTotalOrderedProductsSubtotalByDealerId(@PathVariable String dealerId) {
+        Double totalSubtotal = orderService.getTotalOrderedProductsSubtotalByDealerId(dealerId);
+        return new ResponseEntity<>(totalSubtotal, HttpStatus.OK);
+    }
+
 
 }

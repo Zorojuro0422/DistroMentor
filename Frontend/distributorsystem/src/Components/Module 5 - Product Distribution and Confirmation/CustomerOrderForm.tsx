@@ -18,6 +18,17 @@ interface Product {
   selectedQuantity: number;
 }
 
+interface DealerProduct {
+    dealerproductid: string;
+    dealerid: string;
+    productid: string;
+    name: string;
+    quantity: number;
+    unit: string;
+    price: number;
+}
+
+
 interface Customer {
   customerID: string;
   firstName: string;
@@ -155,39 +166,48 @@ const OrderingPage: React.FC = () => {
 
   const fetchProducts = async () => {
     try {
-      const dealerID = userFromStorage.dealer.dealerid;
-      const response = await axios.get(`http://localhost:8080/order/getAllConfirmedOrdersByDealerId/${dealerID}`);
-      const orders = response.data;
+      const dealerID = userFromStorage.dealer.dealerid; // Get dealer ID from user storage
+      console.log("Fetching products for dealer ID:", dealerID); // Log the dealer ID for debugging
 
+      // Fetch dealer products by dealer ID
+      const response = await axios.get(`http://localhost:8080/api/dealer-products/dealer/${dealerID}`);
+
+      console.log("API response:", response.data); // Log the full API response to check structure
+
+      const dealerProducts = response.data; // Assuming response contains a list of dealer products directly
+
+      // Map the response to the format needed
       const productMap: { [key: string]: Product } = {};
-      orders.forEach((order: any) => {
-        order.orderedproducts.forEach((orderedProduct: any) => {
-          const product = orderedProduct.product;
-          const existingProduct = productMap[product.productid];
 
-          if (existingProduct) {
-            existingProduct.quantity += orderedProduct.quantity;
-          } else {
-            productMap[product.productid] = {
-              productid: product.productid,
-              name: product.name,
-              unit: product.unit,
-              price: product.price,
-              quantity: orderedProduct.quantity,
-              selectedQuantity: 0,
-            };
-          }
-        });
+      dealerProducts.forEach((dealerProduct: any) => {
+        const existingProduct = productMap[dealerProduct.productid]; // Match by productid
+
+        if (existingProduct) {
+          // If the product already exists in the map, add the quantities
+          existingProduct.quantity += dealerProduct.quantity;
+        } else {
+          // Otherwise, add the new product to the map
+          productMap[dealerProduct.productid] = {
+            productid: dealerProduct.productid,
+            name: dealerProduct.name,
+            unit: dealerProduct.unit,
+            price: dealerProduct.price,
+            quantity: dealerProduct.quantity,
+            selectedQuantity: 0, // Set initial selectedQuantity to 0
+          };
+        }
       });
 
-      setProducts(Object.values(productMap));
+      // Set the products state
+      setProducts(Object.values(productMap)); // Convert the product map to an array
     } catch (error) {
-      console.error('Error fetching products:', error);
-      setAlertMessage('Error fetching products.');
-      setAlertSeverity('error');
+      console.error("Error fetching products:", error); // Log the actual error message for debugging
+      setAlertMessage("Error fetching products. Check the console for details.");
+      setAlertSeverity("error");
       setOpenSnackbar(true);
     }
   };
+
 
   const fetchCustomers = async () => {
     try {
@@ -285,15 +305,36 @@ const OrderingPage: React.FC = () => {
          setAlertSeverity('success');
          setOpenSnackbar(true);
 
-         // Subtract the ordered quantity from the available quantity
+         // Subtract the ordered quantity from the dealer product (Dealer's inventory)
          await Promise.all(
              cart.map(async (orderedProduct) => {
                  try {
-                     await axios.put(`http://localhost:8080/product/${orderedProduct.productid}`, {
-                         quantity: orderedProduct.quantity - orderedProduct.selectedQuantity,
-                     });
+                     // Fetch the dealer product by dealer ID and product ID
+                     const dealerProductsResponse = await axios.get(
+                         `http://localhost:8080/api/dealer-products/dealer/${dealerID}`
+                     );
+
+                     const dealerProducts: DealerProduct[] = dealerProductsResponse.data;
+
+                     // Find the specific dealer product by productid
+                     const existingDealerProduct = dealerProducts.find(
+                         (dealerProduct: DealerProduct) => dealerProduct.productid === orderedProduct.productid
+                     );
+
+                     if (existingDealerProduct) {
+                         // Subtract the ordered quantity from the dealer product quantity
+                         const updatedQuantity = existingDealerProduct.quantity - orderedProduct.selectedQuantity;
+
+                         // Update the dealer product with the new quantity
+                         await axios.put(`http://localhost:8080/api/dealer-products/${existingDealerProduct.dealerproductid}`, {
+                             ...existingDealerProduct,
+                             quantity: updatedQuantity, // Update the quantity
+                         });
+                     } else {
+                         console.error('Dealer product not found for product ID:', orderedProduct.productid);
+                     }
                  } catch (error) {
-                     console.error('Error updating product quantity:', error);
+                     console.error('Error updating dealer product quantity:', error);
                  }
              })
          );
@@ -310,10 +351,6 @@ const OrderingPage: React.FC = () => {
          setOpenSnackbar(true);
      }
  };
-
-
-
-
 
   return (
     <div>
@@ -415,9 +452,7 @@ const OrderingPage: React.FC = () => {
                       <TableCell align="center">{product.price}</TableCell>
                       <TableCell align="center">{product.price * product.selectedQuantity}</TableCell>
                       <TableCell align="center">
-                        <RemoveButton onClick={() => handleRemoveFromCart(product)}>
-                          <RemoveCircleIcon />
-                        </RemoveButton>
+                        <RemoveButton onClick={() => handleRemoveFromCart(product)}><RemoveCircleIcon style={{ color: "red" }}></RemoveCircleIcon></RemoveButton>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -438,13 +473,15 @@ const OrderingPage: React.FC = () => {
         open={openSnackbar}
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        style={{ top: '85px' }}
       >
         <Alert onClose={handleCloseSnackbar} severity={alertSeverity}>
           {alertMessage}
         </Alert>
       </Snackbar>
       <ToastContainer
-        position="bottom-right"
+        position="top-center"
         autoClose={5000}
         limit={3}
         hideProgressBar
