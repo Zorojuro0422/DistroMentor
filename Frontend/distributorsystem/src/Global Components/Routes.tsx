@@ -1,14 +1,12 @@
 import { Routes, Route, Navigate  } from 'react-router-dom'
 
 
-import PaymentList from "../Components/Module 8 - Payments/PaymentsListUI";
 // import DealerProfileList from "./Components/Profiles/DealerProfiles/DealerProfileList";
 import DealerRegistration from "../Components/Module 2 - Registrations/DealerRegistrationUI";
 import Schedules from "../Components/Module 7 - Schedules/ScheduleOrderTransactionUI";
 import DistributorOrderForm from "../Components/Module 5 - Product Distribution and Confirmation/DistributorOrderFormUI";
 import DealerOrderForm from "../Components/Module 5 - Product Distribution and Confirmation/DealerOrderFormUI";
 import SignIn from "../Components/Module 1 - Distributor System Sign-in/SignInUI";
-import RecordDirectPayment from "../Components/Module 8 - Payments/RecordDirectPaymentUI";
 import Content from "./Contents";
 
 import DealerProfile from '../Components/Module 4 - Profiles & Approval/DealerProfilesListUI';
@@ -16,8 +14,6 @@ import DealerApproval from '../Components/Module 4 - Profiles & Approval/DealerA
 import ProductDistributionList from '../Components/Module 5 - Product Distribution and Confirmation/ProductDistributionsListUI';
 import { OrderDetails } from '../Components/Module 6 - Collector Assignment/OrderDetails';
 
-
-import { PaymentReceiptDetails } from '../Components/Module 8 - Payments/PaymentReceiptDetailsUI';
 
 import SignupScreen from '../Components/B - Registration(SplashScreen)/SignupScreen';
 import SignInContent from './ContentsSignIn';
@@ -53,6 +49,7 @@ import CustomerOrderForm from '../Components/Module 5 - Product Distribution and
 import CustomerList from '../Components/Module 4 - Profiles & Approval/CustomerList';
 import DepositList from '../Components/Module 4 - Profiles & Approval/DepositList';
 import Customer from '../Components/Module 4 - Profiles & Approval/Customer';
+import Deposit from "../Components/Module 8 - Payments/Deposit";
 
 export default function MainRoutes() {
 
@@ -88,6 +85,7 @@ export default function MainRoutes() {
                             <Route path="/dealerProduct" element={<DealerProductList />} />
                             <Route path="/customerlist" element={<CustomerList />} />
                             <Route path="/depositlist" element={<DepositList />} />
+                            <Route path="/deposit" element={<Deposit />} />
                             <Route path="/update_customer/:customerID" element={<UpdateCustomer />} />
                             <Route path="/dealerProfileDetails/:objectId" element={<><ScrollToTop/><DealerProfileDetails/></>} />
 
@@ -104,7 +102,6 @@ export default function MainRoutes() {
 
                             <Route path="/" element={<Navigate replace to="dashboard" />} />
                             <Route path="/dashboard" element={<><ScrollToTop/><Dashboard /></>} />
-                            <Route path="/paymentList" element={<PaymentList />} />
 
                             {/* CRUD PRODUCTS */}
                             <Route path="/addproduct" element={<AddProduct />} />
@@ -119,11 +116,9 @@ export default function MainRoutes() {
                             <Route path="/dealerProfileDetails/:objectId" element={<><ScrollToTop/><DealerProfileDetails /></>}></Route>
                             <Route path="/dealerRegistration" element={<DealerRegistration/>} />
 
-                            <Route path="/recordDirectPayment" element={<><ScrollToTop/><RecordDirectPayment /></>} />
                             <Route path="/dealerApproval" element={<><ScrollToTop/><DealerApproval /></>} />
 
                             <Route path="/orderDetails/:objectId" element={<><ScrollToTop/><OrderDetails /></>} />
-                            <Route path="/paymentReceiptDetails/:objectId" element={<><ScrollToTop/><PaymentReceiptDetails /></>}></Route>
                         
                             <Route path="/distributorProfileDetails/:objectId" element={<><ScrollToTop/><DistributorProfileDetails /></>}></Route>
                         </Route>
@@ -146,9 +141,6 @@ export default function MainRoutes() {
                         <Route path="/" element={<ContentCashier />}>
                             <Route path="/" element={<Navigate replace to="cashierDashboard" />} />
                             <Route path="/cashierDashboard" element={<><ScrollToTop/><CashierDashboard /></>} />
-                            <Route path="/paymentList" element={<PaymentList />} />
-                            <Route path="/recordDirectPayment" element={<><ScrollToTop/><RecordDirectPayment /></>} />
-                            <Route path="/paymentReceiptDetails/:objectId" element={<><ScrollToTop/><PaymentReceiptDetails /></>}></Route>
                         </Route>
                     )}
 
@@ -162,9 +154,6 @@ export default function MainRoutes() {
                             <Route path="/collectorAssignment" element={<CollectorAssignment />} />
                             <Route path="/orderDetails/:objectId" element={<><ScrollToTop/><OrderDetails /></>} />
                             <Route path="/schedules/:objectId" element={<><ScrollToTop/><Schedules /></>} />
-                            <Route path="/paymentList" element={<PaymentList />} />
-                            <Route path="/recordDirectPayment" element={<><ScrollToTop/><RecordDirectPayment /></>} />
-                            <Route path="/paymentReceiptDetails/:objectId" element={<><ScrollToTop/><PaymentReceiptDetails /></>}></Route>
                             <Route path="/orderConfirmation/:objectId" element={<><ScrollToTop/><OrderConfirmation /></>} />
                             
                         </Route>

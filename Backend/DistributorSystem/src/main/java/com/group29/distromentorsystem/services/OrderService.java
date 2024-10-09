@@ -30,9 +30,6 @@ public class OrderService {
     ProductRepository productRepository;
 
     @Autowired
-    PaymentTransactionRepository paymentTransactionRepository;
-
-    @Autowired
     OrderedProductRepository orderedProductRepository;
 
     @Autowired
@@ -44,8 +41,6 @@ public class OrderService {
     @Autowired
     DistributorRepository distributorRepository;
 
-    @Autowired
-    PaymentTransactionService paymentTransactionService;
 
     public Order createOrder(Order order) {
 
@@ -119,11 +114,6 @@ public class OrderService {
     public Optional<Order> getOrderByID(String orderid){
 
         return orderRepository.findById(orderid);
-    }
-
-    public Order getOrderByPaymentTransactionID(String paymenttransactionid){
-        PaymentTransaction paymentTransaction = paymentTransactionRepository.findById(paymenttransactionid).get();
-        return orderRepository.findById(paymentTransaction.getOrderid()).get();
     }
 
     public List<Order> getAllOrdersByDistributorID(String distributorid) {
@@ -200,25 +190,6 @@ public class OrderService {
         }
     }
 
-    public ResponseEntity updateOrderClosedStatus(String orderId) {
-        Order order = orderRepository.findById(orderId).get();
-
-        boolean allPaymentsPaid = true;
-
-        List<PaymentTransaction> paymentTransactionsFromOrder = paymentTransactionService.getAllPaymentTransactionsByOrderID(order.getOrderid(), order.getDistributor().getDistributorid());
-
-        for (PaymentTransaction transaction : paymentTransactionsFromOrder) {
-            if (!transaction.isPaid()) {
-                allPaymentsPaid = false;
-                break; // Exit the loop as soon as you find an unpaid transaction
-            }
-        }
-
-        order.setIsclosed(allPaymentsPaid);
-        orderRepository.save(order);
-        return new ResponseEntity<>("Order closed status updated successfully", HttpStatus.OK);
-    }
-
 
     @Scheduled(cron = "0 0 0 */15 * ?")
     public void applyPenaltyForAllLatePayments() {
@@ -229,33 +200,6 @@ public class OrderService {
 
 
 
-        for (Order order : orders) {
-            // Check if the order is not closed
-            if (!order.isIsclosed()) {
-                // Set<PaymentTransaction> paymentTransactions = order.getPaymenttransactions();
-
-                List<PaymentTransaction> paymentTransactionsFromOrder = paymentTransactionService.getAllPaymentTransactionsByOrderID(order.getOrderid(), order.getDistributor().getDistributorid());
-
-
-                for (PaymentTransaction paymentTransaction : paymentTransactionsFromOrder) {
-                    LocalDate endDate = paymentTransaction.getEnddate();
-
-                    if (!paymentTransaction.isPaid() && currentDate.isAfter(endDate)) {
-                        double penaltyRate = order.getPenaltyrate();
-
-                        // Calculate the penalty and update the payment transaction
-                        double penaltyAmount = (paymentTransaction.getAmountdue() * penaltyRate) / 100;
-                        double newAmountDue = paymentTransaction.getAmountdue() + penaltyAmount;
-
-                        paymentTransaction.setAmountdue(newAmountDue);
-                        paymentTransactionRepository.save(paymentTransaction);
-
-                    }
-                    order.getPaymenttransactions().add(paymentTransaction);
-                    orderRepository.save(order);
-                }
-            }
-        }
     }
 
     public List<Order> getAllUnconfirmedOrders() {
@@ -283,25 +227,6 @@ public class OrderService {
             return null;
     }
 
-
-    public List<Order> findByCollectorIsNotNullAndPaymenttransactionsIsEmpty() {
-
-        List<Order> completeOrders = new ArrayList<>();
-
-        List <Order> allOrders = orderRepository.findAll();
-
-        for(Order order : allOrders){
-
-            if(order.getCollector() != null ){
-                if(!order.getPaymenttransactions().isEmpty()){
-                    completeOrders.add(order);
-                }
-            }
-        }
-
-        return completeOrders;
-
-    }
 
     public Double getTotalOrderedProductsSubtotalByDealerId(String dealerid) {
         Double totalSubtotal = orderRepository.sumOrderedProductsSubtotalByDealerId(dealerid);

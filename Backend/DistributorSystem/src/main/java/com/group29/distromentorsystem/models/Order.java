@@ -33,8 +33,6 @@ public class Order {
 
     private Set<OrderedProduct> orderedproducts;
 
-    private Set<PaymentTransaction> paymenttransactions = new HashSet<>();;
-
     private boolean isconfirmed;
 
     private boolean isclosed;
@@ -43,7 +41,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(String orderid, LocalDate orderdate, LocalDate distributiondate, float penaltyrate, int paymentterms, double orderamount, Distributor distributor, Dealer dealer, Employee collector, Set<OrderedProduct> orderedproducts, Set<PaymentTransaction> paymenttransactions, boolean isconfirmed, boolean isclosed) {
+    public Order(String orderid, LocalDate orderdate, LocalDate distributiondate, float penaltyrate, int paymentterms, double orderamount, Distributor distributor, Dealer dealer, Employee collector, Set<OrderedProduct> orderedproducts, boolean isconfirmed, boolean isclosed) {
         this.orderid = orderid;
         this.orderdate = orderdate;
         this.distributiondate = distributiondate;
@@ -54,7 +52,6 @@ public class Order {
         this.dealer = dealer;
         this.collector = collector;
         this.orderedproducts = orderedproducts;
-        this.paymenttransactions = paymenttransactions;
         this.isconfirmed = isconfirmed;
         this.isclosed = isclosed;
     }
@@ -137,14 +134,6 @@ public class Order {
 
     public void setOrderedproducts(Set<OrderedProduct> orderedproducts) {
         this.orderedproducts = orderedproducts;
-    }
-
-    public Set<PaymentTransaction> getPaymenttransactions() {
-        return paymenttransactions;
-    }
-
-    public void setPaymenttransactions(Set<PaymentTransaction> paymenttransactions) {
-        this.paymenttransactions = paymenttransactions;
     }
 
     public boolean getConfirmed() {

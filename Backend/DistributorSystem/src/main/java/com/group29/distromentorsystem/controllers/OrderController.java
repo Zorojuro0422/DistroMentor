@@ -35,11 +35,6 @@ public class OrderController {
         return new ResponseEntity<>(orderService.getOrderByID(orderid), HttpStatus.OK);
     }
 
-    @GetMapping("/getOrderByPaymentTransactionID/{paymenttransactionid}")
-    public ResponseEntity<Object> getOrderByPaymentTransactionID(@PathVariable String paymenttransactionid){
-        return new ResponseEntity<>(orderService.getOrderByPaymentTransactionID(paymenttransactionid), HttpStatus.OK);
-    }
-
     @GetMapping("/getOrderByIDUnderDistributor/{orderid}/{distributorid}")
     public ResponseEntity<Object> getOrderByIDUnderDistributor(@PathVariable String orderid, @PathVariable String distributorid){
         return new ResponseEntity<>(orderService.getOrderByIDUnderDistributor(orderid, distributorid), HttpStatus.OK);
@@ -72,11 +67,6 @@ public class OrderController {
     @PutMapping("/updateOrder/{orderId}")
     public ResponseEntity<Object> updateOrder(@PathVariable String orderId, @RequestBody Order updatedOrder) {
         return new ResponseEntity<>(orderService.updateOrder(orderId, updatedOrder), HttpStatus.OK);
-    }
-
-    @PutMapping("/updateOrderClosedStatus/{orderid}")
-    public ResponseEntity<Object> updateOrderClosedStatus(@PathVariable String orderid) {
-        return new ResponseEntity<>(orderService.updateOrderClosedStatus(orderid), HttpStatus.OK);
     }
 
 /*    @PutMapping("/applyPenalty/{orderId}")
@@ -112,11 +102,6 @@ public class OrderController {
     public ResponseEntity<List<Order>> getAllConfirmedOrdersByDealerId(@PathVariable String dealerId) {
         List<Order> orders = orderService.getAllConfirmedOrdersByDealerId(dealerId);
         return new ResponseEntity<>(orders, HttpStatus.OK);
-    }
-
-    @GetMapping("/getAllCompleteOrders")
-    public ResponseEntity<Object> getAllCompleteOrders(){
-        return new ResponseEntity<>(orderService.findByCollectorIsNotNullAndPaymenttransactionsIsEmpty(), HttpStatus.OK);
     }
 
     @GetMapping("/getTotalOrderedProductsSubtotalByDealerId/{dealerId}")

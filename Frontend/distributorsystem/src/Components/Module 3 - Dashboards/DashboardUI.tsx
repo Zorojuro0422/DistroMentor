@@ -214,7 +214,7 @@ export default function Dashboard() {
     }
 
     const getAllUnconfirmedCollectionPaymentReceipts = () => {
-        axios.get(`http://localhost:8080/paymentreceipt/collectionpaymentreceipt/getAllUnconfirmedCollectionPaymentReceiptsByDistributorID/${userFromStorage.distributor.distributorid}`)
+        axios.get(``)
             .then((response) => {
                 setUnconfirmedCollectionPaymentReceipts(response.data);
             })

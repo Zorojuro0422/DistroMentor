@@ -15,9 +15,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/deposits")
-@CrossOrigin
 public class DepositController {
 
     @Value("${file.upload-dir}")  // Defined in application.properties
@@ -27,6 +27,7 @@ public class DepositController {
     private DepositService depositService;
 
     // Create a new deposit
+
     @PostMapping("/create")
     public ResponseEntity<Deposit> createDeposit(
             @RequestParam("dealerId") String dealerId,
