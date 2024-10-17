@@ -14,6 +14,9 @@ public interface DepositRepository extends MongoRepository<Deposit, String> {
     // Custom query to find deposits by distributor ID
     List<Deposit> findByDistributorid(String distributorId);
 
-    // Custom query to find all pending deposits
     List<Deposit> findByStatus(String status);
+
+    List<Deposit> findByDealeridAndStatus(String dealerId, String status);
+
+    List<Deposit> findByDistributoridAndStatus(String distributorId, String status);
 }

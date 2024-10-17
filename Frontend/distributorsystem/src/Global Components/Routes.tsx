@@ -50,6 +50,9 @@ import CustomerList from '../Components/Module 4 - Profiles & Approval/CustomerL
 import DepositList from '../Components/Module 4 - Profiles & Approval/DepositList';
 import Customer from '../Components/Module 4 - Profiles & Approval/Customer';
 import Deposit from "../Components/Module 8 - Payments/Deposit";
+import DepositReceipt from "../Components/Module 8 - Payments/DepositReceipt";
+import DepositDetail from "../Components/Module 8 - Payments/DepositDetail";
+
 
 export default function MainRoutes() {
 
@@ -115,9 +118,9 @@ export default function MainRoutes() {
                             <Route path="/dealerProfileList" element={<DealerProfileListUI />} />
                             <Route path="/dealerProfileDetails/:objectId" element={<><ScrollToTop/><DealerProfileDetails /></>}></Route>
                             <Route path="/dealerRegistration" element={<DealerRegistration/>} />
-
+                            <Route path="/depositReceipt" element={<DepositReceipt />} />
+                            <Route path="/depositDetails/:objectId" element={<DepositDetail />} />
                             <Route path="/dealerApproval" element={<><ScrollToTop/><DealerApproval /></>} />
-
                             <Route path="/orderDetails/:objectId" element={<><ScrollToTop/><OrderDetails /></>} />
                         
                             <Route path="/distributorProfileDetails/:objectId" element={<><ScrollToTop/><DistributorProfileDetails /></>}></Route>

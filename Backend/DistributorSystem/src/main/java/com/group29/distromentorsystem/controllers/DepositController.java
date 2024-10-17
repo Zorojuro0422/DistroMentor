@@ -20,14 +20,13 @@ import java.util.Optional;
 @RequestMapping("/api/deposits")
 public class DepositController {
 
-    @Value("${file.upload-dir}")  // Defined in application.properties
+    @Value("${file.upload-dir}")
     private String uploadDir;
 
     @Autowired
     private DepositService depositService;
 
     // Create a new deposit
-
     @PostMapping("/create")
     public ResponseEntity<Deposit> createDeposit(
             @RequestParam("dealerId") String dealerId,
@@ -35,8 +34,7 @@ public class DepositController {
             @RequestParam("amount") double amount,
             @RequestParam("transactionNumber") String transactionNumber,
             @RequestParam("paymentDate") String paymentDate,
-            @RequestParam("status") String status,
-            @RequestParam("proofOfRemittance") MultipartFile proofOfRemittance // File to be uploaded
+            @RequestParam("proofOfRemittance") MultipartFile proofOfRemittance
     ) throws IOException {
         // Ensure the directory exists
         File directory = new File("C:/Uploads");
@@ -44,19 +42,19 @@ public class DepositController {
             directory.mkdirs();
         }
 
-        // Save the file to the specified directory
+        // Save the file to the directory
         File file = new File(directory.getAbsolutePath() + "/" + proofOfRemittance.getOriginalFilename());
         proofOfRemittance.transferTo(file);
 
-        // Create and save deposit
+        // Create the deposit
         Deposit deposit = new Deposit();
         deposit.setDealerid(dealerId);
         deposit.setDistributorid(distributorId);
         deposit.setAmount(amount);
         deposit.setTransactionnumber(transactionNumber);
         deposit.setSubmissionDate(LocalDateTime.parse(paymentDate));
-        deposit.setStatus(status);
         deposit.setProofOfRemittance("/Uploads/" + proofOfRemittance.getOriginalFilename());
+        deposit.setStatus("unconfirmed");  // Default status as unconfirmed
 
         Deposit savedDeposit = depositService.createDeposit(deposit);
 
@@ -67,7 +65,9 @@ public class DepositController {
     @GetMapping("/{depositId}")
     public ResponseEntity<Optional<Deposit>> getDepositById(@PathVariable String depositId) {
         Optional<Deposit> deposit = depositService.getDepositById(depositId);
-        return deposit.isPresent() ? new ResponseEntity<>(deposit, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return deposit.isPresent() ?
+                new ResponseEntity<>(deposit, HttpStatus.OK) :
+                new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     // Get all deposits for a specific dealer
@@ -84,11 +84,67 @@ public class DepositController {
         return new ResponseEntity<>(deposits, HttpStatus.OK);
     }
 
-    // Get deposits by status (e.g., pending, accepted, declined)
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<Deposit>> getDepositsByStatus(@PathVariable String status) {
-        List<Deposit> deposits = depositService.getDepositsByStatus(status);
+    // Get unconfirmed deposits
+    @GetMapping("/unconfirmed")
+    public ResponseEntity<List<Deposit>> getUnconfirmedDeposits() {
+        List<Deposit> deposits = depositService.getDepositsByStatus("unconfirmed");
         return new ResponseEntity<>(deposits, HttpStatus.OK);
+    }
+
+    // Get confirmed deposits
+    @GetMapping("/confirmed")
+    public ResponseEntity<List<Deposit>> getConfirmedDeposits() {
+        List<Deposit> deposits = depositService.getDepositsByStatus("confirmed");
+        return new ResponseEntity<>(deposits, HttpStatus.OK);
+    }
+
+    // Get declined deposits
+    @GetMapping("/declined")
+    public ResponseEntity<List<Deposit>> getDeclinedDeposits() {
+        List<Deposit> deposits = depositService.getDepositsByStatus("declined");
+        return new ResponseEntity<>(deposits, HttpStatus.OK);
+    }
+
+    // Confirm a deposit
+    @PatchMapping("/confirm/{depositId}")
+    public ResponseEntity<String> confirmDeposit(@PathVariable String depositId) {
+        Optional<Deposit> deposit = depositService.getDepositById(depositId);
+        if (deposit.isPresent()) {
+            Deposit updatedDeposit = deposit.get();
+            updatedDeposit.setStatus("confirmed");  // Mark as confirmed
+            depositService.updateDeposit(updatedDeposit);
+            return new ResponseEntity<>("Deposit confirmed successfully!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Deposit not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // Decline a deposit with a reason
+    @PatchMapping("/decline/{depositId}")
+    public ResponseEntity<String> declineDeposit(
+            @PathVariable String depositId,
+            @RequestParam("reason") String reason
+    ) {
+        Optional<Deposit> deposit = depositService.getDepositById(depositId);
+        if (deposit.isPresent()) {
+            Deposit updatedDeposit = deposit.get();
+            updatedDeposit.setStatus("declined");  // Mark as declined
+            updatedDeposit.setDeclineReason(reason);  // Store decline reason
+            depositService.updateDeposit(updatedDeposit);
+            return new ResponseEntity<>("Deposit declined successfully!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Deposit not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/{depositId}")
+    public ResponseEntity<String> deleteDepositById(@PathVariable String depositId) {
+        try {
+            depositService.deleteDepositById(depositId);
+            return new ResponseEntity<>("Deposit deleted successfully!", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to delete deposit: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/all")
@@ -96,4 +152,36 @@ public class DepositController {
         List<Deposit> deposits = depositService.getAllDeposits();
         return new ResponseEntity<>(deposits, HttpStatus.OK);
     }
+
+    @GetMapping("/confirmed/totalAmount/dealer/{dealerId}")
+    public ResponseEntity<Double> getTotalConfirmedDepositAmountByDealerId(@PathVariable String dealerId) {
+        List<Deposit> confirmedDeposits = depositService.getDepositsByDealerIdAndStatus(dealerId, "confirmed");
+
+        double totalAmount = confirmedDeposits.stream()
+                .mapToDouble(Deposit::getAmount)
+                .sum();
+
+        return new ResponseEntity<>(totalAmount, HttpStatus.OK);
+    }
+
+    @GetMapping("/unconfirmed/distributor/{distributorId}")
+    public ResponseEntity<List<Deposit>> getUnconfirmedDepositsByDistributorId(@PathVariable String distributorId) {
+        List<Deposit> deposits = depositService.getDepositsByDistributorIdAndStatus(distributorId, "unconfirmed");
+        return new ResponseEntity<>(deposits, HttpStatus.OK);
+    }
+
+    // Get all confirmed deposits by distributor ID
+    @GetMapping("/confirmed/distributor/{distributorId}")
+    public ResponseEntity<List<Deposit>> getConfirmedDepositsByDistributorId(@PathVariable String distributorId) {
+        List<Deposit> deposits = depositService.getDepositsByDistributorIdAndStatus(distributorId, "confirmed");
+        return new ResponseEntity<>(deposits, HttpStatus.OK);
+    }
+
+    // Get all declined deposits by distributor ID
+    @GetMapping("/declined/distributor/{distributorId}")
+    public ResponseEntity<List<Deposit>> getDeclinedDepositsByDistributorId(@PathVariable String distributorId) {
+        List<Deposit> deposits = depositService.getDepositsByDistributorIdAndStatus(distributorId, "declined");
+        return new ResponseEntity<>(deposits, HttpStatus.OK);
+    }
+
 }

@@ -1,6 +1,5 @@
 package com.group29.distromentorsystem.models;
 
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -14,6 +13,7 @@ public class CustomerOrder {
     private LocalDate distributiondate;
     private LocalDate orderdate;
     private double orderamount;
+    private double orderamountsrp;  // New field for SRP order amount
 
     @ManyToOne
     @JoinColumn(name = "customer_id", insertable = false, updatable = false)
@@ -71,6 +71,14 @@ public class CustomerOrder {
 
     public void setOrderamount(double orderamount) {
         this.orderamount = orderamount;
+    }
+
+    public double getOrderamountsrp() {  // Getter for orderamountsrp
+        return orderamountsrp;
+    }
+
+    public void setOrderamountsrp(double orderamountsrp) {  // Setter for orderamountsrp
+        this.orderamountsrp = orderamountsrp;
     }
 
     public Customer getCustomer() {

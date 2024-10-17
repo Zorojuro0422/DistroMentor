@@ -13,7 +13,7 @@ const StyledCard = styled(Card)({
   display: 'flex',
   marginTop: 50,
   width: '1280px',
-  height: '600px',
+  height: '550px',
   alignItems: 'center',
   borderRadius: '25px',
   justifyContent: 'left',
@@ -72,6 +72,8 @@ const ButtonStyle = styled(Button)({
 });
 
 export default function ProductRegistration() {
+  const userFromStorage = JSON.parse(localStorage.getItem("user")!);
+  const distributorId = userFromStorage?.distributor?.distributorid || "";
   const navigate = useNavigate();
   const [productID, setProductID] = useState('');
   const [productName, setProductName] = useState('');
@@ -88,16 +90,30 @@ export default function ProductRegistration() {
     unit: '',
     price: '',
     quantity: '',
+    suggestedRetailPrice: '',
+    expirationDate: '',
   });
+  const [suggestedRetailPrice, setSuggestedRetailPrice] = useState('');
+  const [expirationDate, setExpirationDate] = useState<Date | null>(null);
 
   const handleSubmit = () => {
-    if (!productID || !productName || !unit || !price || !quantity) {
+    if (
+      !productID ||
+      !productName ||
+      !unit ||
+      !price ||
+      !quantity ||
+      !suggestedRetailPrice ||
+      !expirationDate
+    ) {
       setFieldWarning({
         productID: !productID ? 'Product ID is required' : '',
         productName: !productName ? 'Product Name is required' : '',
         unit: !unit ? 'Unit is required' : '',
         price: !price ? 'Price is required' : '',
         quantity: !quantity ? 'Quantity is required' : '',
+        suggestedRetailPrice: !suggestedRetailPrice ? 'SRP is required' : '',
+        expirationDate: !expirationDate ? 'Expiration Date is required' : '',
       });
       return;
     }
@@ -108,6 +124,9 @@ export default function ProductRegistration() {
       unit: unit,
       price: parseFloat(price),
       quantity: parseInt(quantity, 10),
+      suggestedRetailPrice: parseFloat(suggestedRetailPrice),
+      expirationDate: expirationDate, // Send it as a string (YYYY-MM-DD format)
+      distributorid: distributorId,
     };
 
     const url = 'http://localhost:8080/product/AddProduct';
@@ -121,12 +140,16 @@ export default function ProductRegistration() {
         setUnit('');
         setPrice('');
         setQuantity('');
+        setSuggestedRetailPrice('');
+         setExpirationDate(null);
         setFieldWarning({
           productID: '',
           productName: '',
           unit: '',
           price: '',
           quantity: '',
+          suggestedRetailPrice: '',
+          expirationDate: '',
         });
         setAlertTitle('Success');
         setAlertMessage('Product Added Successfully!');
@@ -178,53 +201,119 @@ export default function ProductRegistration() {
               }} />
           </div>
 
-          <div style={{ padding: '1px 1px 1px 30px', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', width: '100%' }}>
             <ContentNameTypography>Add Product</ContentNameTypography>
-            <div style={{ paddingTop: 30, paddingBottom: 50 }}>
-              <Grid container spacing={3}>
+            <div style={{ paddingTop: 20, paddingBottom: 30, width: '100%' }}>
+              <Grid container spacing={2}>
                 {/* Textfield For Product ID */}
-                <Grid item xs={12}>
-                  <StyledTextField variant="outlined" label="Product ID" style={{ width: '700px' }} value={productID} onChange={(e) => setProductID(e.target.value)} />
-                  <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
-                    {fieldWarning.productID}
-                  </FormHelperText>
+                <Grid item xs={6}>
+                  <StyledTextField
+                    variant="outlined"
+                    label="Product ID"
+                    fullWidth
+                    value={productID}
+                    onChange={(e) => setProductID(e.target.value)}
+                  />
+                  <FormHelperText style={{ color: '#BD9F00' }}>{fieldWarning.productID}</FormHelperText>
                 </Grid>
+
                 {/* Textfield For Product Name */}
-                <Grid item xs={12}>
-                  <StyledTextField variant="outlined" label="Product Name" style={{ width: '700px' }} value={productName} onChange={(e) => setProductName(e.target.value)} />
-                  <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
-                    {fieldWarning.productName}
-                  </FormHelperText>
+                <Grid item xs={6}>
+                  <StyledTextField
+                    variant="outlined"
+                    label="Product Name"
+                    fullWidth
+                    value={productName}
+                    onChange={(e) => setProductName(e.target.value)}
+                  />
+                  <FormHelperText style={{ color: '#BD9F00' }}>{fieldWarning.productName}</FormHelperText>
                 </Grid>
-                <Grid item xs={12}>
-                  <StyledTextField variant="outlined" label="Unit" style={{ width: '700px' }} value={unit} onChange={(e) => setUnit(e.target.value)} />
-                  <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
-                    {fieldWarning.unit}
-                  </FormHelperText>
+
+                {/* Textfield For Unit */}
+                <Grid item xs={6}>
+                  <StyledTextField
+                    variant="outlined"
+                    label="Unit"
+                    fullWidth
+                    value={unit}
+                    onChange={(e) => setUnit(e.target.value)}
+                  />
+                  <FormHelperText style={{ color: '#BD9F00' }}>{fieldWarning.unit}</FormHelperText>
                 </Grid>
+
                 {/* Textfield For Price */}
-                <Grid item xs={12}>
-                  <StyledTextField variant="outlined" label="Price" style={{ width: '700px' }} value={price} onChange={(e) => setPrice(e.target.value)} />
-                  <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
-                    {fieldWarning.price}
-                  </FormHelperText>
+                <Grid item xs={6}>
+                  <StyledTextField
+                    variant="outlined"
+                    label="Price"
+                    fullWidth
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                  />
+                  <FormHelperText style={{ color: '#BD9F00' }}>{fieldWarning.price}</FormHelperText>
                 </Grid>
+
                 {/* Textfield For Quantity */}
-                <Grid item xs={12}>
-                  <StyledTextField variant="outlined" label="Quantity" style={{ width: '700px' }} value={quantity} onChange={(e) => setQuantity(e.target.value)} />
-                  <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
-                    {fieldWarning.quantity}
-                  </FormHelperText>
+                <Grid item xs={6}>
+                  <StyledTextField
+                    variant="outlined"
+                    label="Quantity"
+                    fullWidth
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                  />
+                  <FormHelperText style={{ color: '#BD9F00' }}>{fieldWarning.quantity}</FormHelperText>
                 </Grid>
+
+                {/* Textfield For SRP */}
+                <Grid item xs={6}>
+                  <StyledTextField
+                    variant="outlined"
+                    label="SRP"
+                    fullWidth
+                    value={suggestedRetailPrice}
+                    onChange={(e) => setSuggestedRetailPrice(e.target.value)}
+                  />
+                  <FormHelperText style={{ color: '#BD9F00' }}>{fieldWarning.suggestedRetailPrice}</FormHelperText>
+                </Grid>
+
+                {/* Date Picker For Expiration Date */}
+                <Grid item xs={6}>
+                  <StyledTextField
+                    type="date"
+                    label="Expiration Date"
+                    fullWidth
+                    InputLabelProps={{ shrink: true }}
+                    value={expirationDate ? expirationDate.toISOString().split('T')[0] : ''}
+                    onChange={(e) => setExpirationDate(new Date(e.target.value))}
+                  />
+                  <FormHelperText style={{ color: '#BD9F00' }}>{fieldWarning.expirationDate}</FormHelperText>
+                </Grid>
+
+                {/* Submit Button */}
                 <Grid item xs={12}>
-                  <Button variant="contained" color="primary" onClick={handleSubmit} style={{ marginTop: '20px', width: '700px' }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleSubmit}
+                    fullWidth
+                    style={{
+                      marginTop: '10px',
+                      maxWidth: '400px',  // Set max width for better control
+                      width: '90%',       // Ensure it stretches within the grid
+                      marginLeft: 'auto',
+                      marginRight: 'auto', // Center the button
+                    }}
+                  >
                     Add Product
                   </Button>
                 </Grid>
+
               </Grid>
             </div>
           </div>
         </StyledCard>
+
         <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} style={{ top: '85px' }}>
           <Alert onClose={handleCloseSnackbar} severity={alertSeverity as 'success' | 'error'} sx={{ width: '100%' }}>
             <AlertTitle>{alertTitle}</AlertTitle>

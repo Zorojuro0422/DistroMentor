@@ -355,7 +355,7 @@ const DealerProfileDetails = () => {
     };
 
     const getOrderByDealerId = (dealerID: string) => {
-        axios.get(`http://localhost:8080/order/getOrderByDealerId/${dealerID}`)
+        axios.get(`http://localhost:8080/order/getAllConfirmedOrdersByDealerId/${dealerID}`)
             .then((response) => {
                 setOrders(response.data);
             })

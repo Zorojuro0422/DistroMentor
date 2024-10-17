@@ -5,46 +5,63 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0dcae2e2-d05e-445c-92af-dded0365df7e" name="Changes" comment="new update">
-      <change afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/Deposit.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/AllProductSubtotalController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/DealerTotalsController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/models/AllProductSubtotal.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/models/DealerTotals.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/repositories/AllProductSubtotalRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/repositories/DealerTotalsRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/services/AllProductSubtotalService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/services/DealerTotalsService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/DepositDetail.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/DepositReceipt.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/CustomerOrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/CustomerOrderController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/DepositController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/DepositController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/OrderController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/PaymentTransactionController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/models/DirectPaymentReceipt.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/ProductController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/models/CustomerOrder.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/models/CustomerOrder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/models/DealerProduct.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/models/DealerProduct.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/models/Deposit.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/models/Deposit.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/models/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/models/Order.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/models/PaymentReceipt.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/models/PaymentTransaction.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/repositories/DirectPaymentReceiptRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/repositories/PaymentReceiptRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/repositories/PaymentTransactionRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/services/DirectPaymentReceiptService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/models/OrderedProduct.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/models/OrderedProduct.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/models/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/models/Product.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/repositories/CustomerOrderRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/repositories/CustomerOrderRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/repositories/DepositRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/repositories/DepositRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/repositories/ProductRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/repositories/ProductRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/services/CustomerOrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/services/CustomerOrderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/services/DepositService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/services/DepositService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/services/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/services/OrderService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/services/PaymentReceiptService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/services/PaymentTransactionService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/services/ProductService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/services/ProductService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/CustomerOrderController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/CustomerOrderController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/OrderController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/OrderController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/OrderedProductController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/OrderedProductController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/PaymentTransactionController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/models/DirectPaymentReceipt.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/ProductController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/ProductController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/models/CustomerOrder.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/models/CustomerOrder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/models/DealerProduct.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/models/DealerProduct.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/models/Order.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/models/Order.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/models/PaymentReceipt.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/models/PaymentTransaction.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/repositories/DirectPaymentReceiptRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/repositories/PaymentReceiptRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/repositories/PaymentTransactionRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/services/DealerService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/services/DealerService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/services/DirectPaymentReceiptService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/models/OrderedProduct.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/models/OrderedProduct.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/models/Product.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/models/Product.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/repositories/CustomerOrderRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/repositories/CustomerOrderRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/repositories/ProductRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/repositories/ProductRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/services/CustomerOrderService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/services/CustomerOrderService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/services/OrderService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/services/OrderService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/services/OrderedProductService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/services/OrderedProductService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/services/PaymentReceiptService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/services/PaymentTransactionService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/services/ProductService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/services/ProductService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 2 - Registrations/AddProductUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 2 - Registrations/AddProductUI.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 3 - Dashboards/DashboardUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 3 - Dashboards/DashboardUI.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/PaymentReceiptDetailsPrint.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/PaymentReceiptDetailsUI.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/PaymentsListUI.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/RecordDirectPaymentUI.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Global Components/NewNavBarDealer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Global Components/NewNavBarDealer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/DealerProfileDetailsUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/DealerProfileDetailsUI.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/DealerProfilesListUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/DealerProfilesListUI.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/ProductListUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/ProductListUI.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/CustomerOrderForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/CustomerOrderForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/DealerOrderFormUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/DealerOrderFormUI.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/DistributorOrderFormUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/DistributorOrderFormUI.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/OrderConfirmationUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/OrderConfirmationUI.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/Deposit.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/Deposit.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Global Components/Contents.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Global Components/Contents.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Global Components/NewAppBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Global Components/NewAppBar.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Global Components/Routes.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Global Components/Routes.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Global Components/RoutesSignUp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Global Components/RoutesSignUp.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/RestCalls/DealerUseRest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/RestCalls/DealerUseRest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/RestCalls/Interfaces.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/RestCalls/Interfaces.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/RestCalls/OrderUseRest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/RestCalls/OrderUseRest.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +117,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Frontend/distributorsystem/public" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="project.propCompiler" />
   </component>
@@ -110,6 +127,7 @@
       <recent name="com.group29.distromentorsystem.models" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Gabriel\Desktop\FinalCaps2\DistroMentor-Capstone\Frontend\distributorsystem\src\Components\Module 8 - Payments" />
       <recent name="C:\Users\Gabriel\Desktop\FinalCaps2\DistroMentor-Capstone\Frontend\distributorsystem\public" />
       <recent name="C:\Users\Gabriel\Desktop\FinalCaps2\DistroMentor-Capstone\Frontend\distributorsystem\src\Global Components\Images" />
     </key>
@@ -161,7 +179,14 @@
       <option name="project" value="LOCAL" />
       <updated>1728482154411</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="new update">
+      <created>1728500022780</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1728500022780</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="UnknownFeatures">

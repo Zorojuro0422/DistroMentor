@@ -34,7 +34,6 @@ export const useRestOrder = (): [
 
 
     function newOrder(order: IOrder) {
-
         axios.post('http://localhost:8080/order/createOrder', {
             orderid: order.orderid,
             distributiondate: order.distributiondate,
@@ -42,7 +41,21 @@ export const useRestOrder = (): [
             paymentterms: order.paymentterms,
             orderdate: order.orderdate,
             orderamount: order.orderamount,
-            orderedproducts: order.orderedproducts,
+            orderamountsrp: order.orderamountsrp,  // Add SRP total
+            orderedproducts: order.orderedproducts.map((op) => ({
+                orderedproductid: op.orderedproductid,
+                quantity: op.quantity,
+                subtotal: op.subtotal,
+                totalsrp: op.totalsrp,  // Ensure totalsrp is passed for each product
+                product: {
+                    productid: op.product.productid,
+                    name: op.product.name,
+                    unit: op.product.unit,
+                    quantity: op.product.quantity,
+                    price: op.product.price,
+                    suggestedRetailPrice: op.product.suggestedRetailPrice,  // Ensure SRP is included
+                },
+            })),
             distributor: {
                 distributorid: order.distributor.distributorid,
                 firstname: order.distributor.firstname,
@@ -78,25 +91,20 @@ export const useRestOrder = (): [
                 businesstin: order.dealer.businesstin,
                 creditlimit: order.dealer.creditlimit,
                 submissiondate: order.dealer.submissiondate,
-
             },
             collector: null,
             paymenttransactionids: [],
             confirmed: order.confirmed,
             closed: order.isclosed
-
-
-
         })
-            .then((response) => {
-
-                // alert("success!");
-            })
-            .catch((error) => {
-
-                // alert("Error creating a new record. Please try again.");
-            });
+        .then((response) => {
+            console.log("Order created successfully!", response.data);
+        })
+        .catch((error) => {
+            console.error("Error creating a new order:", error);
+        });
     }
+
 
     function updateOrder(orderID: string | undefined, updatedOrder: IOrder) {
         updatedOrder.orderedproducts.map((op) => {

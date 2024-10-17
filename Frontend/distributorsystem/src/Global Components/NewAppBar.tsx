@@ -50,6 +50,26 @@ const TypeTypography = styled(Typography)({
     marginRight: 16
 })
 
+const LimitTypography = styled(Typography)({
+    color: '#8B0000',
+    textAlign: 'right',
+    fontSize: 12,
+    marginRight: 16,
+});
+
+const BalanceTypography = styled(Typography)({
+    color: '#006400',
+    textAlign: 'right',
+    fontSize: 12,
+    marginRight: 16,
+});
+
+const OrderAmountTypography = styled(Typography)({
+    color: '#00008B',
+    textAlign: 'right',
+    fontSize: 12,
+    marginRight: 16,
+});
 
 
 export default function NewAppBar(props: navProps) {
@@ -59,6 +79,36 @@ export default function NewAppBar(props: navProps) {
     const [dealerDocuments, setDealerDocuments] = useState<IDealerDocument[]>([]);
     const [distributorDocuments, setDistributorDocuments] = useState<IDistributorDocument[]>([]);
     const { objectId } = useParams();
+    const [totalOrderAmount, setTotalOrderAmount] = useState<number>(0);
+    const [creditLimit, setCreditLimit] = useState<number>(0);
+    const [remainingCredit, setRemainingCredit] = useState<number>(0);
+
+
+     const dealer = userFromStorage?.dealer;
+
+        useEffect(() => {
+            if (dealer && dealer.dealerid) {
+                fetchTotalOrderAmount(dealer.dealerid);
+            }
+        }, [dealer]);
+
+     const fetchTotalOrderAmount = async (dealerId: string) => {
+         try {
+             const response = await axios.get(`http://localhost:8080/allProductSubtotals/getByDealerId/${dealerId}`);
+
+             // Extract the totalProductSubtotal from the response data
+             const totalProductSubtotal = response.data?.totalProductSubtotal || 0;
+
+             // Set the total order amount
+             setTotalOrderAmount(totalProductSubtotal);
+
+             // Calculate the remaining credit and set it
+             const remaining = dealer.creditlimit - totalProductSubtotal;
+             setRemainingCredit(remaining);
+         } catch (error) {
+             console.error('Error retrieving total product subtotal.', error);
+         }
+     };
 
     function getAllDistributorDocuments() {
         axios.get<IDistributorDocument[]>(`http://localhost:8080/distributorDocument/findAllDocumentsByDistributorId/${userFromStorage.distributor!.distributorid}`)
@@ -249,25 +299,44 @@ export default function NewAppBar(props: navProps) {
                         <Toolbar disableGutters>
                             <Box sx={{ flexGrow: 2.5, marginLeft: 15, paddingTop: 1 }}>
                                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                    <NavNameTypography>
-                                        {props.moduleName}
-                                    </NavNameTypography>
-                                    <NavContentTypography>
-                                        {props.moduleContent}
-                                    </NavContentTypography>
+                                    <NavNameTypography>{props.moduleName}</NavNameTypography>
+                                    <NavContentTypography>{props.moduleContent}</NavContentTypography>
                                 </div>
                             </Box>
                             <Box sx={{ flexGrow: 0.1, display: { xs: 'none', md: 'flex' }, paddingTop: 1 }}>
                                 <div style={{ display: 'flex', flexDirection: 'column', marginTop: 8 }}>
                                     {userFromStorage && userFromStorage!.tableName === "Distributor" && (
-                                        <NameTypography>
-                                            {userFromStorage.distributor.firstname + " " + userFromStorage.distributor.lastname}
-                                        </NameTypography>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                            <NameTypography>
+                                                {userFromStorage.distributor.firstname + " " + userFromStorage.distributor.lastname}
+                                            </NameTypography>
+                                            <TypeTypography>Distributor</TypeTypography>
+                                        </Box>
                                     )}
                                     {userFromStorage && userFromStorage!.tableName === "Dealer" && (
-                                        <NameTypography>
-                                            {userFromStorage.dealer.firstname + " " + userFromStorage.dealer.lastname}
-                                        </NameTypography>
+                                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+                                            {/* Credit Information (beside the Dealer Name and Label) */}
+                                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginLeft: 2 }}>
+                                                <LimitTypography>
+                                                    Credit Limit: {userFromStorage.dealer.creditlimit.toFixed(2)}
+                                                </LimitTypography>
+                                                <OrderAmountTypography>
+                                                    Total Order Amount: {totalOrderAmount.toFixed(2)}
+                                                </OrderAmountTypography>
+                                                <BalanceTypography>
+                                                    Remaining Credit Limit: {remainingCredit.toFixed(2)}
+                                                </BalanceTypography>
+                                            </Box>
+
+                                            {/* Dealer Name and Label */}
+                                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                                <NameTypography>
+                                                    {userFromStorage.dealer.firstname + " " + userFromStorage.dealer.lastname}
+                                                </NameTypography>
+                                                <TypeTypography>Dealer</TypeTypography>
+                                            </Box>
+
+                                        </Box>
                                     )}
                                     {userFromStorage && userFromStorage!.tableName === "Sales Associate" && (
                                         <NameTypography>
@@ -284,78 +353,40 @@ export default function NewAppBar(props: navProps) {
                                             {userFromStorage.salesAssociateAndCashier.firstname + " " + userFromStorage.salesAssociateAndCashier.lastname}
                                         </NameTypography>
                                     )}
-                                    {userFromStorage && userFromStorage!.tableName === "Distributor" && (
-                                        <TypeTypography>
-                                            Distributor
-                                        </TypeTypography>
-                                    )}
-                                    {userFromStorage && userFromStorage!.tableName === "Dealer" && (
-                                        <TypeTypography>
-                                            Dealer
-                                        </TypeTypography>
-                                    )}
-                                    {userFromStorage && userFromStorage!.tableName === "Sales Associate" && (
-                                        <TypeTypography>
-                                            Sales Associate
-                                        </TypeTypography>
-                                    )}
-                                    {userFromStorage && userFromStorage!.tableName === "Cashier" && (
-                                        <TypeTypography>
-                                            Cashier
-                                        </TypeTypography>
-                                    )}
-                                    {userFromStorage && userFromStorage!.tableName === "Sales Associate and Cashier" && (
-                                        <TypeTypography>
-                                            Sales Associate and Cashier
-                                        </TypeTypography>
-                                    )}
-                                    {/* {userFromStorage.distributor.firstname + " " + userFromStorage.distributor.lastname}
-                                     */}
-
                                 </div>
+
                                 <Tooltip title='Open Profile'>
                                     <IconButton onClick={handleOpenUserMenu}>
-                                        {userFromStorage && userFromStorage!.tableName == 'Sales Associate and Cashier' && (
-                                            <Avatar alt={userFromStorage.salesAssociateAndCashier.firstname+" "+userFromStorage.salesAssociateAndCashier.lastname} src={bothImageSource} />
+                                        {userFromStorage && userFromStorage!.tableName === 'Dealer' && (
+                                            <Avatar
+                                                alt={`${userFromStorage.dealer.firstname} ${userFromStorage.dealer.lastname}`}
+                                                src={dealerImageSource}
+                                            />
                                         )}
-                                        {userFromStorage && userFromStorage!.tableName == 'Sales Associate' && (
-                                            <Avatar alt={userFromStorage.salesAssociate.firstname+" "+userFromStorage.salesAssociate.lastname} src={salesAssociateImageSource} />
-                                        )}
-                                        {userFromStorage && userFromStorage!.tableName == 'Cashier' && (
-                                            <Avatar alt={userFromStorage.cashier.firstname+" "+userFromStorage.cashier.lastname} src={cashierImageSource} />
-                                        )}
-                                        {userFromStorage && userFromStorage!.tableName == 'Dealer' && (
-                                            <Avatar alt={userFromStorage.dealer.firstname+" "+userFromStorage.dealer.lastname} src={dealerImageSource} />
-                                        )}
-                                         {userFromStorage && userFromStorage!.tableName == 'Distributor' && (
-                                            <Avatar alt={userFromStorage.distributor.firstname+" "+userFromStorage.distributor.lastname} src={distributorImageSource} />
+                                        {userFromStorage && userFromStorage!.tableName === 'Distributor' && (
+                                            <Avatar
+                                                alt={`${userFromStorage.distributor.firstname} ${userFromStorage.distributor.lastname}`}
+                                                src={distributorImageSource}
+                                            />
                                         )}
                                     </IconButton>
                                 </Tooltip>
+
+                                {/* Menus */}
                                 {userFromStorage && userFromStorage!.tableName === "Distributor" && (
                                     <Menu
                                         sx={{ mt: '45px' }}
                                         anchorEl={anchorElUser}
-                                        anchorOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'right',
-                                        }}
+                                        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                                         keepMounted
-                                        transformOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'right',
-                                        }}
+                                        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                                         open={Boolean(anchorElUser)}
                                         onClose={handleCloseUserMenu}
                                     >
-
                                         {settings.map((setting) => (
-                                            <MenuItem onClick={() => handleSettingsClick(setting)}>
-                                                <NameTypography>
-                                                    <Typography textAlign='center'>{setting}</Typography>
-                                                </NameTypography>
+                                            <MenuItem onClick={() => handleSettingsClick(setting)} key={setting}>
+                                                <Typography textAlign='center'>{setting}</Typography>
                                             </MenuItem>
-
                                         ))}
                                     </Menu>
                                 )}
@@ -364,117 +395,73 @@ export default function NewAppBar(props: navProps) {
                                     <Menu
                                         sx={{ mt: '45px' }}
                                         anchorEl={anchorElUser}
-                                        anchorOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'right',
-                                        }}
+                                        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                                         keepMounted
-                                        transformOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'right',
-                                        }}
+                                        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                                         open={Boolean(anchorElUser)}
                                         onClose={handleCloseUserMenu}
                                     >
-
                                         {dealerSettings.map((setting) => (
-                                            <MenuItem onClick={() => handleSettingsClickDealer(setting)}>
+                                            <MenuItem onClick={() => handleSettingsClickDealer(setting)} key={setting}>
                                                 <Typography textAlign='center'>{setting}</Typography>
                                             </MenuItem>
-
                                         ))}
                                     </Menu>
                                 )}
+
                                 {userFromStorage && userFromStorage!.tableName === "Sales Associate" && (
                                     <Menu
                                         sx={{ mt: '45px' }}
                                         anchorEl={anchorElUser}
-                                        anchorOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'right',
-                                        }}
+                                        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                                         keepMounted
-                                        transformOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'right',
-                                        }}
+                                        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                                         open={Boolean(anchorElUser)}
                                         onClose={handleCloseUserMenu}
                                     >
-
                                         {employeeSettings.map((setting) => (
-                                            <MenuItem onClick={() => handleSettingsClickSales(setting)}>
-                                                <NameTypography>
-                                                    <Typography textAlign='center'>{setting}</Typography>
-                                                </NameTypography>
+                                            <MenuItem onClick={() => handleSettingsClickSales(setting)} key={setting}>
+                                                <Typography textAlign='center'>{setting}</Typography>
                                             </MenuItem>
-
                                         ))}
                                     </Menu>
                                 )}
-                                {userFromStorage && userFromStorage!.tableName === "Sales Associate and Cashier" && (
-                                    <Menu
-                                        sx={{ mt: '45px' }}
-                                        anchorEl={anchorElUser}
-                                        anchorOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'right',
-                                        }}
-                                        keepMounted
-                                        transformOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'right',
-                                        }}
-                                        open={Boolean(anchorElUser)}
-                                        onClose={handleCloseUserMenu}
-                                    >
 
-                                        {employeeSettings.map((setting) => (
-                                            <MenuItem onClick={() => handleSettingsClickBoth(setting)}>
-                                                <NameTypography>
-                                                    <Typography textAlign='center'>{setting}</Typography>
-                                                </NameTypography>
-                                            </MenuItem>
-
-                                        ))}
-                                    </Menu>
-                                )}
                                 {userFromStorage && userFromStorage!.tableName === "Cashier" && (
                                     <Menu
                                         sx={{ mt: '45px' }}
                                         anchorEl={anchorElUser}
-                                        anchorOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'right',
-                                        }}
+                                        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                                         keepMounted
-                                        transformOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'right',
-                                        }}
+                                        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                                         open={Boolean(anchorElUser)}
                                         onClose={handleCloseUserMenu}
                                     >
-
                                         {employeeSettings.map((setting) => (
-                                            <MenuItem onClick={() => handleSettingsClickCashier(setting)}>
-                                                <NameTypography>
-                                                    <Typography textAlign='center'>{setting}</Typography>
-                                                </NameTypography>
+                                            <MenuItem onClick={() => handleSettingsClickCashier(setting)} key={setting}>
+                                                <Typography textAlign='center'>{setting}</Typography>
                                             </MenuItem>
-
                                         ))}
                                     </Menu>
                                 )}
 
-
-
-
-
-
-
-
-
+                                {userFromStorage && userFromStorage!.tableName === "Sales Associate and Cashier" && (
+                                    <Menu
+                                        sx={{ mt: '45px' }}
+                                        anchorEl={anchorElUser}
+                                        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                                        keepMounted
+                                        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                                        open={Boolean(anchorElUser)}
+                                        onClose={handleCloseUserMenu}
+                                    >
+                                        {employeeSettings.map((setting) => (
+                                            <MenuItem onClick={() => handleSettingsClickBoth(setting)} key={setting}>
+                                                <Typography textAlign='center'>{setting}</Typography>
+                                            </MenuItem>
+                                        ))}
+                                    </Menu>
+                                )}
                             </Box>
                         </Toolbar>
                     </Container>

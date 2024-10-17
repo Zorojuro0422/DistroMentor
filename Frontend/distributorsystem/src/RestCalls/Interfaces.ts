@@ -130,23 +130,24 @@ export interface IOrderedProducts {
     product: IProduct;
     quantity: number;
     subtotal: number;
+    totalsrp: number; // Total SRP for the product
 }
 
 export interface IOrder {
-    orderid: string,
-    distributiondate: string,
-    orderdate: string,
-    penaltyrate: number,
-    paymentterms: number,
-    orderamount:number,
-    distributor: IDistributor,
-    collector: IEmployee | null,
-    dealer: IDealer,
-    orderedproducts: IOrderedProducts[],
-    paymenttransactions: IPaymentTransaction[] ,
-    confirmed: boolean,
-    isclosed: boolean
-    
+    orderid: string;
+    distributiondate: string;
+    orderdate: string;
+    penaltyrate: number;
+    paymentterms: number;
+    orderamount: number; // Total amount based on product prices
+    orderamountsrp: number; // Total amount based on SRP
+    distributor: IDistributor;
+    collector: IEmployee | null;
+    dealer: IDealer;
+    orderedproducts: IOrderedProducts[];
+    paymenttransactions: IPaymentTransaction[];
+    confirmed: boolean;
+    isclosed: boolean;
 }
 
 
@@ -156,7 +157,9 @@ export interface IProduct {
     quantity: number;
     name: string;
     price: number;
+    suggestedRetailPrice: number;
     unit: string;
+    expirationDate: string;
     orderedproductids: string[]
 }
 
@@ -220,4 +223,21 @@ export interface DealerProduct {
   quantity: number;
   unit: string;
   price: number;
+  suggestedRetailPrice: number;  // Add SRP field
+  expirationDate: string;  // Add expiration date field (as a string or Date)
+}
+
+
+export interface IDeposit {
+  depositid: string; // Unique identifier for each deposit
+  transactionnumber: string; // Transaction number of the deposit
+  amount: number; // Amount deposited
+  proofOfRemittance: string; // Path to the uploaded proof image
+  isconfirm: boolean; // True if confirmed, false otherwise
+  dealerid: string; // Reference to the dealer's ID
+  distributorid: string; // Reference to the distributor's ID
+  submissionDate: string; // Submission date and time of the deposit
+  dealer: IDealer | null; // Linked dealer object, if available
+  distributor: IDistributor | null; // Linked distributor object, if available
+  declineReason?: string;
 }

@@ -314,6 +314,7 @@ export default function OrderConfirmation() {
           product: chosenProduct,
           quantity: Number(quantity),
           subtotal: chosenProduct.price * Number(quantity),
+          totalsrp: chosenProduct.suggestedRetailPrice * Number(quantity),
         };
 
         const updatedOrderedProducts = [...orderedProducts, newOrderedProduct];
@@ -391,6 +392,7 @@ export default function OrderConfirmation() {
       const orderAmount = orderedProducts.reduce((total, product) => {
         return total + product.product.price * product.quantity;
       }, 0);
+      const orderAmountSRP = orderedProducts.reduce((total, product) => total + product.totalsrp, 0);
 
       const updatedOrder: IOrder = {
         orderid: existingOrderId!,
@@ -399,13 +401,14 @@ export default function OrderConfirmation() {
         penaltyrate: Number(penaltyRateRef.current?.value),
         paymentterms: paymentTerm,
         orderamount: orderAmount,
+        orderamountsrp: orderAmountSRP,
         distributor: dealer?.distributor!,
         collector: null,
         dealer: dealer!,
         orderedproducts: orderedProducts,
         paymenttransactions: [],
         confirmed: true,
-        isclosed: false
+        isclosed: false,
       };
 
       try {
@@ -426,69 +429,80 @@ export default function OrderConfirmation() {
               name: product.name,
               quantity: updatedQuantity,
               unit: product.unit,
-              price: product.price
+              price: product.price,
             });
 
             // Fetch dealer products to check if the product already exists for the dealer
-                      const dealerProductsResponse = await axios.get<DealerProduct[]>(
-                        `http://localhost:8080/api/dealer-products/dealer/${order?.dealer.dealerid}`
-                      );
+            const dealerProductsResponse = await axios.get<DealerProduct[]>(
+              `http://localhost:8080/api/dealer-products/dealer/${order?.dealer.dealerid}`
+            );
 
-                      const existingDealerProduct = dealerProductsResponse.data.find(
-                        (dealerProduct: DealerProduct) => dealerProduct.productid === product.productid
-                      );
+            const existingDealerProduct = dealerProductsResponse.data.find(
+              (dealerProduct: DealerProduct) => dealerProduct.productid === product.productid
+            );
 
-                      if (existingDealerProduct) {
-                        // If the product exists, update the quantity by adding the new quantity
-                        const newQuantity = existingDealerProduct.quantity + orderedProduct.quantity;
-                        await axios.put(
-                          `http://localhost:8080/api/dealer-products/${existingDealerProduct.dealerproductid}`,
-                          {
-                            dealerproductid: existingDealerProduct.dealerproductid,
-                            dealerid: existingDealerProduct.dealerid,
-                            productid: existingDealerProduct.productid,
-                            name: existingDealerProduct.name,
-                            quantity: newQuantity, // Update the quantity
-                            unit: existingDealerProduct.unit,
-                            price: existingDealerProduct.price
-                          }
-                        );
-                      } else {
-                        // If the product doesn't exist, create a new dealer product
-                        const dealerProductPayload = {
-                          dealerproductid: uuidv4().slice(0, 8),  // Autogenerate dealer product ID
-                          dealerid: order?.dealer.dealerid!,  // Get dealer ID
-                          productid: product.productid,  // Pass the productid here
-                          name: product.name,  // Product name
-                          quantity: orderedProduct.quantity,  // Product quantity
-                          unit: product.unit,  // Product unit
-                          price: product.price  // Product price
-                        };
-
-                        // Post the new dealer product to the API
-                        await axios.post('http://localhost:8080/api/dealer-products', dealerProductPayload);
-                      }
-                    } catch (error) {
-                      console.error('Error updating product quantity or posting dealer product:', error);
-                    }
-                  });
-
-                  // Ensure all product quantity updates and dealer product posts are completed
-                  await Promise.all(updateProductQuantities);
-
-                  // Show success message and clear inputs
-                  saveHandleAlert('Success Saving Order', "The Dealer's ordered products have been successfully updated & confirmed!", 'success');
-                  clearInputValues();
-
-                } catch (error) {
-                  // Handle errors during order update or product posting
-                  saveHandleAlert('Error Saving Order', "An error occurred while saving the order. Please try again.", 'error');
-                  console.error('Error updating order:', error);
+            if (existingDealerProduct) {
+              // If the product exists, update the quantity by adding the new quantity
+              const newQuantity = existingDealerProduct.quantity + orderedProduct.quantity;
+              await axios.put(
+                `http://localhost:8080/api/dealer-products/${existingDealerProduct.dealerproductid}`,
+                {
+                  dealerproductid: existingDealerProduct.dealerproductid,
+                  dealerid: existingDealerProduct.dealerid,
+                  productid: existingDealerProduct.productid,
+                  name: existingDealerProduct.name,
+                  quantity: newQuantity, // Update the quantity
+                  unit: existingDealerProduct.unit,
+                  price: existingDealerProduct.price,
+                  suggestedRetailPrice: existingDealerProduct.suggestedRetailPrice || 0, // Suggested retail price
+                  expirationDate: existingDealerProduct.expirationDate, // Product expiration date
                 }
-              } else {
-                saveHandleAlert('Cart is Empty.', "Order hasn't been confirmed because cart is empty. Add a product before confirming order", 'error');
-              }
-            };
+              );
+            } else {
+              // If the product doesn't exist, create a new dealer product
+              const dealerProductPayload = {
+                dealerproductid: uuidv4().slice(0, 8), // Autogenerate dealer product ID
+                dealerid: order?.dealer.dealerid!, // Get dealer ID
+                productid: product.productid, // Pass the product ID here
+                name: product.name, // Product name
+                quantity: orderedProduct.quantity, // Product quantity
+                unit: product.unit, // Product unit
+                price: product.price, // Product price
+                suggestedRetailPrice: product.suggestedRetailPrice || 0,
+                expirationDate: product.expirationDate,
+              };
+
+              // Post the new dealer product to the API
+              await axios.post('http://localhost:8080/api/dealer-products', dealerProductPayload);
+            }
+          } catch (error) {
+            console.error('Error updating product quantity or posting dealer product:', error);
+          }
+        });
+
+        // Ensure all product quantity updates and dealer product posts are completed
+        await Promise.all(updateProductQuantities);
+
+        // Post the AllProductSubtotal after confirming the order
+       await axios.post('http://localhost:8080/allProductSubtotals/saveOrUpdate', {
+         dealerid: order?.dealer.dealerid!,         // Make sure this dealerid exists and is correct
+         totalProductSubtotal: orderAmount,         // Pass the subtotal (orderAmount) here
+       });
+
+        // Show success message and clear inputs
+        saveHandleAlert('Success Saving Order', "The Dealer's ordered products have been successfully updated & confirmed!", 'success');
+        clearInputValues();
+
+      } catch (error) {
+        // Handle errors during order update or product posting
+        saveHandleAlert('Error Saving Order', "An error occurred while saving the order. Please try again.", 'error');
+        console.error('Error updating order:', error);
+      }
+    } else {
+      saveHandleAlert('Cart is Empty.', "Order hasn't been confirmed because cart is empty. Add a product before confirming order", 'error');
+    }
+  };
+
 
 
 

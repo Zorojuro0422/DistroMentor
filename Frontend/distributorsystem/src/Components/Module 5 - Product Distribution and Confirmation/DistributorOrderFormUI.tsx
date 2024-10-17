@@ -382,6 +382,7 @@ export default function ProductDistributionList() {
           product: chosenProduct,
           quantity: Number(quantity),
           subtotal: chosenProduct.price * Number(quantity),
+          totalsrp: chosenProduct.suggestedRetailPrice * Number(quantity),
         };
         setOrderedProducts([...orderedProducts, newOrderedProduct]);
         setChosenProduct(null);
@@ -475,6 +476,7 @@ export default function ProductDistributionList() {
       const orderAmount = orderedProducts.reduce((total, product) => {
         return total + product.product.price * product.quantity;
       }, 0);
+      const orderAmountSRP = orderedProducts.reduce((total, product) => total + product.totalsrp, 0);
 
       if (orderAmount < dealerRemainingCredit!) {
         newOrder({
@@ -485,6 +487,7 @@ export default function ProductDistributionList() {
           penaltyrate: Number(penaltyRateRef.current?.value),
           paymentterms: paymentTerm,
           orderamount: orderAmount,
+          orderamountsrp: orderAmountSRP,
           distributor: dealer!.distributor,
           collector: null,
           dealer: dealer!,

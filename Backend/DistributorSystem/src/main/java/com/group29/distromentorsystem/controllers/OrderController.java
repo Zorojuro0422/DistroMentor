@@ -54,11 +54,6 @@ public class OrderController {
         return new ResponseEntity<>(orderService.assignCollector(orderid, collector), HttpStatus.OK);
     }*/
 
-    @PutMapping("/assignCollector/{collectorid}")
-    public ResponseEntity<Object> assignCollector(@PathVariable String  collectorid, @RequestBody  String[] orderids) {
-        return orderService.assignCollector(orderids, collectorid);
-    }
-
     @PutMapping("/removeCollector/{orderid}")
     public ResponseEntity<Object> removeCollector(@PathVariable String orderid){
         return new ResponseEntity<>(orderService.removeCollector(orderid), HttpStatus.OK);
@@ -109,6 +104,4 @@ public class OrderController {
         Double totalSubtotal = orderService.getTotalOrderedProductsSubtotalByDealerId(dealerId);
         return new ResponseEntity<>(totalSubtotal, HttpStatus.OK);
     }
-
-
 }

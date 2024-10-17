@@ -309,26 +309,37 @@ export const useRestDealer = (): [
                 console.error('Error retrieving dealer data:', error);
             });
 
-        axios.get(`http://localhost:8080/order/getTotalOrderedProductsSubtotalByDealerId/${dealerID}`)
+        axios.get(`http://localhost:8080/allProductSubtotals/getByDealerId/${dealerID}`)
             .then((response) => {
-                setDealerCreditLimit(response.data);
-                remainingCredit = creditLimit - response.data;
-                console.log("remaining credit" + remainingCredit);
+                // Assuming the response structure contains the totalProductSubtotal field
+                const totalProductSubtotal = response.data.totalProductSubtotal;
+
+                // Update the dealer credit limit and calculate remaining credit
+                setDealerCreditLimit(totalProductSubtotal);
+                const remainingCredit = creditLimit - totalProductSubtotal;
+
+                console.log("Remaining Credit: " + remainingCredit);
                 setDealerRemainingCredit(remainingCredit);
-                toast.success("Total Ordered Amount: ₱" + response.data + ". Remaining Credit: ₱" + remainingCredit, {
-                    position: "bottom-right",
-                    autoClose: 5000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                })
+
+                // Display a success message with toast notification
+                toast.success(
+                    `Total Ordered Amount: ₱${totalProductSubtotal}. Remaining Credit: ₱${remainingCredit}`,
+                    {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    }
+                );
             })
             .catch((error) => {
                 console.error('Error retrieving dealer credit limit:', error);
             });
+
 
     }
 

@@ -19,7 +19,7 @@ const StyledCard = styled(Card)({
   display: 'flex',
   marginTop: 50,
   width: '1280px',
-  height: '600px',
+  height: '560px',
   alignItems: 'center',
   borderRadius: '25px',
   justifyContent: 'left',
@@ -36,13 +36,11 @@ const StyleGrid = styled(Grid)({
 });
 
 const ContentNameTypography = styled(Typography)({
-  paddingTop: '15px',
+  paddingTop: '25px',
   fontFamily: 'Inter',
   fontWeight: 'bold',
-  textAlign: 'center',
+  textAlign: 'left',
   fontSize: '25px',
-  margin: '-15px 0 10px -450px',
-  paddingLeft: '10px',
   color: '#203949',
 });
 
@@ -102,24 +100,28 @@ const ProductList: React.FC = () => {
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(5); // 5 rows per page
+  const userFromStorage = JSON.parse(localStorage.getItem("user")!);
 
-  useEffect(() => {
-    fetchProducts();
-  }, [search]);
+   useEffect(() => {
+     fetchAllProducts(); // Call to fetch all products
+   }, [search]);
 
-  const fetchProducts = async () => {
+  const fetchAllProducts = async () => {
     try {
       const response = await axios.get('http://localhost:8080/product/getAllProducts');
       setProducts(response.data);
     } catch (error) {
       console.error('Error fetching products:', error);
+      setAlertMessage('Error fetching products.');
+      setAlertSeverity('error');
+      setOpenSnackbar(true);
     }
   };
 
   const handleDelete = async (productId: string) => {
     try {
       await axios.delete(`http://localhost:8080/product/${productId}`);
-      fetchProducts();
+      fetchAllProducts();
       setAlertMessage('Product deleted successfully!');
       setAlertSeverity('success');
       setOpenSnackbar(true);

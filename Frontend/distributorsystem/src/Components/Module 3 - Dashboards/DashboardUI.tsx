@@ -1,9 +1,10 @@
 import { Grid, Paper, Autocomplete, Typography, styled, Table, TableContainer, TableHead, TableRow, TableCell, TableBody, Box, LinearProgress } from "@mui/material";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { ICollectionPaymentReceipt, IDealer, IDirectPaymentReceipt, IDistributor, IOrder, IPaymentReceipt } from "../../RestCalls/Interfaces";
+import { IDealer, IDistributor, IOrder, IDeposit } from "../../RestCalls/Interfaces";
 import { useNavigate } from "react-router-dom";
 import logo5 from '../../Global Components/Images/logo5.png';
+import moment from 'moment';
 
 
 const ProductName = styled(Typography)({
@@ -178,12 +179,20 @@ export default function Dashboard() {
     const rowsPerPage = 5;
     const [unconfirmedDealers, setUnconfirmedDealers] = useState<IDealer[]>();
     const [unconfirmedOrders, setUnconfirmedOrders] = useState<IOrder[]>();
-    const [unconfirmedCollectionPaymentReceipts, setUnconfirmedCollectionPaymentReceipts] = useState<ICollectionPaymentReceipt[]>();
+    const [unconfirmedDeposits, setUnconfirmedDeposits] = useState<IDeposit[]>([]);
+    const [dealers, setDealers] = useState<Record<string, IDealer>>({});
     const paginatedOrders = unconfirmedOrders?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
     const emptyRows = rowsPerPage - (paginatedOrders?.length || 0);
     const handleRowClick = (orderId: string) => {
             navigate(`/orderConfirmation/${orderId}`);
         };
+    const handleDealerClick = (dealerId: string) => {
+        navigate(`/dealerProfileDetails/${dealerId}`); // Navigate to dealer profile page
+      };
+    const handleDepositClick = (depositId: string) => {
+        navigate(`/depositDetails/${depositId}`);
+    };
+
     const handleChangePage = (event: unknown, newPage: number) => {
             setPage(newPage);
         };
@@ -213,41 +222,58 @@ export default function Dashboard() {
             });
     }
 
-    const getAllUnconfirmedCollectionPaymentReceipts = () => {
-        axios.get(``)
-            .then((response) => {
-                setUnconfirmedCollectionPaymentReceipts(response.data);
-            })
-            .catch((error) => {
-                console.error('Error fetching data: ', error);
-            });
-    }
+    const getAllUnconfirmedDeposits = () => {
+        axios
+          .get<IDeposit[]>(`http://localhost:8080/api/deposits/unconfirmed/distributor/${userFromStorage.distributor.distributorid}`)
+          .then((response) => {
+            setUnconfirmedDeposits(response.data);
+          })
+          .catch((error) => {
+            console.error('Error fetching unconfirmed deposits:', error);
+          });
+    };
 
     const handleDealersListClick = () => {
         navigate(`/dealerProfileList`);
     }
 
     const handlePaymentsListClick = () => {
-        navigate(`/paymentList`);
+        navigate(`/depositReceipt`);
     }
 
     const handleOrdersListClick = () => {
         navigate(`/productDistributionList`);
     }
 
+    const fetchDealerById = async (dealerid: string) => {
+        try {
+          const response = await axios.get<IDealer>(`http://localhost:8080/dealer/getDealerByID/${dealerid}`);
+          setDealers((prevDealers) => ({ ...prevDealers, [dealerid]: response.data }));
+        } catch (error) {
+          console.error(`Error fetching dealer ${dealerid}:`, error);
+        }
+      };
 
+    useEffect(() => {
+      // Fetch dealer data for each deposit
+      unconfirmedDeposits.forEach((deposit) => {
+        if (!dealers[deposit.dealerid]) {
+          fetchDealerById(deposit.dealerid);
+        }
+      });
+    }, [unconfirmedDeposits]);
 
     useEffect(() => {
         getAllUnconfirmedDealers();
         getAllUnconfirmedOrders();
-        getAllUnconfirmedCollectionPaymentReceipts();
-    }, [unconfirmedDealers, unconfirmedOrders, unconfirmedCollectionPaymentReceipts]);
+        getAllUnconfirmedDeposits();
+    }, [unconfirmedDealers, unconfirmedOrders, unconfirmedDeposits]);
 
 
     return (
         <Grid container>
             
-             {unconfirmedOrders || unconfirmedCollectionPaymentReceipts || unconfirmedDealers ? (
+             {unconfirmedOrders || unconfirmedDeposits || unconfirmedDealers ? (
             <><PendingOrdersGrid item container>
                         <PendingOrdersPaper>
                             <PendingOrderTypo>Pending Orders</PendingOrderTypo>
@@ -316,24 +342,62 @@ export default function Dashboard() {
                     </PendingOrdersGrid>
                     <PendingPaymentsGrid item container>
                             <PendingPaymentsPaper>
-                                <PendingPaymentTypo>Pending Payments</PendingPaymentTypo>
+                                <PendingPaymentTypo>Pending Deposits</PendingPaymentTypo>
                                 <TableContainer>
                                     <Table aria-label='simple table'>
                                         <TableHead>
                                             <TableRow>
-                                                <TableHeaderCell align="center">Payment Transaction ID</TableHeaderCell>
-                                                <TableHeaderCell align="center">Payment Collection Date</TableHeaderCell>
-                                                <TableHeaderCell align="center">Amount Collected</TableHeaderCell>
+                                                <TableHeaderCell align="center">Transaction ID</TableHeaderCell>
+                                                <TableHeaderCell align="center">Submission Date</TableHeaderCell>
+                                                <TableHeaderCell align="center">Amount</TableHeaderCell>
+                                                <TableHeaderCell align="center">Dealer Name</TableHeaderCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {unconfirmedCollectionPaymentReceipts?.slice(0, 3).map((receipt) => (
-                                                <TableRow key={receipt.paymentreceiptid}>
-                                                    <TableCell align="center">{receipt.paymentreceiptid}</TableCell>
-                                                    <TableCell align="center">{receipt.collectiondate}</TableCell>
-                                                    <TableCell align="center">{receipt.collectionamount}</TableCell>
-                                                </TableRow>
-                                            ))}
+                                          {unconfirmedDeposits?.slice(0, 3).map((deposit) => (
+                                            <TableRow
+                                              key={deposit.depositid}
+                                              style={{ cursor: 'pointer', transition: 'color 0.3s ease' }}
+                                              onMouseEnter={() => setHoveredRow(deposit.depositid)}
+                                              onMouseLeave={() => setHoveredRow(null)}
+                                              onClick={() => handleDepositClick(deposit.depositid)}
+                                            >
+                                              <TableCell
+                                                align="center"
+                                                style={{
+                                                  color: hoveredRow === deposit.depositid ? 'blue' : 'inherit',
+                                                }}
+                                              >
+                                                {deposit.transactionnumber}
+                                              </TableCell>
+                                              <TableCell
+                                                align="center"
+                                                style={{
+                                                  color: hoveredRow === deposit.depositid ? 'blue' : 'inherit',
+                                                }}
+                                              >
+                                                {moment(deposit.submissionDate).format('YYYY-MM-DD')}
+                                              </TableCell>
+                                              <TableCell
+                                                align="center"
+                                                style={{
+                                                  color: hoveredRow === deposit.depositid ? 'blue' : 'inherit',
+                                                }}
+                                              >
+                                                ₱{deposit.amount}
+                                              </TableCell>
+                                              <TableCell
+                                                align="center"
+                                                style={{
+                                                  color: hoveredRow === deposit.depositid ? 'blue' : 'inherit',
+                                                }}
+                                              >
+                                                {dealers[deposit.dealerid]
+                                                  ? `${dealers[deposit.dealerid].firstname} ${dealers[deposit.dealerid].lastname}`
+                                                  : ''}
+                                              </TableCell>
+                                            </TableRow>
+                                          ))}
                                         </TableBody>
                                     </Table>
                                 </TableContainer>
@@ -351,13 +415,32 @@ export default function Dashboard() {
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {unconfirmedDealers?.slice(0, 5).map((dealer) => (
-                                                <TableRow key={dealer.dealerid}>
-                                                    <TableCell align="left">{dealer.firstname + " " + dealer.lastname}</TableCell>
-                                                    <TableCell align="left">{dealer.submissiondate}</TableCell>
-
-                                                </TableRow>
-                                            ))}
+                                          {unconfirmedDealers?.slice(0, 5).map((dealer) => (
+                                            <TableRow
+                                              key={dealer.dealerid}
+                                              style={{ cursor: 'pointer', transition: 'color 0.3s ease' }}
+                                              onMouseEnter={() => setHoveredRow(dealer.dealerid)}
+                                              onMouseLeave={() => setHoveredRow(null)}
+                                              onClick={() => handleDealerClick(dealer.dealerid)}
+                                            >
+                                              <TableCell
+                                                align="left"
+                                                style={{
+                                                  color: hoveredRow === dealer.dealerid ? 'blue' : 'inherit',
+                                                }}
+                                              >
+                                                {dealer.firstname + ' ' + dealer.lastname}
+                                              </TableCell>
+                                              <TableCell
+                                                align="left"
+                                                style={{
+                                                  color: hoveredRow === dealer.dealerid ? 'blue' : 'inherit',
+                                                }}
+                                              >
+                                                {dealer.submissiondate}
+                                              </TableCell>
+                                            </TableRow>
+                                          ))}
                                         </TableBody>
                                     </Table>
                                 </TableContainer>

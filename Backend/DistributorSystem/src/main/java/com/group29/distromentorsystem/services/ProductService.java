@@ -42,7 +42,6 @@ public class ProductService {
         Optional<Product> existingProductOptional = productRepository.findById(productId);
         if (existingProductOptional.isPresent()) {
             Product existingProduct = existingProductOptional.get();
-            // Update fields of existingProduct with fields from updatedProduct
             existingProduct.setName(updatedProduct.getName());
             existingProduct.setUnit(updatedProduct.getUnit());
             existingProduct.setPrice(updatedProduct.getPrice());
@@ -53,4 +52,9 @@ public class ProductService {
             throw new IllegalArgumentException("Product with ID " + productId + " not found.");
         }
     }
+
+    public List<Product> getProductsByDistributorId(String distributorid) {
+        return productRepository.findByDistributorid(distributorid);  // Use repository method
+    }
+
 }

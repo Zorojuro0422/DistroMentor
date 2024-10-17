@@ -16,6 +16,7 @@ interface Product {
   price: number;
   quantity: number;
   selectedQuantity: number;
+  suggestedRetailPrice: number;
 }
 
 interface DealerProduct {
@@ -26,6 +27,7 @@ interface DealerProduct {
     quantity: number;
     unit: string;
     price: number;
+    suggestedRetailPrice: number;
 }
 
 
@@ -194,6 +196,7 @@ const OrderingPage: React.FC = () => {
             price: dealerProduct.price,
             quantity: dealerProduct.quantity,
             selectedQuantity: 0, // Set initial selectedQuantity to 0
+            suggestedRetailPrice: dealerProduct.suggestedRetailPrice || 0,
           };
         }
       });
@@ -264,6 +267,10 @@ const OrderingPage: React.FC = () => {
     return cart.reduce((total, product) => total + product.price * product.selectedQuantity, 0);
   };
 
+  const calculateTotalSRP = () => {
+      return cart.reduce((total, product) => total + product.suggestedRetailPrice * product.selectedQuantity, 0);
+    };
+
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
@@ -283,17 +290,20 @@ const OrderingPage: React.FC = () => {
          distributiondate: distributionDate,
          orderdate: moment().format('YYYY-MM-DD'),
          orderamount: calculateTotalPrice(),
+         orderamountsrp: calculateTotalSRP(),
          customer: selectedCustomer,
          orderedproducts: cart.map((product) => ({
              productid: product.productid,
              quantity: product.selectedQuantity,
              subtotal: product.price * product.selectedQuantity,
+             totalsrp: product.suggestedRetailPrice * product.selectedQuantity,
              product: {
                  productid: product.productid,
                  name: product.name,
                  unit: product.unit,
                  price: product.price,
                  quantity: product.quantity,
+                 suggestedRetailPrice: product.suggestedRetailPrice,
              },
          })),
      };
@@ -430,6 +440,7 @@ const OrderingPage: React.FC = () => {
                     <TableHeaderCell align="center" sx={{ color: '#707070', fontWeight: 550 }}>Unit</TableHeaderCell>
                     <TableHeaderCell align="center" sx={{ color: '#707070', fontWeight: 550 }}>Product Name</TableHeaderCell>
                     <TableHeaderCell align="center" sx={{ color: '#707070', fontWeight: 550 }}>Unit Price</TableHeaderCell>
+                    <TableHeaderCell align="center" sx={{ color: '#707070', fontWeight: 550 }}>Suggested Retail Price</TableHeaderCell>
                     <TableHeaderCell align="center" sx={{ color: '#707070', fontWeight: 550 }}>Amount</TableHeaderCell>
                     <TableHeaderCell align="center" sx={{ color: '#707070', fontWeight: 550 }}></TableHeaderCell>
                   </TableRow>
@@ -450,6 +461,7 @@ const OrderingPage: React.FC = () => {
                       <TableCell align="center">{product.unit}</TableCell>
                       <TableCell align="center">{product.name}</TableCell>
                       <TableCell align="center">{product.price}</TableCell>
+                      <TableCell align="center">{product.suggestedRetailPrice}</TableCell>
                       <TableCell align="center">{product.price * product.selectedQuantity}</TableCell>
                       <TableCell align="center">
                         <RemoveButton onClick={() => handleRemoveFromCart(product)}><RemoveCircleIcon style={{ color: "red" }}></RemoveCircleIcon></RemoveButton>

@@ -284,6 +284,7 @@ export default function DealerOrderForm() {
           product: chosenProduct,
           quantity: Number(quantity),
           subtotal: chosenProduct.price * Number(quantity),
+          totalsrp: chosenProduct.suggestedRetailPrice * Number(quantity),
         };
         setOrderedProducts([...orderedProducts, newOrderedProduct]);
         setChosenProduct(null);
@@ -365,6 +366,8 @@ export default function DealerOrderForm() {
       return total + product.product.price * product.quantity;
     }, 0);
 
+    const orderAmountSRP = orderedProducts.reduce((total, product) => total + product.totalsrp, 0);
+
 
     if (orderAmount > dealerRemainingCredit!) {
       headerHandleAlert('Order Amount Exceeded Remaining Credit', "Total order amount exceeded the remaining credit (₱" + dealerRemainingCredit + "). Please adjust order amount accordingly.", 'warning');
@@ -378,6 +381,7 @@ export default function DealerOrderForm() {
       penaltyrate: Number(penaltyRateRef.current?.value),
       paymentterms: paymentTerm,
       orderamount: orderAmount,
+      orderamountsrp: orderAmountSRP,
       distributor: dealer?.distributor!,
       collector: null,
       dealer: dealer!,

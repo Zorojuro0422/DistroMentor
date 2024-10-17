@@ -3,6 +3,7 @@ package com.group29.distromentorsystem.models;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Document("Deposits")
 public class Deposit {
@@ -12,86 +13,41 @@ public class Deposit {
     private String transactionnumber;  // Unique transaction number for the deposit
     private double amount;  // Amount of the deposit
     private String proofOfRemittance;  // Path to the uploaded proof image
-    private String status;  // Status of the deposit (pending, accepted, declined)
     private String dealerid;  // Reference to the dealer who made the deposit
     private String distributorid;  // Reference to the distributor overseeing the dealer
-    private LocalDateTime submissionDate;  // Field to store the submission date and time
+    private LocalDateTime submissionDate;  // Submission date and time
+    private String status;  // "unconfirmed", "confirmed", or "declined"
+    private String declineReason;  // Reason for declined deposits
 
-    // Constructors
-    public Deposit() {}
-
-    public Deposit(String transactionnumber, double amount, String proofOfRemittance, String status, String dealerid, String distributorid, LocalDateTime submissionDate) {
-        this.transactionnumber = transactionnumber;
-        this.amount = amount;
-        this.proofOfRemittance = proofOfRemittance;
-        this.status = status;
-        this.dealerid = dealerid;
-        this.distributorid = distributorid;
-        this.submissionDate = submissionDate;
+    public Deposit() {
+        this.depositid = UUID.randomUUID().toString().substring(0, 8);
     }
 
     // Getters and Setters
-    public String getDepositid() {
-        return depositid;
-    }
+    public String getDepositid() { return depositid; }
+    public void setDepositid(String depositid) { this.depositid = depositid; }
 
-    public void setDepositid(String depositid) {
-        this.depositid = depositid;
-    }
+    public String getTransactionnumber() { return transactionnumber; }
+    public void setTransactionnumber(String transactionnumber) { this.transactionnumber = transactionnumber; }
 
-    public String getTransactionnumber() {
-        return transactionnumber;
-    }
+    public double getAmount() { return amount; }
+    public void setAmount(double amount) { this.amount = amount; }
 
-    public void setTransactionnumber(String transactionnumber) {
-        this.transactionnumber = transactionnumber;
-    }
+    public String getProofOfRemittance() { return proofOfRemittance; }
+    public void setProofOfRemittance(String proofOfRemittance) { this.proofOfRemittance = proofOfRemittance; }
 
-    public double getAmount() {
-        return amount;
-    }
+    public String getDealerid() { return dealerid; }
+    public void setDealerid(String dealerid) { this.dealerid = dealerid; }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
+    public String getDistributorid() { return distributorid; }
+    public void setDistributorid(String distributorid) { this.distributorid = distributorid; }
 
-    public String getProofOfRemittance() {
-        return proofOfRemittance;
-    }
+    public LocalDateTime getSubmissionDate() { return submissionDate; }
+    public void setSubmissionDate(LocalDateTime submissionDate) { this.submissionDate = submissionDate; }
 
-    public void setProofOfRemittance(String proofOfRemittance) {
-        this.proofOfRemittance = proofOfRemittance;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getDealerid() {
-        return dealerid;
-    }
-
-    public void setDealerid(String dealerid) {
-        this.dealerid = dealerid;
-    }
-
-    public String getDistributorid() {
-        return distributorid;
-    }
-
-    public void setDistributorid(String distributorid) {
-        this.distributorid = distributorid;
-    }
-
-    public LocalDateTime getSubmissionDate() {
-        return submissionDate;
-    }
-
-    public void setSubmissionDate(LocalDateTime submissionDate) {
-        this.submissionDate = submissionDate;
-    }
+    public String getDeclineReason() { return declineReason; }
+    public void setDeclineReason(String declineReason) { this.declineReason = declineReason; }
 }

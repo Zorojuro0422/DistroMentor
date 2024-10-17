@@ -34,12 +34,54 @@ public class DepositService {
         return depositRepository.findByDistributorid(distributorId);
     }
 
-    // Get all deposits by status (e.g., pending, accepted, declined)
+    // Get all deposits
+    public List<Deposit> getAllDeposits() {
+        return depositRepository.findAll();
+    }
+
     public List<Deposit> getDepositsByStatus(String status) {
         return depositRepository.findByStatus(status);
     }
 
-    public List<Deposit> getAllDeposits() {
-        return depositRepository.findAll();
+    // Delete a deposit by ID
+    public void deleteDepositById(String depositId) {
+        depositRepository.deleteById(depositId);
     }
+
+    // Update a deposit
+    public Deposit updateDeposit(Deposit deposit) {
+        return depositRepository.save(deposit);
+    }
+
+    // Confirm a deposit
+    public Deposit confirmDeposit(String depositId) {
+        Optional<Deposit> depositOptional = depositRepository.findById(depositId);
+        if (depositOptional.isPresent()) {
+            Deposit deposit = depositOptional.get();
+            deposit.setStatus("confirmed");
+            return depositRepository.save(deposit);
+        }
+        throw new RuntimeException("Deposit not found");
+    }
+
+    // Decline a deposit with a reason
+    public Deposit declineDeposit(String depositId, String reason) {
+        Optional<Deposit> depositOptional = depositRepository.findById(depositId);
+        if (depositOptional.isPresent()) {
+            Deposit deposit = depositOptional.get();
+            deposit.setStatus("declined");
+            deposit.setDeclineReason(reason);
+            return depositRepository.save(deposit);
+        }
+        throw new RuntimeException("Deposit not found");
+    }
+
+    public List<Deposit> getDepositsByDealerIdAndStatus(String dealerId, String status) {
+        return depositRepository.findByDealeridAndStatus(dealerId, status);
+    }
+
+    public List<Deposit> getDepositsByDistributorIdAndStatus(String distributorId, String status) {
+        return depositRepository.findByDistributoridAndStatus(distributorId, status);
+    }
+
 }

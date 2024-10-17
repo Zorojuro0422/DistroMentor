@@ -57,4 +57,11 @@ public class ProductController {
         Product updateProduct = productService.updateProduct(productId, updatedProduct);
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
+
+    @GetMapping("/getProductsByDistributor/{distributorid}")
+    public ResponseEntity<List<Product>> getProductsByDistributorId(@PathVariable String distributorid) {
+        List<Product> products = productService.getProductsByDistributorId(distributorid);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
 }

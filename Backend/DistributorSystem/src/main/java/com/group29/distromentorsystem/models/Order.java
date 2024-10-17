@@ -1,13 +1,9 @@
 package com.group29.distromentorsystem.models;
 
-
-
-import org.springframework.data.annotation.*;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
-
 
 @Document("Orders")
 public class Order {
@@ -25,6 +21,8 @@ public class Order {
 
     private double orderamount;
 
+    private double orderamountsrp;  // New field for total SRP amount
+
     private Distributor distributor;
 
     private Dealer dealer;
@@ -37,17 +35,22 @@ public class Order {
 
     private boolean isclosed;
 
-
+    // Default constructor
     public Order() {
     }
 
-    public Order(String orderid, LocalDate orderdate, LocalDate distributiondate, float penaltyrate, int paymentterms, double orderamount, Distributor distributor, Dealer dealer, Employee collector, Set<OrderedProduct> orderedproducts, boolean isconfirmed, boolean isclosed) {
+    // Constructor with all fields
+    public Order(String orderid, LocalDate orderdate, LocalDate distributiondate, float penaltyrate,
+                 int paymentterms, double orderamount, double orderamountsrp, Distributor distributor,
+                 Dealer dealer, Employee collector, Set<OrderedProduct> orderedproducts,
+                 boolean isconfirmed, boolean isclosed) {
         this.orderid = orderid;
         this.orderdate = orderdate;
         this.distributiondate = distributiondate;
         this.penaltyrate = penaltyrate;
         this.paymentterms = paymentterms;
         this.orderamount = orderamount;
+        this.orderamountsrp = orderamountsrp;  // Initialize orderamountsrp
         this.distributor = distributor;
         this.dealer = dealer;
         this.collector = collector;
@@ -56,6 +59,7 @@ public class Order {
         this.isclosed = isclosed;
     }
 
+    // Getters and Setters
     public String getOrderid() {
         return orderid;
     }
@@ -102,6 +106,14 @@ public class Order {
 
     public void setOrderamount(double orderamount) {
         this.orderamount = orderamount;
+    }
+
+    public double getOrderamountsrp() {  // Getter for orderamountsrp
+        return orderamountsrp;
+    }
+
+    public void setOrderamountsrp(double orderamountsrp) {  // Setter for orderamountsrp
+        this.orderamountsrp = orderamountsrp;
     }
 
     public Distributor getDistributor() {

@@ -175,8 +175,8 @@ export default function DealerProfileListUI() {
     {/** Columns for DataGrid */ }
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'Dealer ID', width: 210 },
-        { field: 'dealerName', headerName: 'Dealer Name', width: 300 },
-        { field: 'submissionDate', headerName: 'Date Submitted', width: 190 },
+        { field: 'dealerName', headerName: 'Dealer Name', width: 210 },
+        { field: 'submissionDate', headerName: 'Date Submitted', width: 210 },
         {
             field: 'view',
             headerName: '',
@@ -209,9 +209,9 @@ export default function DealerProfileListUI() {
 
     {/** Columns for Confirmed */ }
   const columnsConfirmed: GridColDef[] = [
-          { field: 'id', headerName: 'Dealer ID', width: 280 },
-          { field: 'dealerName', headerName: 'Dealer Name', width: 410 },
-          { field: 'submissionDate', headerName: 'Date Submitted', width: 303 },
+          { field: 'id', headerName: 'Dealer ID', width: 210 },
+          { field: 'dealerName', headerName: 'Dealer Name', width: 210 },
+          { field: 'submissionDate', headerName: 'Date Submitted', width: 210 },
           {
               field: 'view', headerName: '', width: 150,
               renderCell: (params: { row: any; }) => {

@@ -7,7 +7,7 @@ import axios from "axios";
 import dealer1 from '../../Global Components/Images/dealer1-2.png';
 import logo4 from '../../Global Components/Images/logo4.png';
 import { v4 as uuidv4 } from 'uuid';
-import moment from 'moment';  // Import moment
+import moment from 'moment'; // Import moment
 
 // Styled components
 const StyledCard = styled(Card)({
@@ -22,7 +22,7 @@ const StyledCard = styled(Card)({
   backgroundColor: 'rgba(255, 255, 255, 0.8)',
   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   backdropFilter: 'blur(50px)',
-  border: '0px solid rgba(255, 255, 255, 0.3)'
+  border: '0px solid rgba(255, 255, 255, 0.3)',
 });
 
 const StyleGrid = styled(Grid)({
@@ -50,7 +50,7 @@ const StyledTextField = styled(TextField)({
   marginBottom: '55px',
   input: {
     color: '#707070',
-    fontFamily: 'Inter'
+    fontFamily: 'Inter',
   },
   label: {
     color: '#707070',
@@ -65,9 +65,9 @@ const ButtonStyle = styled(Button)({
   height: '40px',
   ':hover': {
     backgroundColor: 'rgba(45, 133, 231, 0.9)',
-    transform: 'scale(1.1)'
+    transform: 'scale(1.1)',
   },
-  transition: 'all 0.4s'
+  transition: 'all 0.4s',
 });
 
 // Transition component for Snackbar
@@ -79,11 +79,14 @@ export default function DepositForm() {
   const navigate = useNavigate();
   const [transactionNumber, setTransactionNumber] = useState('');
   const [amount, setAmount] = useState('');
-  const [proofOfRemittance, setProofOfRemittance] = useState<File | null>(null); // Updated to handle File
+  const [proofOfRemittance, setProofOfRemittance] = useState<File | null>(null);
   const [dealerID, setDealerID] = useState('');
-  const [distributorID, setDistributorID] = useState(''); // Automatically fetched distributorID
-  const [paymentDate, setPaymentDate] = useState(''); // New state for paymentDate
-  const [status] = useState('pending'); // Status is set to "pending"
+  const [distributorID, setDistributorID] = useState('');
+  const [paymentDate, setPaymentDate] = useState('');
+  const [totalAmount, setTotalAmount] = useState(0);  // Needed to Deposit
+  const [totalSales, setTotalSales] = useState(0);  // Total SRP (Total Sales)
+  const [profit, setProfit] = useState(0);  // Profit
+  const [isConfirm] = useState(false); // Default to false since it's initially unconfirmed
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [alertTitle, setAlertTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
@@ -100,47 +103,64 @@ export default function DepositForm() {
     if (userFromStorage) {
       try {
         const parsedUser = JSON.parse(userFromStorage);
-
         console.log("Parsed User from Storage:", parsedUser);
 
-        if (parsedUser && parsedUser.dealer) {
+        if (parsedUser?.dealer) {
           const dealerID = parsedUser.dealer.dealerid;
-          const distributorID = parsedUser.dealer.distributor.distributorid; // Extract distributorid from dealer object
+          const distributorID = parsedUser.dealer.distributor.distributorid;
 
-          if (dealerID) {
-            setDealerID(dealerID);
-            console.log('Dealer ID:', dealerID); // Debugging
-          } else {
-            console.error("Dealer ID is missing in the parsed user object.");
-          }
+          if (dealerID) setDealerID(dealerID);
+          if (distributorID) setDistributorID(distributorID);
 
-          if (distributorID) {
-            setDistributorID(distributorID); // Set distributorID from dealer object
-            console.log('Distributor ID:', distributorID); // Debugging
-          } else {
-            console.error("Distributor ID is missing in the parsed user object.");
-          }
+          // Fetch the dealer totals by dealer ID
+          fetchDealerTotals(dealerID);
         } else {
           console.error("Dealer data is missing in localStorage.");
         }
       } catch (error) {
         console.error("Error parsing user from localStorage:", error);
       }
-    } else {
-      console.error("No user found in localStorage.");
     }
+  }, []);
 
-    // Generate the transaction number
-    setTransactionNumber(uuidv4().slice(0, 8));  // Automatically generate a transaction number
+  // Fetch dealer totals by dealer ID
+  const fetchDealerTotals = (dealerId: string) => {
+    axios
+      .get(`http://localhost:8080/dealerTotals/getByDealerId/${dealerId}`)
+      .then((response) => {
+        const { totalOrderAmount, totalSRP, profit } = response.data;
+        setTotalAmount(totalOrderAmount);  // Needed to Deposit
+        setTotalSales(totalSRP);  // Total Sales (SRP)
+        setProfit(profit);  // Profit
+      })
+      .catch((error) => {
+        console.error('Error fetching dealer totals:', error);
+        setAlertTitle('Error');
+        setAlertMessage('Unable to fetch dealer totals.');
+        setAlertSeverity('error');
+        setOpenSnackbar(true);
+      });
+  };
 
-    // Automatically set the paymentDate using moment to format the current date and time
-    const currentDate = moment().format('YYYY-MM-DDTHH:mm:ss');
-    setPaymentDate(currentDate);
+  useEffect(() => {
+    const generateRandomLetters = () => {
+      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      let result = '';
+      for (let i = 0; i < 3; i++) {
+        result += letters.charAt(Math.floor(Math.random() * letters.length));
+      }
+      return result;
+    };
 
+    // Generate the transaction number with 3 letters + UUID
+    const newTransactionNumber = generateRandomLetters() + '-' + uuidv4().slice(0, 8);
+
+    setTransactionNumber(newTransactionNumber); // Set the generated transaction number
+    setPaymentDate(moment().format('YYYY-MM-DDTHH:mm:ss')); // Set the current date and time
   }, []);
 
   const handleSubmit = () => {
-    if (!amount || !proofOfRemittance || !dealerID || !distributorID) {  // Ensure distributorID is also set
+    if (!amount || !proofOfRemittance || !dealerID || !distributorID) {
       setFieldWarning({
         amount: !amount ? 'Amount is required' : '',
         proofOfRemittance: !proofOfRemittance ? 'Proof of remittance is required' : '',
@@ -149,23 +169,14 @@ export default function DepositForm() {
       return;
     }
 
-    // Debugging the values before form submission
-    console.log("Transaction Number:", transactionNumber);
-    console.log("Amount:", amount);
-    console.log("Dealer ID:", dealerID);
-    console.log("Distributor ID:", distributorID);
-    console.log("Proof of Remittance File:", proofOfRemittance);
-    console.log("Payment Date:", paymentDate);
-    console.log("Status:", status); // Status is logged as "pending"
-
     const formData = new FormData();
-    formData.append('transactionNumber', transactionNumber);  // Ensure parameter matches backend expectation
+    formData.append('transactionNumber', transactionNumber);
     formData.append('amount', amount);
-    formData.append('proofOfRemittance', proofOfRemittance!); // Add the image file
+    formData.append('proofOfRemittance', proofOfRemittance!);
     formData.append('dealerId', dealerID);
-    formData.append('distributorId', distributorID);  // Automatically fetched distributorID
-    formData.append('paymentDate', paymentDate);  // Pass formatted date and time for paymentDate using moment
-    formData.append('status', status);  // Pass "pending" status
+    formData.append('distributorId', distributorID);
+    formData.append('paymentDate', paymentDate);
+    formData.append('isConfirm', String(isConfirm)); // Send as string ('false')
 
     const url = 'http://localhost:8080/api/deposits/create';
 
@@ -178,7 +189,7 @@ export default function DepositForm() {
       .then(() => {
         setAmount('');
         setProofOfRemittance(null);
-        setDistributorID(''); // Clear distributorID after submission
+        setDistributorID('');
         setFieldWarning({
           amount: '',
           proofOfRemittance: '',
@@ -200,15 +211,11 @@ export default function DepositForm() {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
-      setProofOfRemittance(file);
-    }
+    if (file) setProofOfRemittance(file);
   };
 
   const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+    if (reason === 'clickaway') return;
     setOpenSnackbar(false);
   };
 
@@ -217,74 +224,37 @@ export default function DepositForm() {
       <StyleGrid>
         <StyledCard>
           <div style={{ backgroundColor: 'rgb(45, 133, 231, 0.8)', width: '40%', height: 800, marginLeft: -10 }}>
-            <img src={logo4}
-              style={{
-                width: 'auto',
-                marginLeft: 0,
-                padding: '170px 20px 0px 75px',
-                height: '180px',
-                alignItems: 'center',
-                display: 'flex',
-                position: 'relative',
-                zIndex: 2
-              }}
-            />
-            <img src={dealer1}
-              style={{
-                width: 'auto',
-                height: '600px',
-                marginTop: -130,
-                marginLeft: 30,
-                display: 'flex',
-                position: 'relative',
-                zIndex: 1
-              }} />
+            <img src={logo4} style={{ width: 'auto', padding: '170px 20px 0px 75px', height: '180px' }} />
+            <img src={dealer1} style={{ width: 'auto', height: '600px', marginTop: -130, marginLeft: 30 }} />
           </div>
-
           <div style={{ padding: '1px 1px 1px 30px', display: 'flex', flexDirection: 'column' }}>
             <ContentNameTypography>Submit Deposit</ContentNameTypography>
-            <div style={{ paddingTop: 30, paddingBottom: 50 }}>
-              <Grid container spacing={3}>
-                {/* Textfield For Amount */}
-                <Grid item xs={12}>
-                  <StyledTextField variant="outlined" label="Amount" style={{ width: '700px' }} value={amount} onChange={(e) => setAmount(e.target.value)} />
-                  <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
-                    {fieldWarning.amount}
-                  </FormHelperText>
-                </Grid>
-                {/* File Input for Proof of Remittance */}
-                <Grid item xs={12}>
-                  <input
-                    accept="image/*"
-                    type="file"
-                    onChange={handleFileChange}
-                    style={{ display: 'block', marginTop: '10px' }}
-                  />
-                  <FormHelperText style={{ marginLeft: 5, color: '#BD9F00' }}>
-                    {fieldWarning.proofOfRemittance}
-                  </FormHelperText>
-                </Grid>
+            <Typography variant="h6" sx={{ color: '#203949', fontFamily: 'Inter', marginBottom: 2 }}>
+              Needed to be Deposit: ₱ {totalAmount}
+            </Typography>
+            <Typography variant="h6" sx={{ color: '#203949', fontFamily: 'Inter', marginBottom: 2 }}>
+              Total Sales (SRP): ₱ {totalSales}
+            </Typography>
+            <Typography variant="h6" sx={{ color: '#203949', fontFamily: 'Inter', marginBottom: 2 }}>
+              Profit: ₱ {profit}
+            </Typography>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <StyledTextField label="Amount" value={amount} onChange={(e) => setAmount(e.target.value)} />
+                <FormHelperText>{fieldWarning.amount}</FormHelperText>
               </Grid>
-              <Grid container justifyContent="center" style={{ marginTop: '20px' }}>
-                <Grid item>
-                  <ButtonStyle variant="contained" onClick={handleSubmit}>
-                    Submit Deposit
-                  </ButtonStyle>
-                </Grid>
+              <Grid item xs={12}>
+                <input type="file" onChange={handleFileChange} />
+                <FormHelperText>{fieldWarning.proofOfRemittance}</FormHelperText>
               </Grid>
-              <Snackbar
-                open={openSnackbar}
-                autoHideDuration={3000}
-                onClose={handleCloseSnackbar}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                TransitionComponent={SlideTransitionDown}
-              >
-                <Alert onClose={handleCloseSnackbar} severity={alertSeverity as 'success' | 'warning' | 'error'} sx={{ width: 500 }}>
-                  <AlertTitle style={{ textAlign: 'left', fontWeight: 'bold' }}>{alertTitle}</AlertTitle>
-                  {alertMessage}
-                </Alert>
-              </Snackbar>
-            </div>
+            </Grid>
+            <ButtonStyle onClick={handleSubmit}>Submit Deposit</ButtonStyle>
+            <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleCloseSnackbar}>
+              <Alert severity={alertSeverity}>
+                <AlertTitle>{alertTitle}</AlertTitle>
+                {alertMessage}
+              </Alert>
+            </Snackbar>
           </div>
         </StyledCard>
       </StyleGrid>

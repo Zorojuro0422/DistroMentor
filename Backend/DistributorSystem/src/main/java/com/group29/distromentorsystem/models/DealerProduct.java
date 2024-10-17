@@ -3,6 +3,7 @@ package com.group29.distromentorsystem.models;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;  // Import LocalDate for expirationDate
 
 @Document("DealerProducts")
 public class DealerProduct {
@@ -12,7 +13,7 @@ public class DealerProduct {
 
     private String dealerid;
 
-    private String productid;  // New field for product ID
+    private String productid;
 
     private String name;
 
@@ -22,19 +23,26 @@ public class DealerProduct {
 
     private float price;
 
+    private float suggestedRetailPrice;  // Suggested Retail Price
+
+    private LocalDate expirationDate;  // New field for expiration date
+
     // Default constructor
     public DealerProduct() {
     }
 
     // Constructor with all fields
-    public DealerProduct(String dealerproductid, String dealerid, String productid, String name, int quantity, String unit, float price) {
+    public DealerProduct(String dealerproductid, String dealerid, String productid, String name,
+                         int quantity, String unit, float price, float suggestedRetailPrice, LocalDate expirationDate) {
         this.dealerproductid = dealerproductid;
         this.dealerid = dealerid;
-        this.productid = productid;  // Added productid here
+        this.productid = productid;
         this.name = name;
         this.quantity = quantity;
         this.unit = unit;
         this.price = price;
+        this.suggestedRetailPrice = suggestedRetailPrice;
+        this.expirationDate = expirationDate;  // Initialize expiration date
     }
 
     // Getters and Setters
@@ -56,11 +64,11 @@ public class DealerProduct {
     }
 
     public String getProductid() {
-        return productid;  // Getter for productid
+        return productid;
     }
 
     public void setProductid(String productid) {
-        this.productid = productid;  // Setter for productid
+        this.productid = productid;
     }
 
     public String getName() {
@@ -93,5 +101,21 @@ public class DealerProduct {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public float getSuggestedRetailPrice() {
+        return suggestedRetailPrice;
+    }
+
+    public void setSuggestedRetailPrice(float suggestedRetailPrice) {
+        this.suggestedRetailPrice = suggestedRetailPrice;
+    }
+
+    public LocalDate getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(LocalDate expirationDate) {
+        this.expirationDate = expirationDate;
     }
 }
