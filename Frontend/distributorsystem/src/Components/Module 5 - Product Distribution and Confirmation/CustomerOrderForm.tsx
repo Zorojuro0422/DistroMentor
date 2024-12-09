@@ -166,6 +166,17 @@ const OrderingPage: React.FC = () => {
     fetchCustomers();
   }, []);
 
+  useEffect(() => {
+    // Check stock levels after cart updates
+    cart.forEach((product) => {
+      if (product.quantity === 0) {
+        setAlertMessage(`${product.name} is out of stock!`);
+        setAlertSeverity("error");
+        setOpenSnackbar(true);
+      }
+    });
+  }, [cart]);
+
   const fetchProducts = async () => {
     try {
       const dealerID = userFromStorage.dealer.dealerid; // Get dealer ID from user storage
@@ -233,21 +244,49 @@ const OrderingPage: React.FC = () => {
 
   const handleAddToCart = () => {
     if (chosenProduct && quantity > 0) {
-      const existingProductIndex = cart.findIndex(item => item.productid === chosenProduct.productid);
+      if (quantity > chosenProduct.quantity) {
+        // Show a message if the quantity exceeds the available stock
+        setAlertMessage(
+          `Insufficient stock! Only ${chosenProduct.quantity} ${chosenProduct.unit} available of ${chosenProduct.name}.`
+        );
+        setAlertSeverity("error");
+        setOpenSnackbar(true);
+        return;
+      }
+
+      const existingProductIndex = cart.findIndex(
+        (item) => item.productid === chosenProduct.productid
+      );
 
       if (existingProductIndex !== -1) {
         const updatedCart = [...cart];
-        updatedCart[existingProductIndex].selectedQuantity += quantity;
+        const newSelectedQuantity =
+          updatedCart[existingProductIndex].selectedQuantity + quantity;
+
+        if (newSelectedQuantity > chosenProduct.quantity) {
+          // Show a message if the total quantity in the cart exceeds the available stock
+          setAlertMessage(
+            `Insufficient stock! Only ${chosenProduct.quantity} ${chosenProduct.unit} available of ${chosenProduct.name}.`
+          );
+          setAlertSeverity("error");
+          setOpenSnackbar(true);
+          return;
+        }
+
+        updatedCart[existingProductIndex].selectedQuantity = newSelectedQuantity;
         setCart(updatedCart);
       } else {
-        setCart([...cart, { ...chosenProduct, selectedQuantity: quantity }]);
+        setCart([
+          ...cart,
+          { ...chosenProduct, selectedQuantity: quantity },
+        ]);
       }
 
       setChosenProduct(null);
       setQuantity(0);
     } else {
-      setAlertMessage('Please select a product and enter a quantity.');
-      setAlertSeverity('error');
+      setAlertMessage("Please select a product and enter a valid quantity.");
+      setAlertSeverity("error");
       setOpenSnackbar(true);
     }
   };
@@ -257,8 +296,19 @@ const OrderingPage: React.FC = () => {
   };
 
   const handleUpdateQuantity = (product: Product, newQuantity: number) => {
+    if (newQuantity > product.quantity) {
+      setAlertMessage(
+        `Insufficient stock! Only ${product.quantity} ${product.unit} available of ${product.name}.`
+      );
+      setAlertSeverity("error");
+      setOpenSnackbar(true);
+      return;
+    }
+
     const updatedCart = cart.map((item) =>
-      item.productid === product.productid ? { ...item, selectedQuantity: newQuantity } : item
+      item.productid === product.productid
+        ? { ...item, selectedQuantity: newQuantity }
+        : item
     );
     setCart(updatedCart);
   };
@@ -290,7 +340,8 @@ const OrderingPage: React.FC = () => {
          distributiondate: distributionDate,
          orderdate: moment().format('YYYY-MM-DD'),
          orderamount: calculateTotalPrice(),
-         orderamountsrp: calculateTotalSRP(),
+         deposit: 0,
+         status: "Open",
          customer: selectedCustomer,
          orderedproducts: cart.map((product) => ({
              productid: product.productid,
@@ -303,7 +354,6 @@ const OrderingPage: React.FC = () => {
                  unit: product.unit,
                  price: product.price,
                  quantity: product.quantity,
-                 suggestedRetailPrice: product.suggestedRetailPrice,
              },
          })),
      };
@@ -435,12 +485,10 @@ const OrderingPage: React.FC = () => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableHeaderCell align="center" sx={{ color: '#707070', fontWeight: 550 }}>Available Quantity</TableHeaderCell>
                     <TableHeaderCell align="center" sx={{ color: '#707070', fontWeight: 550 }}>Quantity</TableHeaderCell>
                     <TableHeaderCell align="center" sx={{ color: '#707070', fontWeight: 550 }}>Unit</TableHeaderCell>
                     <TableHeaderCell align="center" sx={{ color: '#707070', fontWeight: 550 }}>Product Name</TableHeaderCell>
                     <TableHeaderCell align="center" sx={{ color: '#707070', fontWeight: 550 }}>Unit Price</TableHeaderCell>
-                    <TableHeaderCell align="center" sx={{ color: '#707070', fontWeight: 550 }}>Suggested Retail Price</TableHeaderCell>
                     <TableHeaderCell align="center" sx={{ color: '#707070', fontWeight: 550 }}>Amount</TableHeaderCell>
                     <TableHeaderCell align="center" sx={{ color: '#707070', fontWeight: 550 }}></TableHeaderCell>
                   </TableRow>
@@ -448,7 +496,6 @@ const OrderingPage: React.FC = () => {
                 <TableBody>
                   {cart.map((product) => (
                     <TableRow key={product.productid}>
-                      <TableCell align="center">{product.quantity}</TableCell>
                       <TableCell align="center">
                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
                           <StyledNumber
@@ -461,7 +508,6 @@ const OrderingPage: React.FC = () => {
                       <TableCell align="center">{product.unit}</TableCell>
                       <TableCell align="center">{product.name}</TableCell>
                       <TableCell align="center">{product.price}</TableCell>
-                      <TableCell align="center">{product.suggestedRetailPrice}</TableCell>
                       <TableCell align="center">{product.price * product.selectedQuantity}</TableCell>
                       <TableCell align="center">
                         <RemoveButton onClick={() => handleRemoveFromCart(product)}><RemoveCircleIcon style={{ color: "red" }}></RemoveCircleIcon></RemoveButton>

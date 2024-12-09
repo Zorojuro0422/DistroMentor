@@ -110,7 +110,7 @@ export default function PaymentsListUI() {
       .finally(() => setIsLoading(false));
   };
 
-  const handleViewButtonClick = (id: string) => navigate(`/depositDetails/${id}`);
+  const handleViewButtonClick = (id: string) => navigate(`/depositConfirmation/${id}`);
 
   const handleDeleteClick = (id: string) => {
     setDepositIdToDelete(id);

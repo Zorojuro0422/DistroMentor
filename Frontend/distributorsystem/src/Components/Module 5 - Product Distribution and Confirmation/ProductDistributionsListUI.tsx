@@ -241,20 +241,22 @@ export default function ProductDistributionList() {
     }));
 
     {/** Rows for DataGrid */ }
-    const rowsConfirmed = (order || []).filter((order) => (order.confirmed && !order.isclosed)).map((orderItem) => ({
-        id: orderItem.orderid,
-        dealerId: orderItem.dealer.dealerid,
-        dealerName: `${orderItem.dealer.firstname} ${orderItem.dealer.middlename} ${orderItem.dealer.lastname}`,
-        orderId: orderItem.orderid,
-        orderDate: orderItem.orderdate,
-        confirmed: orderItem.confirmed
-    }));
+    const rowsConfirmed = (order || [])
+        .filter((orderItem) => orderItem.confirmed && orderItem.status !== 'Closed') // Check if confirmed and status is not 'Closed'
+        .map((orderItem) => ({
+            id: orderItem.orderid,
+            dealerId: orderItem.dealer.dealerid,
+            dealerName: `${orderItem.dealer.firstname} ${orderItem.dealer.middlename} ${orderItem.dealer.lastname}`,
+            orderId: orderItem.orderid,
+            orderDate: orderItem.orderdate,
+            confirmed: orderItem.confirmed
+        }));
     {/** Columns for DataGrid */ }
     const columnsConfirmed: GridColDef[] = [
-        { field: 'dealerId', headerName: 'Dealer ID', width: 235 },
-        { field: 'dealerName', headerName: 'Dealer Name', width: 255 },
-        { field: 'orderId', headerName: 'Order Transaction ID', width: 235 },
-        { field: 'orderDate', headerName: 'Order Date', width: 235 },
+        { field: 'dealerId', headerName: 'Dealer ID', width: 250 },
+        { field: 'dealerName', headerName: 'Dealer Name', width: 250 },
+        { field: 'orderId', headerName: 'Order Transaction ID', width: 250 },
+        { field: 'orderDate', headerName: 'Order Date', width: 250 },
         {
             field: 'action', headerName: '', width: 350,
             renderCell: (params: { row: any; }) => {
@@ -279,14 +281,16 @@ export default function ProductDistributionList() {
     ]
 
 
-    const rowsClosed = (order || []).filter((order) => (order.isclosed)).map((orderItem) => ({
-        id: orderItem.orderid,
-        dealerId: orderItem.dealer.dealerid,
-        dealerName: `${orderItem.dealer.firstname} ${orderItem.dealer.middlename} ${orderItem.dealer.lastname}`,
-        orderId: orderItem.orderid,
-        orderDate: orderItem.orderdate,
-        confirmed: orderItem.confirmed
-    }));
+    const rowsClosed = (order || [])
+        .filter((orderItem) => orderItem.status === 'Closed') // Check if status is 'Closed'
+        .map((orderItem) => ({
+            id: orderItem.orderid,
+            dealerId: orderItem.dealer.dealerid,
+            dealerName: `${orderItem.dealer.firstname} ${orderItem.dealer.middlename} ${orderItem.dealer.lastname}`,
+            orderId: orderItem.orderid,
+            orderDate: orderItem.orderdate,
+            confirmed: orderItem.confirmed
+        }));
 
     {/** Columns for DataGrid */ }
     const columnsClosed: GridColDef[] = [

@@ -90,7 +90,6 @@ export default function ProductRegistration() {
     unit: '',
     price: '',
     quantity: '',
-    suggestedRetailPrice: '',
     expirationDate: '',
   });
   const [suggestedRetailPrice, setSuggestedRetailPrice] = useState('');
@@ -103,7 +102,6 @@ export default function ProductRegistration() {
       !unit ||
       !price ||
       !quantity ||
-      !suggestedRetailPrice ||
       !expirationDate
     ) {
       setFieldWarning({
@@ -112,7 +110,6 @@ export default function ProductRegistration() {
         unit: !unit ? 'Unit is required' : '',
         price: !price ? 'Price is required' : '',
         quantity: !quantity ? 'Quantity is required' : '',
-        suggestedRetailPrice: !suggestedRetailPrice ? 'SRP is required' : '',
         expirationDate: !expirationDate ? 'Expiration Date is required' : '',
       });
       return;
@@ -124,7 +121,6 @@ export default function ProductRegistration() {
       unit: unit,
       price: parseFloat(price),
       quantity: parseInt(quantity, 10),
-      suggestedRetailPrice: parseFloat(suggestedRetailPrice),
       expirationDate: expirationDate, // Send it as a string (YYYY-MM-DD format)
       distributorid: distributorId,
     };
@@ -140,15 +136,13 @@ export default function ProductRegistration() {
         setUnit('');
         setPrice('');
         setQuantity('');
-        setSuggestedRetailPrice('');
-         setExpirationDate(null);
+        setExpirationDate(null);
         setFieldWarning({
           productID: '',
           productName: '',
           unit: '',
           price: '',
           quantity: '',
-          suggestedRetailPrice: '',
           expirationDate: '',
         });
         setAlertTitle('Success');
@@ -265,18 +259,6 @@ export default function ProductRegistration() {
                   <FormHelperText style={{ color: '#BD9F00' }}>{fieldWarning.quantity}</FormHelperText>
                 </Grid>
 
-                {/* Textfield For SRP */}
-                <Grid item xs={6}>
-                  <StyledTextField
-                    variant="outlined"
-                    label="SRP"
-                    fullWidth
-                    value={suggestedRetailPrice}
-                    onChange={(e) => setSuggestedRetailPrice(e.target.value)}
-                  />
-                  <FormHelperText style={{ color: '#BD9F00' }}>{fieldWarning.suggestedRetailPrice}</FormHelperText>
-                </Grid>
-
                 {/* Date Picker For Expiration Date */}
                 <Grid item xs={6}>
                   <StyledTextField
@@ -284,8 +266,11 @@ export default function ProductRegistration() {
                     label="Expiration Date"
                     fullWidth
                     InputLabelProps={{ shrink: true }}
-                    value={expirationDate ? expirationDate.toISOString().split('T')[0] : ''}
-                    onChange={(e) => setExpirationDate(new Date(e.target.value))}
+                    value={expirationDate ? expirationDate.toISOString().split('T')[0] : ''} // Display empty if null
+                    onChange={(e) => {
+                      const dateValue = e.target.value ? new Date(e.target.value) : null; // Handle empty input
+                      setExpirationDate(dateValue);
+                    }}
                   />
                   <FormHelperText style={{ color: '#BD9F00' }}>{fieldWarning.expirationDate}</FormHelperText>
                 </Grid>

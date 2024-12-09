@@ -203,7 +203,9 @@ export default function CollectorAssignment() {
     if (userFromStorage && userFromStorage.tableName === 'Sales Associate') {
       axios.get<IOrder[]>(`http://localhost:8080/order/getAllOrdersByDistributorID/${userFromStorage.salesAssociate.distributor.distributorid}`)
         .then((response) => {
-          setOrders(response.data.filter(order => order.confirmed && !order.isclosed));
+         setOrders(
+             response.data.filter(order => order.confirmed && order.status !== 'Closed')
+         );
         })
         .catch((error) => {
 
@@ -214,7 +216,9 @@ export default function CollectorAssignment() {
     else if (userFromStorage && userFromStorage.tableName === 'Sales Associate and Cashier') {
       axios.get<IOrder[]>(`http://localhost:8080/order/getAllOrdersByDistributorID/${userFromStorage.salesAssociateAndCashier.distributor.distributorid}`)
         .then((response) => {
-          setOrders(response.data.filter(order => order.confirmed && !order.isclosed));
+          setOrders(
+              response.data.filter(order => order.confirmed && order.status !== 'Closed')
+          );
         })
         .catch((error) => {
 
@@ -225,7 +229,9 @@ export default function CollectorAssignment() {
     else {
       axios.get<IOrder[]>(`http://localhost:8080/order/getAllOrdersByDistributorID/${userFromStorage.distributor.distributorid}`)
         .then((response) => {
-          setOrders(response.data.filter(order => order.confirmed && !order.isclosed));
+          setOrders(
+              response.data.filter(order => order.confirmed && order.status !== 'Closed')
+          );
         })
         .catch((error) => {
 

@@ -27,10 +27,13 @@ public class DepositController {
     private DepositService depositService;
 
     // Create a new deposit
+    // Create a new deposit
     @PostMapping("/create")
     public ResponseEntity<Deposit> createDeposit(
             @RequestParam("dealerId") String dealerId,
             @RequestParam("distributorId") String distributorId,
+            @RequestParam("orderId") String orderId,  // New field for order ID
+            @RequestParam("paymentId") String paymentId,  // New field for payment ID
             @RequestParam("amount") double amount,
             @RequestParam("transactionNumber") String transactionNumber,
             @RequestParam("paymentDate") String paymentDate,
@@ -50,6 +53,8 @@ public class DepositController {
         Deposit deposit = new Deposit();
         deposit.setDealerid(dealerId);
         deposit.setDistributorid(distributorId);
+        deposit.setOrderid(orderId);  // Set order ID
+        deposit.setPaymentid(paymentId);  // Set payment ID
         deposit.setAmount(amount);
         deposit.setTransactionnumber(transactionNumber);
         deposit.setSubmissionDate(LocalDateTime.parse(paymentDate));

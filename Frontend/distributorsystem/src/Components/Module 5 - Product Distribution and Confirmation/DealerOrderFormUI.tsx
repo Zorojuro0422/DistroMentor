@@ -182,7 +182,7 @@ export default function DealerOrderForm() {
 
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
 
-  const [paymentTerm, setPaymentTerm] = useState(0);
+  const [paymentTerm, setPaymentTerm] = useState(1);
 
   const [totalAmount, setTotalAmount] = useState(0);
 
@@ -197,7 +197,6 @@ export default function DealerOrderForm() {
   const [open, setOpen] = useState(false);
 
   const penaltyRateRef = useRef<TextFieldProps>(null);
-
 
   const userFromStorage = JSON.parse(localStorage.getItem("user")!);
 
@@ -245,19 +244,55 @@ export default function DealerOrderForm() {
 
 
   function getAllProducts() {
-    axios.get<IProduct[]>('http://localhost:8080/product/getAllProducts')
+    const distributorId = userFromStorage?.dealer?.distributor?.distributorid;
+
+    if (!distributorId) {
+      console.error("Distributor ID is missing or undefined.");
+      headerHandleAlert("Error", "Distributor ID is missing. Please check the dealer data.", "error");
+      return;
+    }
+
+    axios
+      .get(`http://localhost:8080/product/getProductsByDistributor/${distributorId}`)
       .then((response) => {
         setProducts(response.data);
       })
       .catch((error) => {
-        console.error('Error retrieving products:', error);
-        headerHandleAlert('Error', 'Error retrieving products. Please try again.', 'error');
-
+        console.error("Error retrieving products:", error);
+        headerHandleAlert("Error", "Error retrieving products. Please try again.", "error");
       });
   }
 
   const handleAddToCart = () => {
     if (chosenProduct) {
+      // Check if quantity exceeds the available stock
+      if (Number(quantity) > chosenProduct.quantity) {
+        toast.error(`Insufficient stock! Only ${chosenProduct.quantity} ${chosenProduct.unit} available of ${chosenProduct.name}.`, {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "colored",
+        });
+        return;
+      }
+
+      // Prevent adding a product with zero quantity
+      if (Number(quantity) <= 0) {
+        toast.warning('Please enter a valid quantity to add to the cart.', {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "colored",
+        });
+        return;
+      }
+
       const uuid = uuidv4();
       const orderedproductuuid = uuid.slice(0, 8);
       const existingProductIndex = orderedProducts.findIndex(
@@ -265,17 +300,15 @@ export default function DealerOrderForm() {
       );
 
       if (existingProductIndex !== -1) {
-
-        toast.warning(chosenProduct.name + ' is already been added to the cart', {
+        toast.warning(`${chosenProduct.name} is already in the cart.`, {
           position: "bottom-right",
           autoClose: 5000,
           hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined,
           theme: "colored",
-        })
+        });
         setChosenProduct(null);
         setQuantity('');
       } else {
@@ -289,23 +322,35 @@ export default function DealerOrderForm() {
         setOrderedProducts([...orderedProducts, newOrderedProduct]);
         setChosenProduct(null);
         setQuantity('');
-        // toast
-        toast.success(chosenProduct.name + ' is added to the cart', {
+
+        toast.success(`${chosenProduct.name} added to the cart.`, {
           position: "bottom-right",
           autoClose: 5000,
           hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined,
           theme: "colored",
-        })
+        });
       }
-
     }
   };
 
+
   const handleUpdateQuantity = (product: IOrderedProducts, updatedQuantity: number) => {
+    if (updatedQuantity > product.product.quantity) {
+      toast.error(`Cannot order more than ${product.product.quantity} units of ${product.product.name}`, {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "colored",
+      });
+      return;
+    }
+
     const updatedProducts = orderedProducts.map((item) => {
       if (item.product.productid === product.product.productid) {
         return { ...item, quantity: updatedQuantity };
@@ -314,6 +359,7 @@ export default function DealerOrderForm() {
     });
     setOrderedProducts(updatedProducts);
   };
+
 
   const handleRemoveFromCart = (product: IOrderedProducts) => {
     // Remove a product from the cart
@@ -351,26 +397,41 @@ export default function DealerOrderForm() {
     getDealerByID(userFromStorage.dealer.dealerid)
   }
 
-  const handleSaveOrder = () => {
+  const handleSaveOrder = async () => {
     if (orderedProducts.length === 0) {
-      headerHandleAlert('No Ordered Products', "Please add products to your order before saving.", 'warning');
+      headerHandleAlert(
+        'No Ordered Products',
+        'Please add products to your order before saving.',
+        'warning'
+      );
       return;
     }
 
     if (!isDealerFound) {
-      headerHandleAlert('Dealer Not Found', "Cannot find the dealer. Please ensure the dealer is selected.", 'error');
+      headerHandleAlert(
+        'Dealer Not Found',
+        'Cannot find the dealer. Please ensure the dealer is selected.',
+        'error'
+      );
       return;
     }
 
-    const orderAmount = orderedProducts.reduce((total, product) => {
-      return total + product.product.price * product.quantity;
-    }, 0);
+    const orderAmount = orderedProducts.reduce(
+      (total, product) => total + product.product.price * product.quantity,
+      0
+    );
 
-    const orderAmountSRP = orderedProducts.reduce((total, product) => total + product.totalsrp, 0);
-
+    const orderAmountSRP = orderedProducts.reduce(
+      (total, product) => total + product.totalsrp,
+      0
+    );
 
     if (orderAmount > dealerRemainingCredit!) {
-      headerHandleAlert('Order Amount Exceeded Remaining Credit', "Total order amount exceeded the remaining credit (₱" + dealerRemainingCredit + "). Please adjust order amount accordingly.", 'warning');
+      headerHandleAlert(
+        'Order Amount Exceeded Remaining Credit',
+        `Total order amount exceeded the remaining credit (₱${dealerRemainingCredit}). Please adjust the order amount accordingly.`,
+        'warning'
+      );
       return;
     }
 
@@ -378,7 +439,7 @@ export default function DealerOrderForm() {
       orderid: uuidv4().slice(0, 8),
       distributiondate: selectedDate?.format('YYYY-MM-DD') || '',
       orderdate: moment().format('YYYY-MM-DD'),
-      penaltyrate: Number(penaltyRateRef.current?.value),
+      penaltyrate: 10,
       paymentterms: paymentTerm,
       orderamount: orderAmount,
       orderamountsrp: orderAmountSRP,
@@ -388,13 +449,80 @@ export default function DealerOrderForm() {
       orderedproducts: orderedProducts,
       paymenttransactions: [],
       confirmed: false,
-      isclosed: false
+      status: 'Open', // Set default status to 'Open'
+      deposit: 0,
     };
 
     try {
-      newOrder(newOrderObj);
-      headerHandleAlert('Success Saving Order', "Your ordered products have been successfully saved!", 'success');
+      const response = await newOrder(newOrderObj);
+
+      headerHandleAlert(
+        'Success Saving Order',
+        'Your ordered products have been successfully saved!',
+        'success'
+      );
       clearInputValues();
+
+      if (paymentTerm === 1) {
+        // Full Payment
+        const dueDate = moment().add(15, 'days').format('YYYY-MM-DD');
+        const paymentRecord = {
+          dueDate,
+          amount: orderAmount,
+          status: 'Open',
+          orderid: newOrderObj.orderid,
+        };
+
+        await axios.post('http://localhost:8080/payment-records', paymentRecord);
+        toast.success('Payment record created successfully.', {
+          position: 'bottom-right',
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: 'colored',
+        });
+      } else if (paymentTerm === 2) {
+        // Installment (2 Payments)
+        const installmentAmount = orderAmount / 2;
+
+        const firstPaymentRecord = {
+          dueDate: moment().add(15, 'days').format('YYYY-MM-DD'),
+          amount: installmentAmount,
+          status: 'Open',
+          orderid: newOrderObj.orderid,
+        };
+
+        const secondPaymentRecord = {
+          dueDate: moment().add(30, 'days').format('YYYY-MM-DD'),
+          amount: installmentAmount,
+          status: 'Open',
+          orderid: newOrderObj.orderid,
+        };
+
+        await axios.post('http://localhost:8080/payment-records', firstPaymentRecord);
+        toast.success('First payment record created successfully.', {
+          position: 'bottom-right',
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: 'colored',
+        });
+
+        await axios.post('http://localhost:8080/payment-records', secondPaymentRecord);
+        toast.success('Second payment record created successfully.', {
+          position: 'bottom-right',
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: 'colored',
+        });
+      }
     } catch (error) {
       console.error('Error saving order:', error);
       headerHandleAlert('Error', 'Error saving order. Please try again.', 'error');
@@ -404,6 +532,52 @@ export default function DealerOrderForm() {
   return (
     <div>
       <OverallGrid container>
+
+      {/* Added Payment Term Field */}
+      <Grid
+        item
+        container
+        spacing={4}
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginTop: '10px',
+          marginRight: '250px',
+        }}
+      >
+        <Grid item>
+          <Paper
+            sx={{
+              padding: 2,
+              backgroundColor: '#ffffff',
+              borderRadius: "10px",
+              width: '150px', /* Reduced width */
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start', /* Ensure proper alignment inside */
+            }}
+          >
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  select
+                  fullWidth
+                  label="Payment Terms"
+                  variant="outlined"
+                  value={paymentTerm}
+                  onChange={(e) => setPaymentTerm(Number(e.target.value))}
+                >
+                  <MenuItem value={1}>Full Payment</MenuItem>
+                  <MenuItem value={2}>Installment</MenuItem>
+                </TextField>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+      </Grid>
+
+
+
         <Grid item container sx={{ display: "flex", justifyContent: "center", marginTop: '10px' }}>
           <Grid item>
           <PaperStyle>

@@ -13,8 +13,6 @@ public class OrderedProduct {
 
     private double subtotal;
 
-    private double totalsrp;  // New field for total SRP
-
     //@DBRef
     private Product product;
 
@@ -24,11 +22,10 @@ public class OrderedProduct {
     public OrderedProduct() {
     }
 
-    public OrderedProduct(String orderedproductid, int quantity, double subtotal, double totalsrp, Product product, String orderid) {
+    public OrderedProduct(String orderedproductid, int quantity, double subtotal, Product product, String orderid) {
         this.orderedproductid = orderedproductid;
         this.quantity = quantity;
         this.subtotal = subtotal;
-        this.totalsrp = totalsrp;
         this.product = product;
         this.orderid = orderid;
     }
@@ -48,7 +45,6 @@ public class OrderedProduct {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-        calculateTotalSRP();  // Recalculate totalsrp when quantity changes
     }
 
     public double getSubtotal() {
@@ -59,21 +55,12 @@ public class OrderedProduct {
         this.subtotal = subtotal;
     }
 
-    public double getTotalsrp() {
-        return totalsrp;
-    }
-
-    public void setTotalsrp(double totalsrp) {
-        this.totalsrp = totalsrp;
-    }
-
     public Product getProduct() {
         return product;
     }
 
     public void setProduct(Product product) {
         this.product = product;
-        calculateTotalSRP();  // Recalculate totalsrp when product changes
     }
 
     public String getOrderid() {
@@ -82,12 +69,5 @@ public class OrderedProduct {
 
     public void setOrderid(String orderid) {
         this.orderid = orderid;
-    }
-
-    // Calculate the total SRP based on product's SRP and quantity
-    private void calculateTotalSRP() {
-        if (this.product != null) {
-            this.totalsrp = this.quantity * this.product.getSuggestedRetailPrice();
-        }
     }
 }

@@ -176,52 +176,80 @@ export default function NewNavBar() {
                                         <path d="M5.082 14.254a8.287 8.287 0 00-1.308 5.135 9.687 9.687 0 01-1.764-.44l-.115-.04a.563.563 0 01-.373-.487l-.01-.121a3.75 3.75 0 013.57-4.047zM20.226 19.389a8.287 8.287 0 00-1.308-5.135 3.75 3.75 0 013.57 4.047l-.01.121a.563.563 0 01-.373.486l-.115.04c-.567.2-1.156.349-1.764.441z" />
                                     </svg>
                                 </ListItemIcon>
-                                <StyledText selected={selectedButton === 2} primary="Profiles" />
+                                <StyledText selected={selectedButton === 2} primary="Inventory" />
                                 {dropDownProfiles ? <ExpandLess sx={{ fill: '#FFFFFF' }} /> : <ExpandMore sx={{ fill: '#FFFFFF' }} />}
                             </StyledListItem>
                         </StyledButton>
                         <Collapse in={dropDownProfiles} timeout="auto" unmountOnExit>
                             <List>
-                                <Link to="/dealerProfileList">
-                                    <StyledButton1 onClick={() => handleButtonClick1(1)} selected1={selectedButton1 === 1}>
-                                        <StyledText1 selected1={selectedButton1 === 1} sx={{ marginLeft: -2 }} primary="Dealer Profiles List" />
-                                    </StyledButton1>
-                                </Link>
-                            </List>
-                        </Collapse>
-
-                        <StyledButton1 onClick={handleDropDownProducts} selected1={selectedButton === 3}>
-                            <StyledListItem>
-                                <ListItemIcon>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={getIconColor(3)} className="w-6 h-6" style={{ marginLeft: 23, width: 25, height: 25 }}>
-                                        <path fillRule="evenodd" d="M7.5 6v.75H5.513c-.96 0-1.764.724-1.865 1.679l-1.263 12A1.875 1.875 0 004.25 22.5h15.5a1.875 1.875 0 001.865-2.071l-1.263-12a1.875 1.875 0 00-1.865-1.679H16.5V6a4.5 4.5 0 10-9 0zM12 3a3 3 0 00-3 3v.75h6V6a3 3 0 00-3-3zm-3 8.25a3 3 0 106 0v-.75a.75.75 0 011.5 0v.75a4.5 4.5 0 11-9 0v-.75a.75.75 0 011.5 0v.75z" clipRule="evenodd" />
-                                    </svg>
-                                </ListItemIcon>
-                                <StyledText selected={selectedButton === 3} primary="Products" />
-                                {dropDownProducts ? <ExpandLess sx={{ fill: '#FFFFFF' }} /> : <ExpandMore sx={{ fill: '#FFFFFF' }} />}
-                            </StyledListItem>
-                        </StyledButton1>
-                        <Collapse in={dropDownProducts} timeout="auto" unmountOnExit>
-                            <List>
-                                <Link to="/addproduct">
-                                    <StyledButton1 onClick={() => handleButtonClick1(3)} selected1={selectedButton1 === 3}>
-                                        <StyledText1 selected1={selectedButton1 === 3} sx={{ marginLeft: 3 }} primary="Product Entry" />
-                                    </StyledButton1>
-                                </Link>
-
                                 <Link to="/productlist">
-                                    <StyledButton1 onClick={() => handleButtonClick1(4)} selected1={selectedButton1 === 4}>
-                                        <StyledText1 selected1={selectedButton1 === 4} sx={{ marginLeft: 3 }} primary="Product List" />
+                                    <StyledButton1 onClick={() => handleButtonClick1(1)} selected1={selectedButton1 === 1}>
+                                        <StyledText1 selected1={selectedButton1 === 1} sx={{ marginLeft: -2 }} primary="Product Catalog" />
                                     </StyledButton1>
                                 </Link>
-
-                                <Link to="/productDistributionList">
-                                    <StyledButton1 onClick={() => handleButtonClick1(5)} selected1={selectedButton1 === 5}>
-                                        <StyledText1 selected1={selectedButton1 === 5} sx={{ marginLeft: 5 }} primary="Product Distribution List" />
+                                <Link to="/addproduct">
+                                    <StyledButton1 onClick={() => handleButtonClick1(2)} selected1={selectedButton1 === 2}>
+                                        <StyledText1 selected1={selectedButton1 === 2} sx={{ marginLeft: -2 }} primary="Product Entry" />
                                     </StyledButton1>
                                 </Link>
                             </List>
                         </Collapse>
+
+                        <Link to="/productDistributionList">
+                            <StyledButton onClick={() => handleButtonClick(3)} selected={selectedButton === 3} focusRipple>
+                                <StyledListItem>
+                                    <ListItemIcon sx={{ left: 200 }}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={getIconColor(1)} className="w-6 h-6" style={{ marginLeft: 23, width: 25, height: 25 }}>
+                                            <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" />
+                                            <path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z" />
+                                        </svg>
+                                    </ListItemIcon>
+                                    <StyledText selected={selectedButton === 3} primary="Stock Request" />
+                                </StyledListItem>
+                            </StyledButton>
+                        </Link>
+
+                        <Link to="/productDistributionList">
+                            <StyledButton onClick={() => handleButtonClick(4)} selected={selectedButton ===4} focusRipple>
+                                <StyledListItem>
+                                    <ListItemIcon sx={{ left: 200 }}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={getIconColor(1)} className="w-6 h-6" style={{ marginLeft: 23, width: 25, height: 25 }}>
+                                            <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" />
+                                            <path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z" />
+                                        </svg>
+                                    </ListItemIcon>
+                                    <StyledText selected={selectedButton === 4} primary="Sales" />
+                                </StyledListItem>
+                            </StyledButton>
+                        </Link>
+
+                        <Link to="/dealerProfileList">
+                            <StyledButton onClick={() => handleButtonClick(5)} selected={selectedButton === 5} focusRipple>
+                                <StyledListItem>
+                                    <ListItemIcon sx={{ left: 200 }}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={getIconColor(1)} className="w-6 h-6" style={{ marginLeft: 23, width: 25, height: 25 }}>
+                                            <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" />
+                                            <path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z" />
+                                        </svg>
+                                    </ListItemIcon>
+                                    <StyledText selected={selectedButton === 5} primary="Dealers" />
+                                </StyledListItem>
+                            </StyledButton>
+                        </Link>
+
+                        <Link to="/depositReceipt">
+                            <StyledButton onClick={() => handleButtonClick(6)} selected={selectedButton === 6} focusRipple>
+                                <StyledListItem>
+                                    <ListItemIcon sx={{ left: 200 }}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={getIconColor(1)} className="w-6 h-6" style={{ marginLeft: 23, width: 25, height: 25 }}>
+                                            <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" />
+                                            <path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z" />
+                                        </svg>
+                                    </ListItemIcon>
+                                    <StyledText selected={selectedButton === 6} primary="Deposits" />
+                                </StyledListItem>
+                            </StyledButton>
+                        </Link>
                     </List>
                 </ColorBox>
             </Drawer>

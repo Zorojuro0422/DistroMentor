@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { useRestDealer } from "../../RestCalls/DealerUseRest";
-import { IDealer, IDealerDocument, IDealerPaymentProof, IOrder } from "../../RestCalls/Interfaces";
+import { IDealer, IDealerDocument, IDealerPaymentProof, IOrder, ICustomerOrder } from "../../RestCalls/Interfaces";
 import axios from "axios";
 import { Button, Card, Grid, Icon, Modal, Paper, Stack, Typography, styled, Tab, Box, Tabs, Snackbar, Alert, AlertTitle, SlideProps, Slide, TextFieldProps, TextField, LinearProgress } from "@mui/material";
 import AutorenewOutlinedIcon from '@mui/icons-material/AutorenewOutlined';
@@ -209,7 +209,7 @@ const ButtonCredit = styled(Button)({
 });
 
 const TabStyle = styled(Tab)({
-    width: 320,
+    width: 240,
     fontWeight: '550',
     label: {
         color: '#707070',
@@ -295,6 +295,7 @@ const DealerProfileDetails = () => {
     const [selectedDealerId, setSelectedDealerId] = useState<string>("");
     const creditLimitRef = useRef<HTMLInputElement>(null);
     const [isUnconfirmedDealer, setIsUnconfirmedDealer] = useState(false);
+    const [customerOrders, setCustomerOrders] = useState<ICustomerOrder[]>([]);
     {/*Tabs*/ }
     function CustomTabPanel(props: TabPanelProps) {
         const { children, value, index, ...other } = props;
@@ -339,6 +340,7 @@ const DealerProfileDetails = () => {
     };
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+        console.log("Tab Index Changed: ", newValue); // Debug log
         setValue(newValue);
     };
 
@@ -363,6 +365,16 @@ const DealerProfileDetails = () => {
                 console.error('Error retrieving Order by Dealer Data!')
             });
     };
+    const fetchCustomerOrders = (dealerID: string) => {
+        axios.get<ICustomerOrder[]>(`http://localhost:8080/customerOrder/getAllCustomerOrdersByDealerId/${dealerID}`)
+            .then((response) => {
+                console.log("Fetched Customer Orders: ", response.data); // Debug fetched data
+                setCustomerOrders(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching customer orders: ", error);
+            });
+    };
 
     function getAllDealerDocuments() {
         axios.get<IDealerDocument[]>(`http://localhost:8080/dealerdocument/findAllDocumentsByDealerId/${objectId!}`)
@@ -378,6 +390,7 @@ const DealerProfileDetails = () => {
         getDealerByIDForProfile(objectId!);
         getAllDealerDocuments();
         getOrderByDealerId(objectId!);
+        fetchCustomerOrders(objectId!);
     };
 
     const business = dealer?.hasbusiness ? (
@@ -406,8 +419,10 @@ const DealerProfileDetails = () => {
     ) : (<Typography>Dealer Has No Business Information.</Typography>);
 
     useEffect(() => {
-        if (objectId !== null) handleFindDealer();
-    }, [dealer]);
+        if (objectId !== null) {
+            handleFindDealer();
+        }
+    }, [objectId]);
 
     const displayFile = (base64Content: Uint8Array | null, fileType: string, docname: string, documentid: string, dealerparam: IDealer) => {
         if (base64Content) {
@@ -538,20 +553,88 @@ const DealerProfileDetails = () => {
         setIsDialogOpen(true);
     };
 
-    const columnsOrder: GridColDef[] = [
-        { field: 'id', headerName: 'Order ID', width: 140 },
+     const columnsOrder: GridColDef[] = [
+         { field: 'id', headerName: 'Order ID', width: 150 },
+         { field: 'orderDate', headerName: 'Order Date', width: 180 },
+         { field: 'distributionDate', headerName: 'Distribution Date', width: 200 },
+         { field: 'orderAmount', headerName: 'Order Amount', width: 170 },
+         {
+             field: 'orderStatus',
+             headerName: 'Status',
+             width: 170,
+             renderCell: (params) => {
+                 const statusColor: { [key: string]: string } = {
+                     Open: 'green',
+                     Pending: 'orange',
+                     Closed: 'red',
+                 };
+
+                 const status = params.value as keyof typeof statusColor; // Ensure params.value is a valid key
+                 return (
+                     <span
+                         style={{
+                             color: statusColor[status] || 'black', // Default to black if status is unknown
+                             fontWeight: 'bold',
+                         }}
+                     >
+                         {params.value}
+                     </span>
+                 );
+             },
+         },
+     ];
+
+     const rowsOrder = orders.map((order) => ({
+         id: order.orderid,
+         orderDate: order.orderdate,
+         distributionDate: order.distributiondate,
+         orderAmount: `Php ${order.orderamount}`,
+         orderStatus: order.status, // Pass status directly
+     }));
+
+    const columnsCustomerOrders: GridColDef[] = [
+        { field: 'id', headerName: 'Order ID', width: 150 },
         { field: 'orderDate', headerName: 'Order Date', width: 180 },
-        { field: 'distributionDate', headerName: 'Distribution Date', width: 170 },
+        { field: 'customerName', headerName: 'Customer Name', width: 200 },
         { field: 'orderAmount', headerName: 'Order Amount', width: 170 },
+        {
+            field: 'orderStatus',
+            headerName: 'Status',
+            width: 170,
+            renderCell: (params) => (
+                <span
+                    style={{
+                        color:
+                            params.value === 'Open'
+                                ? 'green'
+                                : params.value === 'Pending'
+                                ? 'orange'
+                                : 'red',
+                        fontWeight: 'bold',
+                    }}
+                >
+                    {params.value}
+                </span>
+            ),
+        },
     ];
 
-    const rowsOrder = orders.map((order) => ({
-        id: order.orderid,
-        orderDate: order.orderdate,
-        distributionDate: order.distributiondate,
-        orderAmount: `Php ${order.orderamount}`,
-        orderStatus: order.isclosed,
-    }));
+    const rowsCustomerOrders = customerOrders.map((order) => {
+        console.log("Customer Order: ", order); // Debug each order object
+        return {
+            id: order.orderid,
+            orderDate: order.orderdate
+                ? moment(order.orderdate).format('YYYY-MM-DD') // Format date
+                : 'N/A',
+            customerName: order.customer
+                ? `${order.customer.firstName ?? 'Unknown'} ${order.customer.lastName ?? ''}`
+                : 'Unknown Customer',
+            orderAmount: `Php ${order.orderamount?.toFixed(2) ?? '0.00'}`,
+            orderStatus: order.status, // Use `status` from the order object
+        };
+    });
+
+
 
     return (
         <div>
@@ -637,71 +720,107 @@ const DealerProfileDetails = () => {
                                 <StyleMainLabel style={{ marginLeft: 91 }}>Dealer ID</StyleMainLabel>
                                 <StyleMainInfo style={{ marginTop: 15, marginLeft: 111 }}>{dealer?.dealerid}</StyleMainInfo>
                             </Grid>
-                            <Grid item>
-                                <StyleMainLabel>
-                                    Credit Limit
+
+                            {dealer?.confirmed && (
+                                <Grid item>
+                                    <StyleMainLabel>
+                                        Credit Limit
+                                        {signedInDealer.tableName === 'Dealer' ? (
+                                            <>
+                                            </>
+                                        ) : (
+                                            <>
+                                                {isEditIcon ? (
+                                                    <svg
+                                                        width="25"
+                                                        height="25"
+                                                        viewBox="0 0 33 33"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        style={{
+                                                            marginLeft: 6,
+                                                            marginBottom: -5,
+                                                        }}
+                                                        onClick={handleEditCreditLimit}
+                                                    >
+                                                        <path
+                                                            d="M23.1852 6.16996L25.5049 3.84896C25.9884 3.36541 26.6443 3.09375 27.3281 3.09375C28.012 3.09375 28.6678 3.36541 29.1514 3.84896C29.6349 4.33252 29.9066 4.98836 29.9066 5.67221C29.9066 6.35607 29.6349 7.01191 29.1514 7.49547L14.5502 22.0966C13.8233 22.8231 12.9269 23.3571 11.9419 23.6503L8.25 24.7503L9.35 21.0585C9.64326 20.0735 10.1772 19.177 10.9037 18.4501L23.1852 6.16996ZM23.1852 6.16996L26.8125 9.79721M24.75 19.2503V25.7816C24.75 26.6021 24.4241 27.389 23.8439 27.9692C23.2637 28.5494 22.4768 28.8753 21.6562 28.8753H7.21875C6.39824 28.8753 5.61133 28.5494 5.03114 27.9692C4.45095 27.389 4.125 26.6021 4.125 25.7816V11.3441C4.125 10.5236 4.45095 9.73667 5.03114 9.15648C5.61133 8.57629 6.39824 8.25034 7.21875 8.25034H13.75"
+                                                            stroke="#2D85E7"
+                                                            stroke-width="1.5"
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                        />
+                                                    </svg>
+                                                ) : (
+                                                    <IconStyle2 onClick={handleCancelEdit}>
+                                                        <CloseIcon style={{ marginTop: 5 }} />
+                                                    </IconStyle2>
+                                                )}
+                                            </>
+                                        )}
+                                    </StyleMainLabel>
+
                                     {signedInDealer.tableName === 'Dealer' ? (
-                                        <>
-                                        </>
+                                        <StyleMainInfo style={{ marginTop: 15 }}>
+                                            Php {dealer?.creditlimit}
+                                        </StyleMainInfo>
                                     ) : (
                                         <>
-                                            {isEditIcon ? (
-                                                <svg width="25" height="25" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg" style={{
-                                                    marginLeft: 6, marginBottom: -5,
-                                                }} onClick={handleEditCreditLimit}>
-                                                    <path d="M23.1852 6.16996L25.5049 3.84896C25.9884 3.36541 26.6443 3.09375 27.3281 3.09375C28.012 3.09375 28.6678 3.36541 29.1514 3.84896C29.6349 4.33252 29.9066 4.98836 29.9066 5.67221C29.9066 6.35607 29.6349 7.01191 29.1514 7.49547L14.5502 22.0966C13.8233 22.8231 12.9269 23.3571 11.9419 23.6503L8.25 24.7503L9.35 21.0585C9.64326 20.0735 10.1772 19.177 10.9037 18.4501L23.1852 6.16996ZM23.1852 6.16996L26.8125 9.79721M24.75 19.2503V25.7816C24.75 26.6021 24.4241 27.389 23.8439 27.9692C23.2637 28.5494 22.4768 28.8753 21.6562 28.8753H7.21875C6.39824 28.8753 5.61133 28.5494 5.03114 27.9692C4.45095 27.389 4.125 26.6021 4.125 25.7816V11.3441C4.125 10.5236 4.45095 9.73667 5.03114 9.15648C5.61133 8.57629 6.39824 8.25034 7.21875 8.25034H13.75" stroke="#2D85E7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                </svg>
+                                            {isEditing ? (
+                                                <div>
+                                                    <div
+                                                        style={{
+                                                            display: "grid",
+                                                            gridTemplateColumns: "1fr auto auto",
+                                                            gridGap: "10px",
+                                                            alignItems: "left",
+                                                        }}
+                                                    >
+                                                        <input
+                                                            type="number"
+                                                            ref={creditLimitRef}
+                                                            style={{
+                                                                height: 20,
+                                                                width: 120,
+                                                                marginTop: 15,
+                                                                marginLeft: 115,
+                                                            }}
+                                                        />
+                                                        <div>
+                                                            <ButtonCredit
+                                                                variant="contained"
+                                                                style={{ marginTop: 10 }}
+                                                                onClick={() => handleUpdateCreditLimit(dealer!.dealerid)}
+                                                            >
+                                                                <CheckIcon style={{ color: '#2A9221' }} />
+                                                            </ButtonCredit>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             ) : (
-                                                <IconStyle2 onClick={handleCancelEdit} >
-                                                    <CloseIcon style={{ marginTop: 5 }} />
-                                                </IconStyle2>
+                                                <StyleMainInfo style={{ marginTop: 15 }}>
+                                                    Php {dealer?.creditlimit}
+                                                </StyleMainInfo>
                                             )}
                                         </>
                                     )}
-                                </StyleMainLabel>
-
-                                {signedInDealer.tableName === 'Dealer' ? (
-                                    <StyleMainInfo style={{ marginTop: 15 }}>
-                                        Php {dealer?.creditlimit}
-                                    </StyleMainInfo>
-                                ) : (
-                                    <>
-                                        {isEditing ? (
-                                            <div>
-                                                <div style={{ display: "grid", gridTemplateColumns: "1fr auto auto", gridGap: "10px", alignItems: "left" }}>
-                                                    <input
-                                                        type="number"
-                                                        ref={creditLimitRef}
-                                                        style={{ height: 20, width: 120, marginTop: 15, marginLeft: 115 }}
-                                                    />
-                                                    <div>
-                                                        <ButtonCredit variant="contained" style={{ marginTop: 10 }} onClick={() => handleUpdateCreditLimit(dealer!.dealerid)}>
-                                                            <CheckIcon style={{ color: '#2A9221' }} />
-                                                        </ButtonCredit>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <StyleMainInfo style={{ marginTop: 15 }}>
-                                                Php {dealer?.creditlimit}
-                                            </StyleMainInfo>
-                                        )}
-                                    </>
-                                )}
-                            </Grid>
+                                </Grid>
+                            )}
                         </Grid>
 
                         <Grid container>
                             <Grid item>
                                 <Box sx={{ width: 920, marginLeft: 10, marginTop: 5 }}>
                                     <Box sx={{ borderBottom: 0.5, borderColor: 'divider' }}>
-                                        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                                        <Tabs value={value} onChange={handleChange} aria-label="Dealer Details Tabs">
                                             <TabStyle icon={<PermIdentityIcon />} iconPosition="start" label="Basic Information" {...a11yProps(0)} />
                                             <TabStyle icon={<WorkOutlineIcon />} iconPosition="start" label="Business Information" {...a11yProps(1)} />
                                             <TabStyle icon={<ReceiptLongOutlinedIcon />} iconPosition="start" label="Orders" {...a11yProps(2)} />
+                                            <TabStyle icon={<PersonIcon />} iconPosition="start" label="Customer Orders" {...a11yProps(3)} />
                                         </Tabs>
                                     </Box>
                                     <CustomTabPanel value={value} index={0}>
+                                        {/* Tab 0 Content */}
                                         <Grid container>
                                             <Grid item>
                                                 <StyleLabel>Gender</StyleLabel>
@@ -737,29 +856,86 @@ const DealerProfileDetails = () => {
                                     </CustomTabPanel>
 
                                     <CustomTabPanel value={value} index={1}>
+                                        {/* Tab 1 Content */}
                                         {business}
                                     </CustomTabPanel>
 
                                     <CustomTabPanel value={value} index={2}>
-                                        <div>
-                                            <DataGrid
-                                                sx={{ height: 370, overflowX: 'hidden' }}
-                                                rows={rowsOrder} columns={columnsOrder}
-                                                initialState={{
-                                                    pagination: {
-                                                        paginationModel: {
-                                                            pageSize: 5,
-                                                        },
-                                                    },
-                                                }}
-                                                pageSizeOptions={[5]} />
-                                        </div>
+                                        {/* Tab 2 Content */}
+                                        {dealer?.confirmed ? (
+                                            rowsOrder.length > 0 ? (
+                                                <div>
+                                                    <DataGrid
+                                                        rows={rowsOrder}
+                                                        columns={columnsOrder}
+                                                        initialState={{
+                                                            pagination: {
+                                                                paginationModel: {
+                                                                    pageSize: 5,
+                                                                },
+                                                            },
+                                                        }}
+                                                        pageSizeOptions={[5]}
+                                                        sx={{ cursor: "pointer" }} // Change cursor to pointer for better UX
+                                                        onRowClick={(params) => navigate(`/orderTransactionDetails/${params.row.id}`)} // Navigate on row click
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <Typography style={{ marginTop: 20, color: '#707070' }}>
+                                                    No orders available.
+                                                </Typography>
+                                            )
+                                        ) : (
+                                            <Typography style={{ marginTop: 20, color: '#707070' }}>
+                                                Orders will be available after confirmation.
+                                            </Typography>
+                                        )}
                                     </CustomTabPanel>
+
+
+                                    <CustomTabPanel value={value} index={3}>
+                                        {/* Tab 3 Content */}
+                                        {dealer?.confirmed ? (
+                                            customerOrders.length > 0 ? (
+                                                <>
+                                                    <DataGrid
+                                                        sx={{
+                                                            height: 370,
+                                                            overflowX: 'hidden',
+                                                            cursor: 'pointer', // Pointer cursor for better UX
+                                                        }}
+                                                        rows={rowsCustomerOrders}
+                                                        columns={columnsCustomerOrders}
+                                                        initialState={{
+                                                            pagination: {
+                                                                paginationModel: {
+                                                                    pageSize: 5,
+                                                                },
+                                                            },
+                                                        }}
+                                                        pageSizeOptions={[5]}
+                                                        onRowClick={(params) =>
+                                                            navigate(`/customerTransaction/${params.row.id}`) // Navigate to customer transaction details
+                                                        }
+                                                    />
+                                                </>
+                                            ) : (
+                                                <Typography style={{ marginTop: 20, color: '#707070' }}>
+                                                    No customer orders available.
+                                                </Typography>
+                                            )
+                                        ) : (
+                                            <Typography style={{ marginTop: 20, color: '#707070' }}>
+                                                Customer orders will be available after confirmation.
+                                            </Typography>
+                                        )}
+                                    </CustomTabPanel>
+
 
                                     {/* Confirm/Decline Buttons */}
                                     {
                                         dealer?.confirmed === false && (
-                                            <Grid container style={{ marginTop: 10, marginLeft: 100 }} spacing={5}>
+                                            <Grid container style={{ marginTop: 10, marginLeft: 280 }} spacing={5}>
                                                 <Grid item>
                                                     <StyledButton
                                                         style={{ width: 120 }}

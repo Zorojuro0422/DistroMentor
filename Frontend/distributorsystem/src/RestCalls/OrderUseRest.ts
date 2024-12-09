@@ -95,7 +95,7 @@ export const useRestOrder = (): [
             collector: null,
             paymenttransactionids: [],
             confirmed: order.confirmed,
-            closed: order.isclosed
+            status: 'Open',
         })
         .then((response) => {
             console.log("Order created successfully!", response.data);

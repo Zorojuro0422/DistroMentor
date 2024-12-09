@@ -147,10 +147,47 @@ export interface IOrder {
     orderedproducts: IOrderedProducts[];
     paymenttransactions: IPaymentTransaction[];
     confirmed: boolean;
-    isclosed: boolean;
+    status: String;
+    deposit: number;
 }
 
-
+export interface ICustomerOrder {
+  orderid: string;
+  customerid: string;
+  dealerid: string;
+  distributiondate: string;
+  orderdate: string;
+  orderamount: number;
+  deposit: number;
+  status: string;
+  isclosed?: boolean; // Optional if it exists
+  customer?: {
+    _id: string;
+    dealerID: string;
+    firstName: string;
+    lastName: string;
+    customerContactNumber: string;
+    customerAddress: string;
+    customerSalesAmount: number;
+  };
+  orderedproducts: {
+    _class: string;
+    orderedproductid?: string | null;
+    quantity: number;
+    subtotal: number;
+    product: {
+      productid: string;
+      name: string;
+      quantity: number;
+      unit: string;
+      price: number;
+      expirationDate?: string | null;
+      distributorid?: string | null;
+      orderedproductids?: string[] | null;
+    };
+    orderid?: string | null;
+  }[];
+}
 
 export interface IProduct {
     productid: string;
@@ -182,6 +219,14 @@ export interface IPaymentReceipt {
     paymenttransactionid: string, 
     receiverID: string,
     receivername: string
+}
+
+export interface PaymentRecord {
+  paymentId: string;
+  amount: number;
+  dueDate: string;
+  orderid: string;
+  status: string;
 }
 
 export interface IDirectPaymentReceipt extends IPaymentReceipt{
@@ -236,6 +281,8 @@ export interface IDeposit {
   isconfirm: boolean; // True if confirmed, false otherwise
   dealerid: string; // Reference to the dealer's ID
   distributorid: string; // Reference to the distributor's ID
+  orderid: string;
+  paymentid: string;
   submissionDate: string; // Submission date and time of the deposit
   dealer: IDealer | null; // Linked dealer object, if available
   distributor: IDistributor | null; // Linked distributor object, if available

@@ -1,6 +1,7 @@
 package com.group29.distromentorsystem.controllers;
 
 import com.group29.distromentorsystem.models.Order;
+import com.group29.distromentorsystem.repositories.OrderRepository;
 import com.group29.distromentorsystem.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,9 @@ public class OrderController {
 
     @Autowired
     OrderService orderService;
+
+    @Autowired
+    private OrderRepository orderRepository;
 
     @PostMapping("/createOrder")
     public ResponseEntity<Object> createOrder(@RequestBody Order order){
@@ -103,5 +107,12 @@ public class OrderController {
     public ResponseEntity<Double> getTotalOrderedProductsSubtotalByDealerId(@PathVariable String dealerId) {
         Double totalSubtotal = orderService.getTotalOrderedProductsSubtotalByDealerId(dealerId);
         return new ResponseEntity<>(totalSubtotal, HttpStatus.OK);
+    }
+
+    @GetMapping("/orders/{id}")
+    public ResponseEntity<Order> getOrderById(@PathVariable String id) {
+        return orderRepository.findById(id)
+                .map(order -> ResponseEntity.ok(order))
+                .orElse(ResponseEntity.notFound().build());
     }
 }

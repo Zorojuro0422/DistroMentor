@@ -2,6 +2,7 @@ package com.group29.distromentorsystem.models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -15,6 +16,8 @@ public class Deposit {
     private String proofOfRemittance;  // Path to the uploaded proof image
     private String dealerid;  // Reference to the dealer who made the deposit
     private String distributorid;  // Reference to the distributor overseeing the dealer
+    private String orderid;  // Reference to the associated order
+    private String paymentid;  // Reference to the associated payment record
     private LocalDateTime submissionDate;  // Submission date and time
     private String status;  // "unconfirmed", "confirmed", or "declined"
     private String declineReason;  // Reason for declined deposits
@@ -41,6 +44,12 @@ public class Deposit {
 
     public String getDistributorid() { return distributorid; }
     public void setDistributorid(String distributorid) { this.distributorid = distributorid; }
+
+    public String getOrderid() { return orderid; }
+    public void setOrderid(String orderid) { this.orderid = orderid; }
+
+    public String getPaymentid() { return paymentid; }
+    public void setPaymentid(String paymentid) { this.paymentid = paymentid; }
 
     public LocalDateTime getSubmissionDate() { return submissionDate; }
     public void setSubmissionDate(LocalDateTime submissionDate) { this.submissionDate = submissionDate; }

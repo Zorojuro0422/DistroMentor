@@ -6,9 +6,13 @@ import com.group29.distromentorsystem.repositories.CustomerOrderRepository;
 import com.group29.distromentorsystem.repositories.DealerTotalsRepository;
 import com.group29.distromentorsystem.models.DealerTotals;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerOrderService {
@@ -19,11 +23,15 @@ public class CustomerOrderService {
     @Autowired
     private DealerTotalsRepository dealerTotalsRepository;
 
+    public List<CustomerOrder> getCustomerOrdersByDealerId(String dealerid) {
+        return customerOrderRepository.findByDealerid(dealerid);
+    }
+
     public CustomerOrder saveOrder(CustomerOrder customerOrder) {
         // Save the order
         CustomerOrder savedOrder = customerOrderRepository.save(customerOrder);
 
-        // After saving the order, update the dealer's total order amount, total SRP, and profit
+        // After saving the order, update the dealer's total order amount
         updateDealerTotals(savedOrder);
 
         return savedOrder;
@@ -40,16 +48,6 @@ public class CustomerOrderService {
         return orders.stream().mapToDouble(CustomerOrder::getOrderamount).sum(); // Sum all order amounts
     }
 
-    // Get total SRP amount by dealer ID
-    public double getTotalAmountSrpByDealer(String dealerId) {
-        List<CustomerOrder> orders = customerOrderRepository.findByDealerid(dealerId);
-
-        return orders.stream()
-                .flatMap(order -> order.getOrderedproducts().stream())
-                .mapToDouble(OrderedProduct::getTotalsrp)
-                .sum(); // Sum all SRP values for products ordered by the dealer
-    }
-
     // Update dealer totals when an order is placed
     public void updateDealerTotals(CustomerOrder order) {
         String dealerId = order.getDealerid();
@@ -62,17 +60,6 @@ public class CustomerOrderService {
         double newOrderAmount = order.getOrderamount();
         dealerTotals.setTotalOrderAmount(dealerTotals.getTotalOrderAmount() + newOrderAmount);
 
-        // Update the total SRP (add the SRP of the new order's products to the existing total SRP)
-        double newSrp = order.getOrderedproducts().stream()
-                .mapToDouble(OrderedProduct::getTotalsrp).sum();
-        dealerTotals.setTotalSRP(dealerTotals.getTotalSRP() + newSrp);
-
-        // Calculate new profit from this order
-        double newProfit = newSrp - newOrderAmount;
-
-        // Accumulate the new profit with the existing profit
-        dealerTotals.setProfit(dealerTotals.getProfit() + newProfit);
-
         // Save the updated totals back to the database
         dealerTotalsRepository.save(dealerTotals);
     }
@@ -84,18 +71,31 @@ public class CustomerOrderService {
 
         dealerTotals.setTotalOrderAmount(dealerTotals.getTotalOrderAmount() + updatedAmount); // Add to existing total
 
-        // No need to recalculate the profit here, as it should be handled elsewhere when SRP is updated
         dealerTotalsRepository.save(dealerTotals);  // Save the updated totals
     }
 
-    // Update method to modify total SRP amount for a dealer
-    public void updateTotalAmountSrpByDealer(String dealerId, double updatedSrp) {
-        DealerTotals dealerTotals = dealerTotalsRepository.findByDealerid(dealerId)
-                .orElseThrow(() -> new IllegalArgumentException("Dealer totals not found for dealer ID: " + dealerId));
+    public CustomerOrder getCustomerOrderByOrderid(String orderid) {
+        return customerOrderRepository.findByOrderid(orderid)
+                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderid));
 
-        dealerTotals.setTotalSRP(dealerTotals.getTotalSRP() + updatedSrp);  // Add to existing SRP
-
-        // No need to recalculate the profit here, as it should be handled elsewhere when SRP is updated
-        dealerTotalsRepository.save(dealerTotals);  // Save the updated totals
     }
+
+    public CustomerOrder updateCustomerOrder(String orderid, CustomerOrder orderDetails) {
+        // Fetch the existing order
+        CustomerOrder existingOrder = customerOrderRepository.findById(orderid)
+                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderid));
+
+        // Update fields
+        existingOrder.setCustomerid(orderDetails.getCustomerid());
+        existingOrder.setDealerid(orderDetails.getDealerid());
+        existingOrder.setDistributiondate(orderDetails.getDistributiondate());
+        existingOrder.setOrderdate(orderDetails.getOrderdate());
+        existingOrder.setOrderamount(orderDetails.getOrderamount());
+        existingOrder.setDeposit(orderDetails.getDeposit());
+        existingOrder.setStatus(orderDetails.getStatus());
+
+        // Save and return the updated order
+        return customerOrderRepository.save(existingOrder);
+    }
+
 }

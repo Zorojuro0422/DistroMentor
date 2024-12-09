@@ -267,12 +267,12 @@ export default function Dashboard() {
         getAllUnconfirmedDealers();
         getAllUnconfirmedOrders();
         getAllUnconfirmedDeposits();
-    }, [unconfirmedDealers, unconfirmedOrders, unconfirmedDeposits]);
+    }, []);
 
 
     return (
         <Grid container>
-            
+
              {unconfirmedOrders || unconfirmedDeposits || unconfirmedDealers ? (
             <><PendingOrdersGrid item container>
                         <PendingOrdersPaper>
@@ -457,7 +457,7 @@ export default function Dashboard() {
                     {/* You can adjust the width as needed */}
                 </Box>
             )}
-            
+
         </Grid>
     )
 }

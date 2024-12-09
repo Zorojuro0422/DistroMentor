@@ -17,6 +17,7 @@ import { useEffect, useRef, useState } from 'react';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const RemoveButton = styled(Button)({
   ":hover": {
@@ -215,6 +216,8 @@ export default function OrderConfirmation() {
 
   const [open, setOpen] = useState(false);
 
+  const navigate = useNavigate();
+
   const quantityRef = useRef<TextFieldProps>(null);
   const penaltyRateRef = useRef<TextFieldProps>(null);
   const dealerIDRef = useRef<TextFieldProps>(null);
@@ -394,12 +397,16 @@ export default function OrderConfirmation() {
       }, 0);
       const orderAmountSRP = orderedProducts.reduce((total, product) => total + product.totalsrp, 0);
 
+      // Retain existing payment terms and penalty rate if available
+      const existingPaymentTerms = order?.paymentterms || 0; // Use existing value or default to 0
+      const existingPenaltyRate = order?.penaltyrate || 0; // Use existing value or default to 0
+
       const updatedOrder: IOrder = {
         orderid: existingOrderId!,
         distributiondate: currentDate, // Automatically set to today's date
         orderdate: moment().format('YYYY-MM-DD'),
-        penaltyrate: Number(penaltyRateRef.current?.value),
-        paymentterms: paymentTerm,
+        penaltyrate: Number(penaltyRateRef.current?.value) || existingPenaltyRate, // Use new value or retain existing
+        paymentterms: paymentTerm || existingPaymentTerms, // Use new value or retain existing
         orderamount: orderAmount,
         orderamountsrp: orderAmountSRP,
         distributor: dealer?.distributor!,
@@ -408,7 +415,8 @@ export default function OrderConfirmation() {
         orderedproducts: orderedProducts,
         paymenttransactions: [],
         confirmed: true,
-        isclosed: false,
+        status: 'Open',
+        deposit: 0,
       };
 
       try {
@@ -484,15 +492,15 @@ export default function OrderConfirmation() {
         await Promise.all(updateProductQuantities);
 
         // Post the AllProductSubtotal after confirming the order
-       await axios.post('http://localhost:8080/allProductSubtotals/saveOrUpdate', {
-         dealerid: order?.dealer.dealerid!,         // Make sure this dealerid exists and is correct
-         totalProductSubtotal: orderAmount,         // Pass the subtotal (orderAmount) here
-       });
+        await axios.post('http://localhost:8080/allProductSubtotals/saveOrUpdate', {
+          dealerid: order?.dealer.dealerid!, // Make sure this dealerid exists and is correct
+          totalProductSubtotal: orderAmount, // Pass the subtotal (orderAmount) here
+        });
 
         // Show success message and clear inputs
         saveHandleAlert('Success Saving Order', "The Dealer's ordered products have been successfully updated & confirmed!", 'success');
         clearInputValues();
-
+        navigate('/productDistributionList');
       } catch (error) {
         // Handle errors during order update or product posting
         saveHandleAlert('Error Saving Order', "An error occurred while saving the order. Please try again.", 'error');
@@ -502,10 +510,6 @@ export default function OrderConfirmation() {
       saveHandleAlert('Cart is Empty.', "Order hasn't been confirmed because cart is empty. Add a product before confirming order", 'error');
     }
   };
-
-
-
-
 
   return (
     <div>

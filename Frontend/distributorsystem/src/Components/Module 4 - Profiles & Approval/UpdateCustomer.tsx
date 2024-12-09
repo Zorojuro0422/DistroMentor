@@ -65,7 +65,7 @@ const StyledTextField = styled(TextField)({
 });
 
 const UpdateCustomer: React.FC = () => {
-  const { customerID } = useParams<{ customerID: string }>();
+  const { objectId } = useParams<{ objectId: string }>();
   const navigate = useNavigate();
   const [customer, setCustomer] = useState<Customer>({
     customerID: '',
@@ -90,7 +90,7 @@ const UpdateCustomer: React.FC = () => {
 
   const fetchCustomer = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/customer/${customerID}`);
+      const response = await axios.get(`http://localhost:8080/customer/${objectId}`);
       setCustomer(response.data);
     } catch (error) {
       console.error('Error fetching customer:', error);
@@ -110,7 +110,7 @@ const UpdateCustomer: React.FC = () => {
     }
 
     try {
-      await axios.put(`http://localhost:8080/customer/${customerID}`, customer);
+      await axios.put(`http://localhost:8080/customer/${objectId}`, customer);
       setUpdateSuccess(true);
       setTimeout(() => {
         navigate('/customerList');

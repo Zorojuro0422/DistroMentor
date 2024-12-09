@@ -277,51 +277,77 @@ export const useRestDealer = (): [
 
 
     function getDealerByID(dealerID: string) {
-        let creditLimit = 0;
-        let remainingCredit = 0;
+        // Fetch dealer details first
         axios.get(`http://localhost:8080/dealer/getDealerByID/${dealerID}`)
             .then((response) => {
                 if (response.data !== null) {
-                    if (response.data.isconfirmed !== false) {
-                        setDealer(response.data);
-                        setIsDealerFound(true);
-                        creditLimit = response.data.creditlimit;
-                        setDealerCreditLimit(creditLimit)
-                        toast.success("Dealer found successfully! Dealer Credit Limit: ₱" + response.data.creditlimit, {
-                            position: "bottom-right",
-                            autoClose: 5000,
-                            hideProgressBar: true,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: "colored",
-                        })
-                    }
+                    const fetchedDealer = response.data;
 
+                    // Set dealer data and credit limit
+                    setDealer(fetchedDealer);
+                    setIsDealerFound(true);
 
-                }
-                else {
+                    const creditLimit = fetchedDealer.creditlimit || 0;
+                    setDealerCreditLimit(creditLimit);
+
+                    // Fetch total order amount and calculate remaining credit
+                    fetchTotalProductSubtotal(dealerID, creditLimit);
+
+                    // Toast notification for dealer success
+                    toast.success(`Dealer found! Credit Limit: ₱${creditLimit}`, {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
+                } else {
+                    // Handle dealer not found
                     setIsDealerFound(false);
+                    toast.error("Dealer not found!", {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
                 }
             })
             .catch((error) => {
-                console.error('Error retrieving dealer data:', error);
+                console.error('Error retrieving dealer:', error);
+                toast.error(
+                    "Error retrieving dealer information. Please try again.",
+                    {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    }
+                );
             });
+    }
 
+    // Helper function to fetch total order amount
+    function fetchTotalProductSubtotal(dealerID: string, creditLimit: number) {
         axios.get(`http://localhost:8080/allProductSubtotals/getByDealerId/${dealerID}`)
             .then((response) => {
-                // Assuming the response structure contains the totalProductSubtotal field
-                const totalProductSubtotal = response.data.totalProductSubtotal;
+                const totalProductSubtotal = response.data?.totalProductSubtotal || 0; // Default to 0 if undefined
 
-                // Update the dealer credit limit and calculate remaining credit
-                setDealerCreditLimit(totalProductSubtotal);
+                // Calculate and update remaining credit
                 const remainingCredit = creditLimit - totalProductSubtotal;
-
-                console.log("Remaining Credit: " + remainingCredit);
                 setDealerRemainingCredit(remainingCredit);
 
-                // Display a success message with toast notification
+                // Toast notification for remaining credit
                 toast.success(
                     `Total Ordered Amount: ₱${totalProductSubtotal}. Remaining Credit: ₱${remainingCredit}`,
                     {
@@ -337,10 +363,24 @@ export const useRestDealer = (): [
                 );
             })
             .catch((error) => {
-                console.error('Error retrieving dealer credit limit:', error);
+                console.error('Error retrieving total product subtotal:', error);
+
+                // Handle error gracefully by keeping credit limit as remaining credit
+                setDealerRemainingCredit(creditLimit);
+                toast.error(
+                    "Error retrieving total ordered amount. Remaining credit may be incorrect.",
+                    {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    }
+                );
             });
-
-
     }
 
 

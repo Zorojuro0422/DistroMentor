@@ -91,11 +91,14 @@ const ProductList: React.FC = () => {
   const [search, setSearch] = useState('');
   const [fieldWarning, setFieldWarning] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>('success');
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [restockQuantity, setRestockQuantity] = useState<number | "">(""); // Initialize as empty
+
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
@@ -108,7 +111,15 @@ const ProductList: React.FC = () => {
 
   const fetchAllProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/product/getAllProducts');
+      const distributorId = userFromStorage?.distributor?.distributorid;
+      if (!distributorId) {
+        setAlertMessage('Distributor ID is missing.');
+        setAlertSeverity('error');
+        setOpenSnackbar(true);
+        return;
+      }
+
+      const response = await axios.get(`http://localhost:8080/product/getProductsByDistributor/${distributorId}`);
       setProducts(response.data);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -117,6 +128,7 @@ const ProductList: React.FC = () => {
       setOpenSnackbar(true);
     }
   };
+
 
   const handleDelete = async (productId: string) => {
     try {
@@ -136,9 +148,28 @@ const ProductList: React.FC = () => {
     }
   };
 
-  const handleEdit = (productId: string) => {
-    window.location.href = `/update_product/${productId}`;
-  };
+  const handleEditClick = (product: Product) => {
+      setSelectedProduct(product); // Set the product to be edited
+      setOpenEditDialog(true); // Open the edit dialog
+    };
+
+    const handleUpdate = async (updatedProduct: Product) => {
+      try {
+        await axios.put(`http://localhost:8080/product/${updatedProduct.productid}`, updatedProduct);
+        fetchAllProducts(); // Refresh the product list
+        setAlertMessage('Product updated successfully!');
+        setAlertSeverity('success');
+        setOpenSnackbar(true);
+      } catch (error) {
+        console.error('Error updating product:', error);
+        setAlertMessage('Error updating product.');
+        setAlertSeverity('error');
+        setOpenSnackbar(true);
+      } finally {
+        setOpenEditDialog(false); // Close the edit dialog
+        setSelectedProduct(null); // Reset the selected product
+      }
+    };
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
@@ -245,9 +276,7 @@ const ProductList: React.FC = () => {
                       <td style={{ border: '1px solid black', padding: '10px', fontWeight: 'bold', color: '#333' }}>{product.price}</td>
                       <td style={{ border: '1px solid black', padding: '10px', fontWeight: 'bold', color: '#333' }}>{product.quantity}</td>
                       <td style={{ border: '1px solid black', padding: '10px', textAlign: 'center' }}>
-                        <EditButton onClick={() => handleEdit(product.productid)}>
-                          Edit
-                        </EditButton>
+                        <EditButton onClick={() => handleEditClick(product)}>Edit</EditButton>
                         <DeleteButton onClick={() => handleOpenDialog(product.productid)}>
                           Delete
                         </DeleteButton>
@@ -325,6 +354,109 @@ const ProductList: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      {openEditDialog && selectedProduct && (
+        <Dialog open={openEditDialog} onClose={() => setOpenEditDialog(false)}>
+          <DialogTitle
+            sx={{
+              textAlign: "center",
+              fontFamily: "Inter, sans-serif",
+              fontWeight: "bold",
+              fontSize: "20px",
+            }}
+          >
+            Update and Restock Product
+          </DialogTitle>
+          <DialogContent>
+            {/* Update Product Name */}
+            <TextField
+              label="Product Name"
+              name="name"
+              value={selectedProduct.name}
+              onChange={(e) =>
+                setSelectedProduct((prev) =>
+                  prev ? { ...prev, name: e.target.value } : null
+                )
+              }
+              fullWidth
+              margin="normal"
+            />
+            {/* Update Unit */}
+            <TextField
+              label="Unit"
+              name="unit"
+              value={selectedProduct.unit}
+              onChange={(e) =>
+                setSelectedProduct((prev) =>
+                  prev ? { ...prev, unit: e.target.value } : null
+                )
+              }
+              fullWidth
+              margin="normal"
+            />
+            {/* Update Price */}
+            <TextField
+              label="Price"
+              name="price"
+              type="number"
+              value={selectedProduct.price}
+              onChange={(e) =>
+                setSelectedProduct((prev) =>
+                  prev ? { ...prev, price: +e.target.value } : null
+                )
+              }
+              fullWidth
+              margin="normal"
+            />
+            {/* Update Restock Quantity */}
+            <TextField
+              label="Restock Quantity"
+              name="restockQuantity"
+              type="number"
+              value={restockQuantity}
+              onChange={(e) => {
+                const value = e.target.value === "" ? "" : +e.target.value; // Allow empty string
+                setRestockQuantity(value);
+              }}
+              fullWidth
+              margin="normal"
+            />
+          </DialogContent>
+          <DialogActions>
+            {/* Cancel Button */}
+            <Button
+              onClick={() => {
+                setOpenEditDialog(false);
+                setSelectedProduct(null);
+                setRestockQuantity(""); // Reset the restock quantity
+              }}
+              color="secondary"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                if (selectedProduct) {
+                  const updatedProduct = {
+                    ...selectedProduct, // Spread the current product fields
+                    quantity:
+                      restockQuantity !== ""
+                        ? selectedProduct.quantity + restockQuantity // Add restock quantity if provided
+                        : selectedProduct.quantity, // Keep the current quantity if restockQuantity is empty
+                  };
+                  handleUpdate(updatedProduct); // Call update handler
+                  setRestockQuantity(""); // Reset restock quantity input
+                  setOpenEditDialog(false); // Close the edit dialog
+                  setSelectedProduct(null); // Reset selected product
+                }
+              }}
+              color="primary"
+            >
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
+
     </div>
   );
 };

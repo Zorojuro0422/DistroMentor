@@ -362,9 +362,11 @@ export default function Schedules() {
                                                     <TableCell align='center'><Typography1>Php {order?.orderamount}</Typography1></TableCell>
                                                     <TableCell align='center'><Typography1>{order?.penaltyrate}%</Typography1></TableCell>
                                                     <TableCell align="center">
-                                                        <Typography1><span style={{ color: order?.isclosed ? 'red' : 'green' }}>
-                                                            {order?.isclosed ? 'CLOSED' : 'OPEN'}
-                                                        </span></Typography1>
+                                                        <Typography1>
+                                                            <span style={{ color: order?.status === 'Closed' ? 'red' : 'green' }}>
+                                                                {order?.status?.toUpperCase()}
+                                                            </span>
+                                                        </Typography1>
                                                     </TableCell>
                                                 </TableRow>
                                             </TableBody>
@@ -444,12 +446,13 @@ export default function Schedules() {
                                     </Grid>
                                 </Grid>
 
-                                {order.isclosed ? (
+                                {order.status === 'Closed' ? (
                                     <div>
                                         <h1>All payment transactions have been paid. Order is closed.</h1>
                                     </div>
                                 ) : (
                                     <div>
+                                        {/* Additional content for non-closed orders can be added here */}
                                     </div>
                                 )}
                             </div>

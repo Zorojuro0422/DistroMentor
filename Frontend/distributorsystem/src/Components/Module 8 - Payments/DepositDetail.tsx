@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { IDeposit, IDealer } from "../../RestCalls/Interfaces";
+import { IDeposit, IDealer, PaymentRecord } from "../../RestCalls/Interfaces";
 import axios from "axios";
 import {
   Box,
@@ -140,18 +140,114 @@ export default function DepositDetailsUI() {
 
   // Handle confirm action
   const handleConfirm = async () => {
+    if (!deposit || !deposit.orderid || !deposit.paymentid) {
+      alert("Order ID or Payment ID is missing in the deposit data.");
+      return;
+    }
+
     try {
-      // Confirm deposit and update the backend
+      // Confirm deposit in the backend
       await axios.patch(`http://localhost:8080/api/deposits/confirm/${objectId}`);
 
-      // Update dealer total sales and debt
-      await updateDealerTotalSalesAndDebt();
+      // Fetch the latest order data
+      const orderResponse = await axios.get(
+        `http://localhost:8080/order/getOrderByID/${deposit.orderid}`
+      );
+      const order = orderResponse.data;
 
-      alert("Deposit confirmed successfully!");
+      if (!order) {
+        alert("Order not found.");
+        return;
+      }
+
+      // Update the deposit amount and determine the updated status
+      const updatedDeposit = (order.deposit || 0) + deposit.amount; // Add deposit amount to the existing deposit
+      const updatedStatus = updatedDeposit === order.orderamount ? "Closed" : "Pending"; // Determine the new status
+
+      // Update the order object with the new deposit and status
+      const updatedOrder = { ...order, deposit: updatedDeposit, status: updatedStatus };
+      console.log("Updated Order Object:", updatedOrder);
+
+      // Send the update request for the order
+      await axios.put(
+        `http://localhost:8080/order/updateOrder/${deposit.orderid}`,
+        updatedOrder
+      );
+
+      // Update the specific payment record to "Paid"
+      await axios.put(
+        `http://localhost:8080/payment-records/${deposit.paymentid}`,
+        {
+          ...deposit, // Spread the existing deposit object
+          status: "Paid", // Update only the status field
+        }
+      );
+
+      console.log(`Payment Record ${deposit.paymentid} updated to Paid.`);
+
+        const dealerId = order.dealer?.dealerid;
+
+        if (!dealerId) {
+          console.error("Dealer ID is missing!");
+          return;
+        }
+
+        try {
+          // Log the dealer ID
+          console.log("Fetching totalProductSubtotal for dealerId:", dealerId);
+
+          // Fetch the current totalProductSubtotal
+          const response = await axios.get(
+            `http://localhost:8080/allProductSubtotals/getByDealerId/${deposit.dealerid}`
+          );
+
+          // Log the fetched response
+          console.log("Response from getByDealerId API:", response.data);
+
+          const totalProductSubtotal = response.data.totalProductSubtotal;
+
+          // Log the current totalProductSubtotal
+          console.log("Current totalProductSubtotal:", totalProductSubtotal);
+
+          const updatedTotalDebt = totalProductSubtotal - deposit.amount;
+
+          // Log the updated totalProductSubtotal
+          console.log("Updated totalProductSubtotal after deduction:", updatedTotalDebt);
+
+          // Update the allProductSubtotals in the backend
+          const updateResponse = await axios.put(
+            `http://localhost:8080/allProductSubtotals/updateByDealerId/${deposit.dealerid}`,
+            {
+              totalProductSubtotal: updatedTotalDebt, // Updated total debt (subtotal)
+            }
+          );
+
+          // Log the response from the update API
+          console.log("Response from updateByDealerId API:", updateResponse.data);
+
+          console.log("Updated totalProductSubtotal successfully:", updatedTotalDebt);
+        } catch (error) {
+          console.error("Error occurred while fetching or updating totalProductSubtotal:", error);
+        }
+
+      // Refetch the updated order data to ensure UI is in sync
+      const updatedOrderResponse = await axios.get(
+        `http://localhost:8080/order/getOrderByID/${deposit.orderid}`
+      );
+      console.log("Updated Order from Backend:", updatedOrderResponse.data);
+
+      alert("Deposit confirmed, order and payment record updated successfully!");
       navigate(-1); // Navigate back after confirmation
     } catch (error) {
-      console.error("Error confirming deposit or updating dealer totals:", error);
-      alert("Failed to confirm deposit or update dealer totals.");
+      console.error("Error confirming deposit or updating order:", error);
+
+      if (axios.isAxiosError(error) && error.response) {
+        alert(
+          `Error: ${error.response.data.message || "Failed to confirm deposit or update order."}`
+        );
+      } else {
+        alert("An unexpected error occurred. Please try again.");
+      }
     }
   };
 

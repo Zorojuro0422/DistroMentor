@@ -19,11 +19,9 @@ public class Product {
 
     private float price;
 
-    private float suggestedRetailPrice;  // New field for suggested retail price
+    private LocalDate expirationDate;
 
-    private LocalDate expirationDate;  // New field for expiration date
-
-    private String distributorid;  // New field for distributor ID
+    private String distributorid;
 
     private Set<String> orderedproductids;
 
@@ -31,14 +29,12 @@ public class Product {
     }
 
     public Product(String productid, String name, int quantity, String unit, float price,
-                   float suggestedRetailPrice, LocalDate expirationDate, String distributorid,
-                   Set<String> orderedproductids) {
+                   LocalDate expirationDate, String distributorid, Set<String> orderedproductids) {
         this.productid = productid;
         this.name = name;
         this.quantity = quantity;
         this.unit = unit;
         this.price = price;
-        this.suggestedRetailPrice = suggestedRetailPrice;
         this.expirationDate = expirationDate;
         this.distributorid = distributorid;
         this.orderedproductids = orderedproductids;
@@ -82,14 +78,6 @@ public class Product {
 
     public void setPrice(float price) {
         this.price = price;
-    }
-
-    public float getSuggestedRetailPrice() {
-        return suggestedRetailPrice;
-    }
-
-    public void setSuggestedRetailPrice(float suggestedRetailPrice) {
-        this.suggestedRetailPrice = suggestedRetailPrice;
     }
 
     public LocalDate getExpirationDate() {

@@ -52,6 +52,11 @@ import Customer from '../Components/Module 4 - Profiles & Approval/Customer';
 import Deposit from "../Components/Module 8 - Payments/Deposit";
 import DepositReceipt from "../Components/Module 8 - Payments/DepositReceipt";
 import DepositDetail from "../Components/Module 8 - Payments/DepositDetail";
+import DepositConfirmation from "../Components/Module 8 - Payments/DepositConfirmation";
+import Invoices from '../Components/Module 5 - Product Distribution and Confirmation/Invoices';
+import { CustomerTransaction } from '../Components/Module 5 - Product Distribution and Confirmation/CustomerTransaction';
+import CustomerCollection from '../Components/Module 6 - Collector Assignment/CustomerCollection';
+import Payment from "../Components/Module 8 - Payments/Payment";
 
 
 export default function MainRoutes() {
@@ -89,9 +94,12 @@ export default function MainRoutes() {
                             <Route path="/customerlist" element={<CustomerList />} />
                             <Route path="/depositlist" element={<DepositList />} />
                             <Route path="/deposit" element={<Deposit />} />
-                            <Route path="/update_customer/:customerID" element={<UpdateCustomer />} />
+                            <Route path="/customercollection" element={<CustomerCollection/>} />
+                            <Route path="/payment" element={<Payment/>} />
+                            <Route path="/update_customer/:objectId" element={<UpdateCustomer />} />
                             <Route path="/dealerProfileDetails/:objectId" element={<><ScrollToTop/><DealerProfileDetails/></>} />
-
+                            <Route path="/orderTransactionDetails/:objectId" element={<><ScrollToTop/><OrderTransactionDetails /></>} />
+                            <Route path="/customerTransaction/:objectId" element={<><ScrollToTop/><CustomerTransaction/></>} />
                         </Route>
                     )}
 
@@ -113,13 +121,16 @@ export default function MainRoutes() {
                             <Route path="/distributorOrderForm" element={<><ScrollToTop/><DistributorOrderForm/></>} />
                             <Route path="/orderConfirmation/:objectId" element={<><ScrollToTop/><OrderConfirmation /></>} />
                             <Route path="/productDistributionList" element={<ProductDistributionList />} />
+                            <Route path="/invoices" element={<Invoices />} />
                             <Route path="/orderTransactionDetails/:objectId" element={<><ScrollToTop/><OrderTransactionDetails /></>} />
+                            <Route path="/customerTransaction/:objectId" element={<><ScrollToTop/><CustomerTransaction/></>} />
                             <Route path="/customer/:objectId" element={<Customer />} />
                             <Route path="/dealerProfileList" element={<DealerProfileListUI />} />
                             <Route path="/dealerProfileDetails/:objectId" element={<><ScrollToTop/><DealerProfileDetails /></>}></Route>
                             <Route path="/dealerRegistration" element={<DealerRegistration/>} />
                             <Route path="/depositReceipt" element={<DepositReceipt />} />
                             <Route path="/depositDetails/:objectId" element={<DepositDetail />} />
+                            <Route path="/depositConfirmation/:objectId" element={<DepositConfirmation />} />
                             <Route path="/dealerApproval" element={<><ScrollToTop/><DealerApproval /></>} />
                             <Route path="/orderDetails/:objectId" element={<><ScrollToTop/><OrderDetails /></>} />
                         

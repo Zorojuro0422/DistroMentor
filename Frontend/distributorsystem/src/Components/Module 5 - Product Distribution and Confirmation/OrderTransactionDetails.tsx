@@ -1,11 +1,12 @@
 import { Alert, AlertTitle, Box, Button, Grid, LinearProgress, Paper, Slide, SlideProps, Snackbar, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, styled } from "@mui/material";
-import { IOrder } from "../../RestCalls/Interfaces";
-import { useEffect, useState } from "react";
+import { IOrder, PaymentRecord } from "../../RestCalls/Interfaces";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import OrderTransactionDetailsPrint from "./OrderTransactionDetailsPrint";
 import logo5 from '../../Global Components/Images/logo5.png';
-
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import moment from "moment";
 function SlideTransitionDown(props: SlideProps) {
   return <Slide {...props} direction="down" />;
 }
@@ -193,19 +194,53 @@ export function OrderTransactionDetails() {
   const [alerttitle, setTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState('success');
+  const [paymentRecords, setPaymentRecords] = useState<PaymentRecord[]>([]);
+  const [openDialog, setOpenDialog] = useState(false); // Dialog open state
   const { objectId } = useParams();
+  const [proofOfRemittanceFiles, setProofOfRemittanceFiles] = useState<Record<string, File | null>>({});
+
 
   useEffect(() => {
     axios
       .get<IOrder>(`http://localhost:8080/order/getOrderByID/${objectId}`)
       .then((response) => {
-        setOrder(response.data);
+        const orderData = response.data;
+        console.log("Fetched Order Data:", orderData); // Log the entire order data
+
+        setOrder(orderData); // Set the state with the fetched order data
       })
       .catch((error) => {
         console.error("Error fetching order data:", error);
         headerHandleAlert('Error', "Failed to retrieve order data. Please try again.", 'error');
       });
   }, [objectId]);
+
+  const fetchPaymentRecords = () => {
+    axios
+      .get(`http://localhost:8080/payment-records/order/${objectId}`)
+      .then((response) => {
+        console.log("Fetched Payment Records:", response.data); // Log the fetched data
+        setPaymentRecords(response.data); // Store the fetched data
+      })
+      .catch((error) => {
+        console.error("Error fetching payment records:", error);
+        headerHandleAlert("Error", "Failed to retrieve payment records. Please try again.", "error");
+      });
+  };
+
+  const handleOpenDialog = () => {
+      fetchPaymentRecords(); // Fetch payment data when the dialog opens
+      setOpenDialog(true);
+    };
+
+  const handlePay = (record: PaymentRecord) => {
+    console.log(`Processing payment for Record ID: ${record.paymentId}`);
+    // Add your payment logic here
+  };
+
+  const handleCloseDialog = () => {
+      setOpenDialog(false);
+  };
 
   const headerHandleAlert = (title: string, message: string, severity: 'success' | 'warning' | 'error') => {
     setTitle(title);
@@ -229,6 +264,216 @@ export function OrderTransactionDetails() {
       window.print();
       setPrinting(false);
     }, 10);
+  };
+
+  const handlePayWithProof = async (record: PaymentRecord) => {
+    try {
+      console.log("Pay button clicked for record:", record);
+
+      // Extract dealer ID, distributor ID, and order ID safely
+      const dealerId = order?.dealer?.dealerid; // Safely get dealer ID
+      const distributorId = order?.distributor?.distributorid; // Safely get distributor ID
+      const orderId = order?.orderid; // Safely get order ID
+      const paymentDate = moment().format("YYYY-MM-DDTHH:mm:ss"); // Current date and time
+      const proofOfRemittance = proofOfRemittanceFiles[record.paymentId]; // Get the selected file for proof of remittance
+
+      // Validate required fields
+      if (!dealerId || !distributorId || !orderId || !record.paymentId || !proofOfRemittance) {
+        headerHandleAlert(
+          "Error",
+          "Missing required information or proof of remittance.",
+          "error"
+        );
+        console.error("Missing information:", {
+          dealerId,
+          distributorId,
+          orderId,
+          paymentId: record.paymentId,
+          proofOfRemittance,
+        });
+        return;
+      }
+
+      // Prepare form data
+      const formData = new FormData();
+      formData.append("dealerId", dealerId);
+      formData.append("distributorId", distributorId);
+      formData.append("orderId", orderId); // Pass the order ID correctly
+      formData.append("paymentId", record.paymentId);
+      formData.append("amount", record.amount.toString());
+      formData.append("transactionNumber", `TXN-${record.paymentId}`);
+      formData.append("paymentDate", paymentDate);
+      formData.append("proofOfRemittance", proofOfRemittance);
+
+      // Make API request
+      const response = await axios.post(
+        "http://localhost:8080/api/deposits/create",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("API Response:", response.data);
+
+       // If deposit creation is successful, update the payment record status to Pending
+          const updateResponse = await axios.put(
+            `http://localhost:8080/payment-records/${record.paymentId}`,
+            {
+              ...record,
+              status: "Pending", // Change the status to Pending
+            }
+          );
+
+          console.log("Payment Record Updated:", updateResponse.data);
+
+      headerHandleAlert(
+        "Success",
+        `Deposit for Payment ID ${record.paymentId} created successfully!`,
+        "success"
+      );
+
+    } catch (error) {
+      console.error("Error creating deposit:", error);
+      headerHandleAlert(
+        "Error",
+        `Failed to create deposit for Payment ID ${record.paymentId}.`,
+        "error"
+      );
+    }
+  };
+
+const handleOverduePayments = async () => {
+  try {
+    const currentDate = moment().startOf('day');
+    console.log("Current Date:", currentDate.format('YYYY-MM-DD')); // Log the current date
+
+    // Fetch order details if not available
+    console.log("Fetching order details for object ID:", objectId);
+    const orderResponse = await axios.get<IOrder>(
+      `http://localhost:8080/order/getOrderByID/${objectId}`
+    );
+    const order = orderResponse.data;
+    console.log("Fetched Order Details:", order);
+
+    // Extract dealerId from the order
+    const dealerId = order?.dealer?.dealerid;
+    console.log("Dealer ID:", dealerId);
+
+    if (!dealerId) {
+      console.error("Dealer ID not found in the order data.");
+      return; // Exit if dealerId is not available
+    }
+
+    // Fetch payment records
+    console.log("Fetching payment records for order ID:", objectId);
+    const response = await axios.get<PaymentRecord[]>(
+      `http://localhost:8080/payment-records/order/${objectId}`
+    );
+    const paymentRecords = response.data;
+    console.log("Fetched Payment Records:", paymentRecords);
+
+    // Loop through payment records and check for overdue payments
+    for (const record of paymentRecords) {
+      console.log("Processing payment record:", record);
+
+      if (
+        record.status === "Open" &&
+        moment(record.dueDate).isBefore(currentDate)
+      ) {
+        console.log(
+          `Payment record ${record.paymentId} is overdue. Status: ${record.status}, Due Date: ${record.dueDate}`
+        );
+
+        // Change status to "Overdue"
+        const updatedRecord = { ...record, status: "Overdue" };
+        console.log("Updating payment record status to 'Overdue':", updatedRecord);
+
+        await axios.put(
+          `http://localhost:8080/payment-records/${record.paymentId}`,
+          updatedRecord
+        );
+        console.log(`Updated payment record ${record.paymentId} to 'Overdue'`);
+
+        // Calculate penalty (10% of the overdue amount)
+        const penalty = record.amount * 0.1;
+        console.log(`Penalty calculated for payment ID ${record.paymentId}: ₱${penalty}`);
+
+        await axios.post(
+          `http://localhost:8080/api/total-interest/${dealerId}?interest=${penalty}`
+        );
+        console.log(`Penalty of ₱${penalty} recorded in Total Interest for dealer ${dealerId}`);
+
+        // Deduct penalty from dealer's credit limit
+        console.log("Fetching dealer details for dealer ID:", dealerId);
+        const dealerResponse = await axios.get(
+          `http://localhost:8080/dealer/getDealerByID/${dealerId}`
+        );
+        const dealer = dealerResponse.data;
+        console.log("Fetched Dealer Details:", dealer);
+        const creditLimit = dealer?.creditlimit;
+        console.log("Dealer Credit Limit:", creditLimit);
+
+        const updatedCreditLimit = creditLimit - penalty;
+        console.log(
+          `Dealer ${dealerId} current credit limit: ₱${creditLimit}, Updated credit limit: ₱${updatedCreditLimit}`
+        );
+
+        // Update dealer credit limit
+        await axios.put(
+          `http://localhost:8080/dealer/updateCreditLimit/${dealerId}?creditlimit=${updatedCreditLimit}`
+        );
+        console.log(`Updated dealer ${dealerId} credit limit to ₱${updatedCreditLimit}`);
+
+        // Log success message
+        console.log(
+          `Penalty of ₱${penalty} deducted from dealer ${dealerId}. New credit limit: ₱${updatedCreditLimit}`
+        );
+
+        // Show alert
+        headerHandleAlert(
+          "Overdue Payment",
+          ` Unable to pay on time. A penalty of ₱${penalty} has been deducted from the dealer's credit limit.`,
+          "warning"
+        );
+      } else {
+        console.log(
+          `Payment record ${record.paymentId} is not overdue. Status: ${record.status}, Due Date: ${record.dueDate}`
+        );
+      }
+    }
+
+    console.log("Finished processing all payment records.");
+  } catch (error) {
+    console.error("Error handling overdue payments:", error);
+    headerHandleAlert(
+      "Error",
+      "Failed to process overdue payments.",
+      "error"
+    );
+  }
+};
+const [hasCheckedOverdue, setHasCheckedOverdue] = useState(false);
+
+useEffect(() => {
+  if (objectId && !hasCheckedOverdue) {
+    handleOverduePayments();
+    setHasCheckedOverdue(true); // Mark it as executed
+  }
+}, [objectId, hasCheckedOverdue]);
+
+  const handleFileChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    paymentId: string
+  ) => {
+    const file = event.target.files?.[0] || null;
+    console.log("Selected file for Payment ID:", paymentId, file);
+    setProofOfRemittanceFiles((prev) => ({
+      ...prev,
+      [paymentId]: file, // Store the file against the corresponding paymentId
+    }));
   };
 
   return (
@@ -342,6 +587,126 @@ export function OrderTransactionDetails() {
                       </Grid>
                     </Grid>
                   </PaperStyle>
+
+                  <Grid
+                    container
+                    sx={{
+                      position: "fixed", // Fix the container to the viewport
+                      top: 100, // Distance from the top of the page
+                      right: 40, // Distance from the right of the page
+                      justifyContent: "flex-end", // Align items to the right
+                      alignItems: "center", // Align items vertically in the center
+                      padding: "10px", // Add some padding for spacing
+                      width: "auto", // Automatically size the container based on content
+                      maxWidth: "300px", // Optionally, set a max width for the container
+                    }}
+                  >
+                    <Grid item>
+                      <StyledButton variant="contained" onClick={handleOpenDialog}>
+                        Pay
+                      </StyledButton>
+                    </Grid>
+                  </Grid>
+
+
+                  <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
+                    <DialogTitle sx={{ fontWeight: "bold" }}>Payment Records</DialogTitle>
+                    <DialogContent>
+                      {paymentRecords ? (
+                        <div>
+                          {paymentRecords.map((record, index) => (
+                            <div
+                              key={index}
+                              style={{
+                                marginBottom: "16px",
+                                padding: "8px",
+                                border: "1px solid #ddd",
+                                borderRadius: "8px",
+                              }}
+                            >
+                              <Typography>Amount: ₱ {record.amount}</Typography>
+
+                              {/* Conditionally render Due Date */}
+                              {record.status !== "Paid" && (
+                                <Typography>Due Date: {record.dueDate}</Typography>
+                              )}
+
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  alignItems: "center",
+                                  marginTop: "8px",
+                                }}
+                              >
+                                <Typography>
+                                  Status:{" "}
+                                  <span
+                                    style={{
+                                      color:
+                                        record.status === "Pending"
+                                          ? "orange"
+                                          : record.status === "Paid" || record.status === "Overdue"
+                                          ? "red"
+                                          : record.status === "Open"
+                                          ? "green"
+                                          : "inherit",
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    {record.status}
+                                  </span>
+                                </Typography>
+                              </Box>
+
+                              {/* File upload for proof of remittance */}
+                              <Box
+                                sx={{
+                                  marginTop: "8px",
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  gap: "8px",
+                                }}
+                              >
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={(event) =>
+                                    handleFileChange(event, record.paymentId) // Handle file selection
+                                  }
+                                  disabled={
+                                    record.status === "Paid" ||
+                                    record.status === "Pending"
+                                  } // Disable file upload if already paid or overdue
+                                />
+                                <Button
+                                  variant="contained"
+                                  color="primary"
+                                  onClick={() => handlePayWithProof(record)}
+                                  disabled={
+                                    record.status === "Paid" ||
+                                    record.status === "Pending"
+                                  } // Disable button if already paid or overdue
+                                >
+                                  Pay
+                                </Button>
+                              </Box>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <Typography>Loading payment records...</Typography>
+                      )}
+                    </DialogContent>
+
+                    <DialogActions>
+                      <Button onClick={handleCloseDialog} sx={{ color: "red", fontWeight: "bold" }}>
+                        Close
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+
+
 
                   {/* Alerts */}
                   <Snackbar open={openAlert} autoHideDuration={3000} onClose={handleCloseAlert} anchorOrigin={{

@@ -494,7 +494,8 @@ export default function ProductDistributionList() {
           orderedproducts: orderedProducts,
           paymenttransactions: [],
           confirmed: true,
-          isclosed: false
+          status: 'Open',
+          deposit: 0,
         });
         //if possible kay ara na siya mo clear after sa snackbar
         saveHandleAlert('Success Saving Order', "The Dealer's ordered products have been successfully saved!", 'success')

@@ -1,6 +1,6 @@
 package com.group29.distromentorsystem.models;
 
-import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDate;
 import java.util.Set;
@@ -21,8 +21,6 @@ public class Order {
 
     private double orderamount;
 
-    private double orderamountsrp;  // New field for total SRP amount
-
     private Distributor distributor;
 
     private Dealer dealer;
@@ -33,33 +31,29 @@ public class Order {
 
     private boolean isconfirmed;
 
-    private boolean isclosed;
+    private OrderStatus status;
 
-    // Default constructor
+    private double deposit; // Added field for deposit
+
     public Order() {
     }
 
-    // Constructor with all fields
-    public Order(String orderid, LocalDate orderdate, LocalDate distributiondate, float penaltyrate,
-                 int paymentterms, double orderamount, double orderamountsrp, Distributor distributor,
-                 Dealer dealer, Employee collector, Set<OrderedProduct> orderedproducts,
-                 boolean isconfirmed, boolean isclosed) {
+    public Order(String orderid, LocalDate orderdate, LocalDate distributiondate, float penaltyrate, int paymentterms, double orderamount, Distributor distributor, Dealer dealer, Employee collector, Set<OrderedProduct> orderedproducts, boolean isconfirmed, OrderStatus status, double deposit) {
         this.orderid = orderid;
         this.orderdate = orderdate;
         this.distributiondate = distributiondate;
         this.penaltyrate = penaltyrate;
         this.paymentterms = paymentterms;
         this.orderamount = orderamount;
-        this.orderamountsrp = orderamountsrp;  // Initialize orderamountsrp
         this.distributor = distributor;
         this.dealer = dealer;
         this.collector = collector;
         this.orderedproducts = orderedproducts;
         this.isconfirmed = isconfirmed;
-        this.isclosed = isclosed;
+        this.status = status;
+        this.deposit = deposit;
     }
 
-    // Getters and Setters
     public String getOrderid() {
         return orderid;
     }
@@ -108,14 +102,6 @@ public class Order {
         this.orderamount = orderamount;
     }
 
-    public double getOrderamountsrp() {  // Getter for orderamountsrp
-        return orderamountsrp;
-    }
-
-    public void setOrderamountsrp(double orderamountsrp) {  // Setter for orderamountsrp
-        this.orderamountsrp = orderamountsrp;
-    }
-
     public Distributor getDistributor() {
         return distributor;
     }
@@ -156,11 +142,26 @@ public class Order {
         isconfirmed = confirmed;
     }
 
-    public boolean isIsclosed() {
-        return isclosed;
+    public OrderStatus getStatus() {
+        return status;
     }
 
-    public void setIsclosed(boolean isclosed) {
-        this.isclosed = isclosed;
+    public void setStatus(OrderStatus status) {
+        this.status = status;
+    }
+
+    public double getDeposit() { // Getter for deposit
+        return deposit;
+    }
+
+    public void setDeposit(double deposit) { // Setter for deposit
+        this.deposit = deposit;
+    }
+
+    // Enum for Order Status
+    public enum OrderStatus {
+        Open,
+        Pending,
+        Closed
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -213,21 +214,19 @@ public class DealerService {
     }
 
 
-    public double getTotalOrderAmountByDealerID(String dealerid){
-        Dealer dealer = dealerRepository.findById(dealerid).get();
+    public double getTotalOrderAmountByDealerID(String dealerid) {
+        Dealer dealer = dealerRepository.findById(dealerid).orElseThrow(() -> new NoSuchElementException("Dealer not found"));
 
-        double  totalOrderAmount = 0;
+        double totalOrderAmount = 0;
 
-        for (String orderid: dealer.getOrderids()) {
-            Order order = orderRepository.findById(orderid).get();
-            if(order.isIsclosed()){
+        for (String orderid : dealer.getOrderids()) {
+            Order order = orderRepository.findById(orderid).orElseThrow(() -> new NoSuchElementException("Order not found"));
+            if (order.getStatus() == Order.OrderStatus.Closed) { // Skip orders with status Closed
                 continue;
-            }
-            else {
+            } else {
                 totalOrderAmount += order.getOrderamount();
             }
         }
-
 
         return totalOrderAmount;
     }

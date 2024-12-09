@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.*;
 
-
 @Service
 public class OrderService {
 
@@ -30,9 +29,6 @@ public class OrderService {
     ProductRepository productRepository;
 
     @Autowired
-    private AllProductSubtotalService allProductSubtotalService;
-
-    @Autowired
     OrderedProductRepository orderedProductRepository;
 
     @Autowired
@@ -44,14 +40,13 @@ public class OrderService {
     @Autowired
     DistributorRepository distributorRepository;
 
-
     public Order createOrder(Order order) {
         Order newOrder = orderRepository.save(order);
 
         double orderamount = 0;
-        double orderamountsrp = 0;  // Initialize orderamountsrp
 
         Dealer dealer = dealerRepository.findById(order.getDealer().getDealerid()).get();
+
         Distributor distributor = distributorRepository.findById(dealer.getDistributor().getDistributorid()).get();
 
         Set<OrderedProduct> newOrderedProducts = order.getOrderedproducts();
@@ -61,33 +56,28 @@ public class OrderService {
             String productid = op.getProduct().getProductid();
             int quantity = op.getQuantity();
 
-            Product product = productRepository.findById(productid).orElse(null);
+            Product product = productRepository.findById(productid).get();
 
             if (product != null) {
                 float price = product.getPrice();
-                float srp = product.getSuggestedRetailPrice();  // Retrieve SRP from the product
-
                 double subtotal = price * quantity;
-                double totalsrp = srp * quantity;  // Calculate SRP total for this product
 
-                OrderedProduct newOrderedProduct = new OrderedProduct(
-                        op.getOrderedproductid(), quantity, subtotal, totalsrp, product, newOrder.getOrderid()
-                );
+                OrderedProduct newOrderedProduct = new OrderedProduct(op.getOrderedproductid(), quantity, op.getSubtotal(), product, newOrder.getOrderid());
 
                 newOrderedProduct = orderedProductRepository.save(newOrderedProduct);
+
                 savedOrderedProducts.add(newOrderedProduct);
 
                 orderamount += subtotal;
-                orderamountsrp += totalsrp;  // Accumulate SRP totals for the entire order
 
+                newOrderedProduct.setProduct(product);
                 product.getOrderedproductids().add(newOrderedProduct.getOrderedproductid());
                 productRepository.save(product);
+                orderedProductRepository.save(newOrderedProduct);
             }
         }
-
         newOrder.setOrderedproducts(savedOrderedProducts);
         newOrder.setOrderamount(orderamount);
-        newOrder.setOrderamountsrp(orderamountsrp);  // Set orderamountsrp
 
         dealer.getOrderids().add(newOrder.getOrderid());
         dealerRepository.save(dealer);
@@ -96,25 +86,7 @@ public class OrderService {
         distributor.getOrderids().add(newOrder.getOrderid());
         distributorRepository.save(distributor);
 
-        updateAllProductSubtotal(order.getDealer().getDealerid(), orderamount);
-
         return orderRepository.save(newOrder);
-    }
-
-    // Method to update AllProductSubtotal for the dealer
-    private void updateAllProductSubtotal(String dealerId, double newOrderSubtotal) {
-        Optional<AllProductSubtotal> productSubtotalOpt = allProductSubtotalService.getProductSubtotalByDealerId(dealerId);
-
-        AllProductSubtotal productSubtotal;
-        if (productSubtotalOpt.isPresent()) {
-            productSubtotal = productSubtotalOpt.get();
-            productSubtotal.setTotalProductSubtotal(productSubtotal.getTotalProductSubtotal() + newOrderSubtotal);  // Add the new subtotal
-        } else {
-            // Create new AllProductSubtotal entry if not present
-            productSubtotal = new AllProductSubtotal(dealerId, newOrderSubtotal);
-        }
-
-        allProductSubtotalService.saveOrUpdateProductSubtotal(productSubtotal);  // Save the updated subtotal
     }
 
     public List<Order> getAllOrders() {
@@ -133,66 +105,88 @@ public class OrderService {
         return orderRepository.findAllByDistributor_Distributorid(distributorid);
     }
 
-    public ResponseEntity<String> assignCollector(String[] orderids, String collectorid) {
-        Employee employee = employeeRepository.findById(collectorid).orElseThrow();
+    public ResponseEntity assignCollector(String[] orderids, String collectorid) {
+        Employee employee = employeeRepository.findById(collectorid).get();
 
         for (String orderId : orderids) {
-            Order order = orderRepository.findById(orderId).orElseThrow();
+            Order order = orderRepository.findById(orderId).get();
 
-            if (order.getCollector() != null) {
-                Employee prevEmployee = order.getCollector();
-                prevEmployee.getOrderids().remove(order.getOrderid());
-                employeeRepository.save(prevEmployee);
+            if (order != null) {
+                if (order.getCollector() != null) {
+                    Employee prevEmployee = order.getCollector();
+                    prevEmployee.getOrderids().remove(order.getOrderid());
+                    employeeRepository.save(prevEmployee);
+                }
+
+                order.setCollector(employee);
+                orderRepository.save(order);
+
+                employee.getOrderids().add(order.getOrderid());
             }
-
-            order.setCollector(employee);
-            orderRepository.save(order);
-
-            employee.getOrderids().add(order.getOrderid());
         }
 
         employeeRepository.save(employee);
-        return new ResponseEntity<>("Collector assigned successfully", HttpStatus.OK);
+        return new ResponseEntity("Collector assigned successfully", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> removeCollector(String orderid) {
-        Order order = orderRepository.findById(orderid).orElseThrow();
-        Employee employee = employeeRepository.findById(order.getCollector().getEmployeeid()).orElseThrow();
+    public ResponseEntity removeCollector(String orderid) {
+        Order order = orderRepository.findById(orderid).get();
 
+        Employee employee = employeeRepository.findById(order.getCollector().getEmployeeid()).get();
         employee.getOrderids().remove(orderid);
         employeeRepository.save(employee);
 
         order.setCollector(null);
         orderRepository.save(order);
 
-        return new ResponseEntity<>("Collector removed successfully", HttpStatus.OK);
+        return new ResponseEntity("Collector removed successfully", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> updateOrder(String orderId, Order updatedOrder) {
-        Order optionalOrder = orderRepository.findById(orderId).orElseThrow();
+    public ResponseEntity updateOrder(String orderId, Order updatedOrder) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
 
-        optionalOrder.setPenaltyrate(updatedOrder.getPenaltyrate());
-        optionalOrder.setDistributiondate(updatedOrder.getDistributiondate());
-        optionalOrder.setPaymentterms(updatedOrder.getPaymentterms());
-        optionalOrder.setOrderedproducts(updatedOrder.getOrderedproducts());
-        optionalOrder.setOrderamount(updatedOrder.getOrderamount());
-        optionalOrder.setConfirmed(updatedOrder.getConfirmed());
-        optionalOrder.setIsclosed(updatedOrder.isIsclosed());
+        if (optionalOrder.isPresent()) {
+            Order existingOrder = optionalOrder.get();
 
-        for (OrderedProduct op : updatedOrder.getOrderedproducts()) {
-            op.setOrderid(updatedOrder.getOrderid());
+            // Update fields in the existing order
+            existingOrder.setPenaltyrate(updatedOrder.getPenaltyrate());
+            existingOrder.setDistributiondate(updatedOrder.getDistributiondate());
+            existingOrder.setPaymentterms(updatedOrder.getPaymentterms());
+            existingOrder.setOrderedproducts(updatedOrder.getOrderedproducts());
+            existingOrder.setOrderamount(updatedOrder.getOrderamount());
+            existingOrder.setConfirmed(updatedOrder.getConfirmed());
+            existingOrder.setStatus(updatedOrder.getStatus()); // Updated for status
+
+            // Handle deposit safely without null issues
+            Double newDeposit = updatedOrder.getDeposit();
+            if (newDeposit != null) { // Only update if newDeposit is not null
+                existingOrder.setDeposit(newDeposit); // Frontend already calculates the total deposit
+            }
+
+            // Update the order ID for ordered products
+            if (updatedOrder.getOrderedproducts() != null) {
+                for (OrderedProduct op : updatedOrder.getOrderedproducts()) {
+                    op.setOrderid(updatedOrder.getOrderid());
+                }
+            }
+
+            // Save the updated order
+            orderRepository.save(existingOrder);
+
+            return new ResponseEntity<>("Order updated successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Order not found", HttpStatus.NOT_FOUND);
         }
-
-        orderRepository.save(optionalOrder);
-
-        return new ResponseEntity<>("Order updated successfully", HttpStatus.OK);
     }
+
+
 
     @Scheduled(cron = "0 0 0 */15 * ?")
     public void applyPenaltyForAllLatePayments() {
         LocalDate currentDate = LocalDate.now();
         List<Order> orders = orderRepository.findAll();
-        // Implement penalty logic here
+
+        // Logic for penalty calculation can be implemented here
     }
 
     public List<Order> getAllUnconfirmedOrders() {
@@ -209,14 +203,14 @@ public class OrderService {
 
     public Order getOrderByIDUnderDistributor(String orderid, String distributorid) {
         boolean exists = orderRepository.existsByOrderidAndDistributor_Distributorid(orderid, distributorid);
-        return exists ? orderRepository.findById(orderid).orElse(null) : null;
+        if (exists) {
+            return orderRepository.findById(orderid).orElse(null);
+        } else
+            return null;
     }
 
     public Double getTotalOrderedProductsSubtotalByDealerId(String dealerid) {
         Double totalSubtotal = orderRepository.sumOrderedProductsSubtotalByDealerId(dealerid);
         return totalSubtotal != null ? totalSubtotal : 0.0;
     }
-
-
-
 }

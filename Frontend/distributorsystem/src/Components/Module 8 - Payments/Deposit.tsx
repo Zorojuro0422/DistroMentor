@@ -91,6 +91,8 @@ export default function DepositForm() {
   const [alertTitle, setAlertTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState<'success' | 'warning' | 'error'>('success');
+  const [orderId, setOrderId] = useState('');
+  const [paymentId, setPaymentId] = useState('');
   const [fieldWarning, setFieldWarning] = useState({
     amount: '',
     proofOfRemittance: '',

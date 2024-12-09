@@ -199,9 +199,21 @@ export default function NewNavBarDealer(props: navProps) {
                                 </StyledListItem>
                             </StyledButton>
                         </Link>
-                        {/* Deposit */}
-                        <Link to="/deposit">
-                            <StyledButton onClick={() => handleButtonClick(6)} selected={selectedButton === 6} focusRipple>
+                        <Link to="/customercollection">
+                            <StyledButton onClick={() => handleButtonClick(3)} selected={selectedButton === 3} focusRipple>
+                                <StyledListItem>
+                                    <ListItemIcon sx={{ left: 200 }}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={getIconColor(1)} className="w-6 h-6" style={{ marginLeft: 23, width: 25, height: 25 }}>
+                                            <path fillRule="evenodd" d="M7.5 6v.75H5.513c-.96 0-1.764.724-1.865 1.679l-1.263 12A1.875 1.875 0 004.25 22.5h15.5a1.875 1.875 0 001.865-2.071l-1.263-12a1.875 1.875 0 00-1.865-1.679H16.5V6a4.5 4.5 0 10-9 0zM12 3a3 3 0 00-3 3v.75h6V6a3 3 0 00-3-3zm-3 8.25a3 3 0 106 0v-.75a.75.75 0 011.5 0v.75a4.5 4.5 0 11-9 0v-.75a.75.75 0 011.5 0v.75a3 3 0 003-3zm-3 8.25a3 3 0 106 0v-.75a.75.75 0 011.5 0v.75a4.5 4.5 0 11-9 0v-.75a.75.75 0 011.5 0v.75a3 3 0 003-3z" clipRule="evenodd" />
+                                        </svg>
+                                    </ListItemIcon>
+                                    <StyledText selected={selectedButton === 3} primary="Collection" />
+                                </StyledListItem>
+                            </StyledButton>
+                        </Link>
+
+                        <Link to="/payment">
+                            <StyledButton onClick={() => handleButtonClick(6)} selected={selectedButton === 7} focusRipple>
                                 <StyledListItem>
                                     <ListItemIcon sx={{ left: 200 }}>
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={getIconColor(3)} className="w-6 h-6" style={{ marginLeft: 23, width: 25, height: 25 }}>
@@ -209,7 +221,7 @@ export default function NewNavBarDealer(props: navProps) {
                                             <path d="M5.082 14.254a8.287 8.287 0 00-1.308 5.135 9.687 9.687 0 01-1.764-.44l-.115-.04a.563.563 0 01-.373-.487l-.01-.121a3.75 3.75 0 013.57-4.047zM20.226 19.389a8.287 8.287 0 00-1.308-5.135 3.75 3.75 0 013.57 4.047l-.01.121a.563.563 0 01-.373.486l-.115.04c-.567.2-1.156.349-1.764.441z" />
                                         </svg>
                                     </ListItemIcon>
-                                    <StyledText selected={selectedButton === 6} primary="Deposit" />
+                                    <StyledText selected={selectedButton === 7} primary="Payment" />
                                 </StyledListItem>
                             </StyledButton>
                         </Link>
