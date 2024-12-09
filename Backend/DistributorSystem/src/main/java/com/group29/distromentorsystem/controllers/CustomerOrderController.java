@@ -7,12 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/customerOrder")
 public class CustomerOrderController {
+
     @Autowired
     private CustomerOrderService customerOrderService;
 
@@ -20,9 +20,15 @@ public class CustomerOrderController {
     public CustomerOrder createOrder(@RequestBody CustomerOrder customerOrder) {
         return customerOrderService.saveOrder(customerOrder);
     }
+
     @GetMapping("/getAllCustomerOrders")
     public List<CustomerOrder> getAllCustomerOrders() {
         return customerOrderService.getAllCustomerOrders();
+    }
+
+    @GetMapping("/getAllCustomerOrdersByDealerId/{dealerid}")
+    public List<CustomerOrder> getAllCustomerOrdersByDealerId(@PathVariable String dealerid) {
+        return customerOrderService.getCustomerOrdersByDealerId(dealerid);
     }
 
     // New method to get total order amount by dealer ID
@@ -31,20 +37,28 @@ public class CustomerOrderController {
         return customerOrderService.getTotalOrderAmountByDealer(dealerId);
     }
 
-    @GetMapping("/getTotalAmountSrpByDealer/{dealerId}")
-    public double getTotalAmountSrpByDealer(@PathVariable String dealerId) {
-        return customerOrderService.getTotalAmountSrpByDealer(dealerId);
-    }
-
     // Update the total order amount (Total Sales) for a dealer by dealer ID
     @PutMapping("/updateTotalOrderAmountByDealer/{dealerId}")
     public void updateTotalOrderAmountByDealer(@PathVariable String dealerId, @RequestParam double updatedAmount) {
         customerOrderService.updateTotalOrderAmountByDealer(dealerId, updatedAmount);  // Updates the dealer's total sales
     }
 
-    // Update the total SRP amount for a dealer by dealer ID
-    @PutMapping("/updateTotalAmountSrpByDealer/{dealerId}")
-    public void updateTotalAmountSrpByDealer(@PathVariable String dealerId, @RequestParam double updatedSrp) {
-        customerOrderService.updateTotalAmountSrpByDealer(dealerId, updatedSrp);  // Updates the dealer's total SRP
+    @GetMapping("/getCustomerOrderById/{orderid}")
+    public CustomerOrder getCustomerOrderById(@PathVariable String orderid) {
+        return customerOrderService.getCustomerOrderByOrderid(orderid);
     }
+    @PutMapping("/{orderid}")
+    public ResponseEntity<CustomerOrder> updateCustomerOrder(
+            @PathVariable String orderid,
+            @RequestBody CustomerOrder orderDetails) {
+        try {
+            // Call the service method to update the order
+            CustomerOrder updatedOrder = customerOrderService.updateCustomerOrder(orderid, orderDetails);
+            return ResponseEntity.ok(updatedOrder);
+        } catch (RuntimeException e) {
+            // Return 404 if the order is not found
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
