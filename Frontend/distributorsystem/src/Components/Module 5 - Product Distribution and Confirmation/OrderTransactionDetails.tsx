@@ -196,17 +196,9 @@ export function OrderTransactionDetails() {
   const [alertSeverity, setAlertSeverity] = useState('success');
   const [paymentRecords, setPaymentRecords] = useState<PaymentRecord[]>([]);
   const [openDialog, setOpenDialog] = useState(false); // Dialog open state
-  const [userRole, setUserRole] = useState<string>("");
   const { objectId } = useParams();
   const [proofOfRemittanceFiles, setProofOfRemittanceFiles] = useState<Record<string, File | null>>({});
 
-    useEffect(() => {
-        const userFromStorage = localStorage.getItem("userFromStorage");
-        if (userFromStorage) {
-          const user = JSON.parse(userFromStorage); // Parse the JSON string
-          setUserRole(user.role); // Assume `role` is the field specifying "Distributor" or "Dealer"
-        }
-      }, []);
 
   useEffect(() => {
     axios
@@ -597,26 +589,24 @@ useEffect(() => {
                   </PaperStyle>
 
                   <Grid
-                        container
-                        sx={{
-                          position: "fixed",
-                          top: 100,
-                          right: 40,
-                          justifyContent: "flex-end",
-                          alignItems: "center",
-                          padding: "10px",
-                          width: "auto",
-                          maxWidth: "300px",
-                        }}
-                      >
-                        {userRole !== "Distributor" && ( // Only render the button if the user is not a distributor
-                          <Grid item>
-                            <StyledButton variant="contained" onClick={handleOpenDialog}>
-                              Pay
-                            </StyledButton>
-                          </Grid>
-                        )}
-                      </Grid>
+                    container
+                    sx={{
+                      position: "fixed", // Fix the container to the viewport
+                      top: 100, // Distance from the top of the page
+                      right: 40, // Distance from the right of the page
+                      justifyContent: "flex-end", // Align items to the right
+                      alignItems: "center", // Align items vertically in the center
+                      padding: "10px", // Add some padding for spacing
+                      width: "auto", // Automatically size the container based on content
+                      maxWidth: "300px", // Optionally, set a max width for the container
+                    }}
+                  >
+                    <Grid item>
+                      <StyledButton variant="contained" onClick={handleOpenDialog}>
+                        Pay
+                      </StyledButton>
+                    </Grid>
+                  </Grid>
 
 
                   <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
