@@ -224,9 +224,8 @@ export default function NewAppBar(props: navProps) {
 
     const handleSettingsClick = (choice: string) => {
         switch (choice) {
-            const objectId = userFromStorage.distributor.distributorid;
             case 'Profile':
-                navigate(`/profile/${objectId}`);
+                navigate(`/distributorProfileDetails/${userFromStorage.tableName.toLowerCase()}`);
                 break;
             case 'Dashboard':
                 navigate('/dashboard');
@@ -237,8 +236,6 @@ export default function NewAppBar(props: navProps) {
                 break;
         }
     };
-
-
     const handleSettingsClickDealer = (choice: string) => {
             console.log(choice)
             const objectId = userFromStorage.dealer.dealerid;
