@@ -127,7 +127,7 @@ export default function DealerDashboard() {
   );
 
   return (
-    <Grid container spacing={3} sx={{ padding: 3, marginLeft: "220px" }}>
+    <Grid container spacing={3} sx={{ padding: 3, marginLeft: "150px" }}>
       {/* Orders Section */}
       <Grid item xs={12} md={6}>
         <Paper elevation={3} sx={{ padding: 2, height: "100%" }}>
@@ -202,6 +202,8 @@ export default function DealerDashboard() {
                   <TableCell>Customer ID</TableCell>
                   <TableCell>First Name</TableCell>
                   <TableCell>Last Name</TableCell>
+                  <TableCell>Address</TableCell>
+                  <TableCell>Contact Number</TableCell>
                   <TableCell>Actions</TableCell>
                 </TableRow>
               </TableHead>
@@ -211,6 +213,8 @@ export default function DealerDashboard() {
                     <TableCell>{customer.customerID}</TableCell>
                     <TableCell>{customer.firstName}</TableCell>
                     <TableCell>{customer.lastName}</TableCell>
+                    <TableCell>{customer.address}</TableCell>
+                    <TableCell>{customer.contactNumber}</TableCell>
                     <TableCell>
                       <StyledButton
                         sx={{ fontSize: "12px", padding: "5px 10px" }}
@@ -245,8 +249,9 @@ export default function DealerDashboard() {
         </Paper>
       </Grid>
 
+
       {/* Customer Orders Section */}
-      <Grid item xs={12}>
+      <Grid item xs={12} sx={{ mt: 3 }}> {/* Added margin-top */}
         <Paper elevation={3} sx={{ padding: 2 }}>
           <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", fontSize: "18px" }}>
             Customer Orders
