@@ -223,20 +223,19 @@ export default function NewAppBar(props: navProps) {
     };
 
     const handleSettingsClick = (choice: string) => {
-                console.log(choice)
-                const objectId = userFromStorage.distributor.distributorid;
-                if (choice === 'Profile') {
-                    navigate(`/profile/${objectId}`)
-
-                }
-                if (choice === 'Dashboard') {
-                    navigate(`/dashboard`)
-
-                }
-                else {
-                    localStorage.clear();
-                    navigate("/SignIn")
-                }
+        switch (choice) {
+            const objectId = userFromStorage.distributor.distributorid;
+            case 'Profile':
+                navigate(`/profile/${objectId}`);
+                break;
+            case 'Dashboard':
+                navigate('/dashboard');
+                break;
+            case 'Logout':
+                localStorage.clear();
+                navigate('/SignIn');
+                break;
+        }
     };
 
 
