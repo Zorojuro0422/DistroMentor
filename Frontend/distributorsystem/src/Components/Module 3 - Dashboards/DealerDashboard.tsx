@@ -127,7 +127,7 @@ export default function DealerDashboard() {
   );
 
   return (
-    <Grid container spacing={3} sx={{ padding: 3, marginLeft: "100px" }}>
+    <Grid container spacing={3} sx={{ padding: 3, marginLeft: "80px" }}>
       {/* Orders Section */}
       <Grid item xs={12} md={6}>
         <Paper elevation={3} sx={{ padding: 2, height: "100%" }}>
@@ -200,40 +200,20 @@ export default function DealerDashboard() {
               <TableHead>
                 <TableRow>
                   <TableCell>Customer ID</TableCell>
-                  <TableCell>First Name</TableCell>
-                  <TableCell>Last Name</TableCell>
+                  <TableCell>Customer Name</TableCell>
                   <TableCell>Address</TableCell>
                   <TableCell>Contact Number</TableCell>
-                  <TableCell>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {paginatedCustomers.map((customer: any) => (
                   <TableRow key={customer.customerID}>
                     <TableCell>{customer.customerID}</TableCell>
-                    <TableCell>{customer.firstName}</TableCell>
-                    <TableCell>{customer.lastName}</TableCell>
-                    <TableCell>{customer.address}</TableCell>
-                    <TableCell>{customer.contactNumber}</TableCell>
                     <TableCell>
-                      <StyledButton
-                        sx={{ fontSize: "12px", padding: "5px 10px" }}
-                        onClick={() => navigate(`/update_customer/${customer.customerID}`)}
-                      >
-                        Edit
-                      </StyledButton>
-                      <StyledButton
-                        sx={{
-                          ml: 1,
-                          backgroundColor: "red",
-                          fontSize: "12px",
-                          padding: "5px 10px",
-                        }}
-                        onClick={() => console.log("Delete customer")}
-                      >
-                        Delete
-                      </StyledButton>
+                      {`${customer.firstName} ${customer.lastName}`}
                     </TableCell>
+                    <TableCell>{customer.customerAddress}</TableCell>
+                    <TableCell>{customer.customerContactNumber}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
