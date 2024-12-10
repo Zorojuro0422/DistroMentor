@@ -84,7 +84,7 @@ export default function Payment() {
           console.log("Fetching confirmed orders for dealer ID:", userFromStorage.userId);
 
           const response = await axios.get<IOrder[]>(
-            `http://distromentor.onrender.com/order/getAllConfirmedOrdersByDealerId/${userFromStorage.userId}`
+            `https://distromentor.onrender.com/order/getAllConfirmedOrdersByDealerId/${userFromStorage.userId}`
           );
 
           console.log("Fetched Orders:", response.data);

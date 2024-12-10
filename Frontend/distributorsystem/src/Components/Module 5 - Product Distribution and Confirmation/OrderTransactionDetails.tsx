@@ -202,7 +202,7 @@ export function OrderTransactionDetails() {
 
   useEffect(() => {
     axios
-      .get<IOrder>(`http://distromentor.onrender.com/order/getOrderByID/${objectId}`)
+      .get<IOrder>(`https://distromentor.onrender.com/order/getOrderByID/${objectId}`)
       .then((response) => {
         const orderData = response.data;
         console.log("Fetched Order Data:", orderData); // Log the entire order data
@@ -217,7 +217,7 @@ export function OrderTransactionDetails() {
 
   const fetchPaymentRecords = () => {
     axios
-      .get(`http://distromentor.onrender.com/payment-records/order/${objectId}`)
+      .get(`https://distromentor.onrender.com/payment-records/order/${objectId}`)
       .then((response) => {
         console.log("Fetched Payment Records:", response.data); // Log the fetched data
         setPaymentRecords(response.data); // Store the fetched data
@@ -307,7 +307,7 @@ export function OrderTransactionDetails() {
 
       // Make API request
       const response = await axios.post(
-        "http://distromentor.onrender.com/api/deposits/create",
+        "https://distromentor.onrender.com/api/deposits/create",
         formData,
         {
           headers: {
@@ -320,7 +320,7 @@ export function OrderTransactionDetails() {
 
        // If deposit creation is successful, update the payment record status to Pending
           const updateResponse = await axios.put(
-            `http://distromentor.onrender.com/payment-records/${record.paymentId}`,
+            `https://distromentor.onrender.com/payment-records/${record.paymentId}`,
             {
               ...record,
               status: "Pending", // Change the status to Pending
@@ -353,7 +353,7 @@ const handleOverduePayments = async () => {
     // Fetch order details if not available
     console.log("Fetching order details for object ID:", objectId);
     const orderResponse = await axios.get<IOrder>(
-      `http://distromentor.onrender.com/order/getOrderByID/${objectId}`
+      `https://distromentor.onrender.com/order/getOrderByID/${objectId}`
     );
     const order = orderResponse.data;
     console.log("Fetched Order Details:", order);
@@ -370,7 +370,7 @@ const handleOverduePayments = async () => {
     // Fetch payment records
     console.log("Fetching payment records for order ID:", objectId);
     const response = await axios.get<PaymentRecord[]>(
-      `http://distromentor.onrender.com/payment-records/order/${objectId}`
+      `https://distromentor.onrender.com/payment-records/order/${objectId}`
     );
     const paymentRecords = response.data;
     console.log("Fetched Payment Records:", paymentRecords);
@@ -392,7 +392,7 @@ const handleOverduePayments = async () => {
         console.log("Updating payment record status to 'Overdue':", updatedRecord);
 
         await axios.put(
-          `http://distromentor.onrender.com/payment-records/${record.paymentId}`,
+          `https://distromentor.onrender.com/payment-records/${record.paymentId}`,
           updatedRecord
         );
         console.log(`Updated payment record ${record.paymentId} to 'Overdue'`);
@@ -402,14 +402,14 @@ const handleOverduePayments = async () => {
         console.log(`Penalty calculated for payment ID ${record.paymentId}: ₱${penalty}`);
 
         await axios.post(
-          `http://distromentor.onrender.com/api/total-interest/${dealerId}?interest=${penalty}`
+          `https://distromentor.onrender.com/api/total-interest/${dealerId}?interest=${penalty}`
         );
         console.log(`Penalty of ₱${penalty} recorded in Total Interest for dealer ${dealerId}`);
 
         // Deduct penalty from dealer's credit limit
         console.log("Fetching dealer details for dealer ID:", dealerId);
         const dealerResponse = await axios.get(
-          `http://distromentor.onrender.com/dealer/getDealerByID/${dealerId}`
+          `https://distromentor.onrender.com/dealer/getDealerByID/${dealerId}`
         );
         const dealer = dealerResponse.data;
         console.log("Fetched Dealer Details:", dealer);
@@ -423,7 +423,7 @@ const handleOverduePayments = async () => {
 
         // Update dealer credit limit
         await axios.put(
-          `http://distromentor.onrender.com/dealer/updateCreditLimit/${dealerId}?creditlimit=${updatedCreditLimit}`
+          `https://distromentor.onrender.com/dealer/updateCreditLimit/${dealerId}?creditlimit=${updatedCreditLimit}`
         );
         console.log(`Updated dealer ${dealerId} credit limit to ₱${updatedCreditLimit}`);
 

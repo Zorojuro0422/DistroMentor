@@ -119,7 +119,7 @@ const ProductList: React.FC = () => {
         return;
       }
 
-      const response = await axios.get(`http://distromentor.onrender.com/product/getProductsByDistributor/${distributorId}`);
+      const response = await axios.get(`https://distromentor.onrender.com/product/getProductsByDistributor/${distributorId}`);
       setProducts(response.data);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -132,7 +132,7 @@ const ProductList: React.FC = () => {
 
   const handleDelete = async (productId: string) => {
     try {
-      await axios.delete(`http://distromentor.onrender.com/product/${productId}`);
+      await axios.delete(`https://distromentor.onrender.com/product/${productId}`);
       fetchAllProducts();
       setAlertMessage('Product deleted successfully!');
       setAlertSeverity('success');
@@ -155,7 +155,7 @@ const ProductList: React.FC = () => {
 
     const handleUpdate = async (updatedProduct: Product) => {
       try {
-        await axios.put(`http://distromentor.onrender.com/product/${updatedProduct.productid}`, updatedProduct);
+        await axios.put(`https://distromentor.onrender.com/product/${updatedProduct.productid}`, updatedProduct);
         fetchAllProducts(); // Refresh the product list
         setAlertMessage('Product updated successfully!');
         setAlertSeverity('success');

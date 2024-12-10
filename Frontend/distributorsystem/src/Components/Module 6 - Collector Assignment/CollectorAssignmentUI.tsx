@@ -152,7 +152,7 @@ export default function CollectorAssignment() {
 
   function getAllCollectors() {
     if (userFromStorage && userFromStorage.tableName === 'Sales Associate') {
-      axios.get<IEmployee[]>(`http://distromentor.onrender.com/employee/getAllCollectorsByDistributorID/${userFromStorage.salesAssociate.distributor.distributorid}`)
+      axios.get<IEmployee[]>(`https://distromentor.onrender.com/employee/getAllCollectorsByDistributorID/${userFromStorage.salesAssociate.distributor.distributorid}`)
         .then((response) => {
           const updatedCollectors = response.data.map((collector) => {
             const assignedOrders = orders.filter((order) => order.collector?.employeeid === collector.employeeid);
@@ -167,7 +167,7 @@ export default function CollectorAssignment() {
         });
     }
     else if (userFromStorage && userFromStorage.tableName === 'Sales Associate and Cashier') {
-      axios.get<IEmployee[]>(`http://distromentor.onrender.com/employee/getAllCollectorsByDistributorID/${userFromStorage.salesAssociateAndCashier.distributor.distributorid}`)
+      axios.get<IEmployee[]>(`https://distromentor.onrender.com/employee/getAllCollectorsByDistributorID/${userFromStorage.salesAssociateAndCashier.distributor.distributorid}`)
         .then((response) => {
           const updatedCollectors = response.data.map((collector) => {
             const assignedOrders = orders.filter((order) => order.collector?.employeeid === collector.employeeid);
@@ -182,7 +182,7 @@ export default function CollectorAssignment() {
         });
     }
     else {
-      axios.get<IEmployee[]>(`http://distromentor.onrender.com/employee/getAllCollectorsByDistributorID/${userFromStorage.distributor.distributorid}`)
+      axios.get<IEmployee[]>(`https://distromentor.onrender.com/employee/getAllCollectorsByDistributorID/${userFromStorage.distributor.distributorid}`)
         .then((response) => {
           const updatedCollectors = response.data.map((collector) => {
             const assignedOrders = orders.filter((order) => order.collector?.employeeid === collector.employeeid);
@@ -201,7 +201,7 @@ export default function CollectorAssignment() {
   function getAllOrders() {
 
     if (userFromStorage && userFromStorage.tableName === 'Sales Associate') {
-      axios.get<IOrder[]>(`http://distromentor.onrender.com/order/getAllOrdersByDistributorID/${userFromStorage.salesAssociate.distributor.distributorid}`)
+      axios.get<IOrder[]>(`https://distromentor.onrender.com/order/getAllOrdersByDistributorID/${userFromStorage.salesAssociate.distributor.distributorid}`)
         .then((response) => {
          setOrders(
              response.data.filter(order => order.confirmed && order.status !== 'Closed')
@@ -214,7 +214,7 @@ export default function CollectorAssignment() {
         });
     }
     else if (userFromStorage && userFromStorage.tableName === 'Sales Associate and Cashier') {
-      axios.get<IOrder[]>(`http://distromentor.onrender.com/order/getAllOrdersByDistributorID/${userFromStorage.salesAssociateAndCashier.distributor.distributorid}`)
+      axios.get<IOrder[]>(`https://distromentor.onrender.com/order/getAllOrdersByDistributorID/${userFromStorage.salesAssociateAndCashier.distributor.distributorid}`)
         .then((response) => {
           setOrders(
               response.data.filter(order => order.confirmed && order.status !== 'Closed')
@@ -227,7 +227,7 @@ export default function CollectorAssignment() {
         });
     }
     else {
-      axios.get<IOrder[]>(`http://distromentor.onrender.com/order/getAllOrdersByDistributorID/${userFromStorage.distributor.distributorid}`)
+      axios.get<IOrder[]>(`https://distromentor.onrender.com/order/getAllOrdersByDistributorID/${userFromStorage.distributor.distributorid}`)
         .then((response) => {
           setOrders(
               response.data.filter(order => order.confirmed && order.status !== 'Closed')

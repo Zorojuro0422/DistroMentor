@@ -84,7 +84,7 @@ export default function CustomerCollection() {
         console.log("Fetching orders for dealer ID:", userFromStorage.userId);
 
         const response = await axios.get<ICustomerOrder[]>(
-          `http://distromentor.onrender.com/customerOrder/getAllCustomerOrdersByDealerId/${userFromStorage.userId}`
+          `https://distromentor.onrender.com/customerOrder/getAllCustomerOrdersByDealerId/${userFromStorage.userId}`
         );
 
         console.log("Fetched Customer Orders:", response.data);

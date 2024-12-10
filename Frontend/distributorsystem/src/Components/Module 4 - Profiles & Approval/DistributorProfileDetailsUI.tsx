@@ -165,7 +165,7 @@ export function DistributorProfileDetails() {
 
 
   function getAllDistributorDocuments() {
-    axios.get<IDistributorDocument[]>(`http://distromentor.onrender.com/distributorDocument/findAllDocumentsByDistributorId/${objectId!}`)
+    axios.get<IDistributorDocument[]>(`https://distromentor.onrender.com/distributorDocument/findAllDocumentsByDistributorId/${objectId!}`)
       .then((response) => {
         setDistributorDocuments(response.data);
       })

@@ -146,7 +146,7 @@ export default function ProductDistributionList() {
     function getAllOrders() {
         if (userFromStorage && userFromStorage.tableName === 'Sales Associate') {
             axios
-                .get<IOrder[]>(`http://distromentor.onrender.com/order/getAllOrdersByDistributorID/${userFromStorage.salesAssociate.distributor.distributorid}`)
+                .get<IOrder[]>(`https://distromentor.onrender.com/order/getAllOrdersByDistributorID/${userFromStorage.salesAssociate.distributor.distributorid}`)
                 .then((response) => {
                     setOrder(response.data);
                 })
@@ -157,7 +157,7 @@ export default function ProductDistributionList() {
         }
         else if (userFromStorage && userFromStorage.tableName === 'Sales Associate and Cashier') {
             axios
-                .get<IOrder[]>(`http://distromentor.onrender.com/order/getAllOrdersByDistributorID/${userFromStorage.salesAssociateAndCashier.distributor.distributorid}`)
+                .get<IOrder[]>(`https://distromentor.onrender.com/order/getAllOrdersByDistributorID/${userFromStorage.salesAssociateAndCashier.distributor.distributorid}`)
                 .then((response) => {
                     setOrder(response.data);
                 })
@@ -168,7 +168,7 @@ export default function ProductDistributionList() {
         }
         else {
             axios
-                .get<IOrder[]>(`http://distromentor.onrender.com/order/getAllOrdersByDistributorID/${userFromStorage.distributor.distributorid}`)
+                .get<IOrder[]>(`https://distromentor.onrender.com/order/getAllOrdersByDistributorID/${userFromStorage.distributor.distributorid}`)
                 .then((response) => {
                     setOrder(response.data);
                 })

@@ -231,7 +231,7 @@ const UpdateProduct: React.FC = () => {
 
   const fetchProduct = async () => {
     try {
-      const response = await axios.get(`http://distromentor.onrender.com/product/getAllProducts/${productId}`);
+      const response = await axios.get(`https://distromentor.onrender.com/product/getAllProducts/${productId}`);
       setProduct(response.data);
     } catch (error) {
       console.error('Error fetching product:', error);
@@ -250,7 +250,7 @@ const UpdateProduct: React.FC = () => {
     }
 
     try {
-      await axios.put(`http://distromentor.onrender.com/product/${productId}`, product);
+      await axios.put(`https://distromentor.onrender.com/product/${productId}`, product);
       setUpdateSuccess(true);
       setTimeout(() => {
         navigate('/productlist');

@@ -67,7 +67,7 @@ export default function SalesAssociateDashboard(){
 
     
     const getAllUnconfirmedOrders = () => {
-        axios.get(`http://distromentor.onrender.com/order/getAllUnconfirmedOrdersByDistributorID/${userFromStorage.salesAssociate.distributor.distributorid}`)
+        axios.get(`https://distromentor.onrender.com/order/getAllUnconfirmedOrdersByDistributorID/${userFromStorage.salesAssociate.distributor.distributorid}`)
             .then((response) => {
                 setUnconfirmedOrders(response.data);
             })
