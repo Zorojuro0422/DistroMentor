@@ -36,6 +36,7 @@ import ThankYouScreen from '../Components/A - SplashScreen/ThankYouScreen';
 import { DistributorProfileDetails } from '../Components/Module 4 - Profiles & Approval/DistributorProfileDetailsUI';
 import ScrollToTop from './ScrollToTop';
 import Dashboard from "../Components/Module 3 - Dashboards/DashboardUI";
+import DealerDashboard from "../Components/Module 3 - Dashboards/DealerDashboard";
 import CashierDashboard from '../Components/Module 3 - Dashboards/CashierDashboardUI';
 import SalesAndCashierDashboard from '../Components/Module 3 - Dashboards/SalesAndCashierDashboardUI';
 import SalesAssociateDashboard from '../Components/Module 3 - Dashboards/SalesAssociateDashboardUI';
@@ -93,6 +94,7 @@ export default function MainRoutes() {
                             <Route path="/dealerProduct" element={<DealerProductList />} />
                             <Route path="/customerlist" element={<CustomerList />} />
                             <Route path="/depositlist" element={<DepositList />} />
+                            <Route path="/dealerdashboard" element={<><ScrollToTop/><DealerDashboard /></>} />
                             <Route path="/deposit" element={<Deposit />} />
                             <Route path="/customercollection" element={<CustomerCollection/>} />
                             <Route path="/payment" element={<Payment/>} />

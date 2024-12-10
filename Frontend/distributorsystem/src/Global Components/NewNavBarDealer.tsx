@@ -156,7 +156,7 @@ export default function NewNavBarDealer({ moduleName }: NavProps) {
 
                     {/* Home */}
                     <List>
-                        <Link to="/dealerOrderForm">
+                        <Link to="/dealerdashboard">
                             <StyledButton onClick={() => handleButtonClick(1)} selected={selectedButton === 1} focusRipple>
                                 <StyledListItem>
                                     <ListItemIcon sx={{ left: 200 }}>
