@@ -16,7 +16,7 @@ export const useRestPaymentReceipt = (): [(directpaymentreceipt: IDirectPaymentR
 
     function createDirectPaymentReceipt(directpaymentreceipt: IDirectPaymentReceipt, receiverID: string) {
 
-        axios.post(`http://distromentor.onrender.com/paymentreceipt/directpaymentreceipt/createDirectPaymentReceipt/${receiverID}`, {
+        axios.post(`https://distromentor.onrender.com/paymentreceipt/directpaymentreceipt/createDirectPaymentReceipt/${receiverID}`, {
             paymentreceiptid: directpaymentreceipt.paymentreceiptid,
             remarks: directpaymentreceipt.remarks,
             datepaid: directpaymentreceipt.datepaid,
@@ -60,7 +60,7 @@ export const useRestPaymentReceipt = (): [(directpaymentreceipt: IDirectPaymentR
 
 
     function getPaymentReceiptByID(paymentreceiptid: string) {
-        axios.get(`http://distromentor.onrender.com/paymentreceipt/getPaymentReceiptByID/${paymentreceiptid}`)
+        axios.get(`https://distromentor.onrender.com/paymentreceipt/getPaymentReceiptByID/${paymentreceiptid}`)
             .then((response) => {
                 setPaymentReceipt(response.data);
                 console.log(response.data)
@@ -85,7 +85,7 @@ export const useRestPaymentReceipt = (): [(directpaymentreceipt: IDirectPaymentR
 
     function confirmCollectionPaymentReceipt(collectionpaymentreceiptid: string, receiverID: string) {
        getPaymentReceiptByID(collectionpaymentreceiptid);
-        axios.put(`http://distromentor.onrender.com/paymentreceipt/collectionpaymentreceipt/updateCollectionPaymentReceipt/${collectionpaymentreceiptid}/${receiverID}`)
+        axios.put(`https://distromentor.onrender.com/paymentreceipt/collectionpaymentreceipt/updateCollectionPaymentReceipt/${collectionpaymentreceiptid}/${receiverID}`)
             .then((response) => {
 
 
