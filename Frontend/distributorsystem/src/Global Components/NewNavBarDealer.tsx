@@ -234,7 +234,7 @@ export default function NewNavBarDealer({ moduleName }: NavProps) {
                         {/* Dropdown Items */}
                         <Collapse in={dropDownProfiles} timeout="auto" unmountOnExit>
                             <List>
-                                <Link to="/dealerProduct">
+                                <Link to="/dealerOrderForm">
                                     <StyledButton1
                                         onClick={() => setSelectedButton1(1)}
                                         selected1={selectedButton1 === 1}
@@ -348,7 +348,7 @@ export default function NewNavBarDealer({ moduleName }: NavProps) {
                         {/* Dropdown Items */}
                         <Collapse in={dropDownProducts} timeout="auto" unmountOnExit>
                             <List>
-                                <Link to="/dealerProfiles">
+                                <Link to="/customerlist">
                                     <StyledButton1
                                         onClick={() => setSelectedButton1(3)}
                                         selected1={selectedButton1 === 3}
@@ -357,7 +357,7 @@ export default function NewNavBarDealer({ moduleName }: NavProps) {
                                         <StyledText1 selected1={selectedButton1 === 3} primary="Customer Profiles" />
                                     </StyledButton1>
                                 </Link>
-                                <Link to="/dealerRegistrations">
+                                <Link to="/customerRegistration">
                                     <StyledButton1
                                         onClick={() => setSelectedButton1(4)}
                                         selected1={selectedButton1 === 4}
@@ -370,7 +370,7 @@ export default function NewNavBarDealer({ moduleName }: NavProps) {
                         </Collapse>
 
                         {/* Deposit Button */}
-                        <Link to="/deposit">
+                        <Link to="/payment">
                             <StyledButton
                                 onClick={() => handleButtonClick(6)}
                                 selected={selectedButton === 6}

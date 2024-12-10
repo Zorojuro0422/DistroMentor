@@ -223,19 +223,23 @@ export default function NewAppBar(props: navProps) {
     };
 
     const handleSettingsClick = (choice: string) => {
-        switch (choice) {
-            case 'Profile':
-                navigate(`/profile/${userFromStorage.tableName.toLowerCase()}`);
-                break;
-            case 'Dashboard':
-                navigate('/dashboard');
-                break;
-            case 'Logout':
-                localStorage.clear();
-                navigate('/SignIn');
-                break;
-        }
+                console.log(choice)
+                const objectId = userFromStorage.distributor.distributorid;
+                if (choice === 'Profile') {
+                    navigate(`/profile/${objectId}`)
+
+                }
+                if (choice === 'Dashboard') {
+                    navigate(`/dashboard`)
+
+                }
+                else {
+                    localStorage.clear();
+                    navigate("/SignIn")
+                }
     };
+
+
     const handleSettingsClickDealer = (choice: string) => {
             console.log(choice)
             const objectId = userFromStorage.dealer.dealerid;
