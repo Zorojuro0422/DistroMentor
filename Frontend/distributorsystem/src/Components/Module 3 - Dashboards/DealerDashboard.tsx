@@ -127,7 +127,7 @@ export default function DealerDashboard() {
   );
 
   return (
-    <Grid container spacing={3} sx={{ padding: 3, marginLeft: "80px" }}>
+    <Grid container spacing={3} sx={{ padding: 3, marginLeft: "65px" }}>
       {/* Orders Section */}
       <Grid item xs={12} md={6}>
         <Paper elevation={3} sx={{ padding: 2, height: "100%" }}>
