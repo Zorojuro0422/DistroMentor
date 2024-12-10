@@ -200,60 +200,34 @@ export default function NewNavBarDealer({ moduleName }: NavProps) {
                         </Link>
 
                         {/* Stock Request Dropdown */}
-                        <StyledButton
-                            onClick={() => {
-                                setDropDownProfiles(!dropDownProfiles);
-                                handleButtonClick(3); // Select the Stock Request button
-                            }}
-                            selected={selectedButton === 3}
-                            focusRipple
-                        >
-                            <StyledListItem>
-                                <ListItemIcon>
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        strokeWidth="1.5"
-                                        stroke={selectedButton === 3 ? "#2D85E7" : "white"} // Match text color when selected
-                                        className="size-6"
-                                        style={{ marginLeft: 23, width: 25, height: 25 }}
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"
-                                        />
-                                    </svg>
-                                </ListItemIcon>
-                                <StyledText selected={selectedButton === 3} primary="Stock Request" />
-                                {dropDownProfiles ? <ExpandLess sx={{ fill: "#FFFFFF" }} /> : <ExpandMore sx={{ fill: "#FFFFFF" }} />}
-                            </StyledListItem>
-                        </StyledButton>
-
-                        {/* Dropdown Items */}
-                        <Collapse in={dropDownProfiles} timeout="auto" unmountOnExit>
-                            <List>
-                                <Link to="/dealerOrderForm">
-                                    <StyledButton1
-                                        onClick={() => setSelectedButton1(1)}
-                                        selected1={selectedButton1 === 1}
-                                        focusRipple
-                                    >
-                                        <StyledText1 selected1={selectedButton1 === 1} primary="Stock Request Form" />
-                                    </StyledButton1>
-                                </Link>
-                                <Link to="/dealerProduct">
-                                    <StyledButton1
-                                        onClick={() => setSelectedButton1(2)}
-                                        selected1={selectedButton1 === 2}
-                                        focusRipple
-                                    >
-                                        <StyledText1 selected1={selectedButton1 === 2} primary="Stock Request Records" />
-                                    </StyledButton1>
-                                </Link>
-                            </List>
-                        </Collapse>
+                        <Link to="/dealerOrderForm">
+                            <StyledButton
+                                onClick={() => handleButtonClick(3)}
+                                selected={selectedButton === 3}
+                                focusRipple
+                            >
+                                <StyledListItem>
+                                    <ListItemIcon>
+                                        <svg
+                                           xmlns="http://www.w3.org/2000/svg"
+                                           fill="none"
+                                           viewBox="0 0 24 24"
+                                           strokeWidth="1.5"
+                                           stroke={selectedButton === 3 ? "#2D85E7" : "white"} // Match text color when selected
+                                           className="size-6"
+                                           style={{ marginLeft: 23, width: 25, height: 25 }}
+                                       >
+                                           <path
+                                               strokeLinecap="round"
+                                               strokeLinejoin="round"
+                                               d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"
+                                           />
+                                       </svg>
+                                   </ListItemIcon>
+                                    <StyledText selected={selectedButton === 3} primary="Stock Request" />
+                                </StyledListItem>
+                            </StyledButton>
+                        </Link>
 
                         {/* Sales Dropdown */}
                         <StyledButton
