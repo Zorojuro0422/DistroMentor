@@ -127,15 +127,15 @@ export default function DealerDashboard() {
   );
 
   return (
-    <Grid container spacing={4} sx={{ padding: 4 }}>
+    <Grid container spacing={3} sx={{ padding: 3, marginLeft: "220px" }}>
       {/* Orders Section */}
-      <Grid item xs={12} md={6}>
-        <Paper elevation={3} sx={{ padding: 3 }}>
-          <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
+      <Grid item xs={12} md={5}>
+        <Paper elevation={3} sx={{ padding: 2, height: "100%" }}>
+          <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", fontSize: "18px" }}>
             Dealer Orders
           </Typography>
-          <TableContainer>
-            <Table>
+          <TableContainer sx={{ maxHeight: "240px" }}>
+            <Table stickyHeader size="small">
               <TableHead>
                 <TableRow>
                   <TableCell>Order ID</TableCell>
@@ -146,39 +146,47 @@ export default function DealerDashboard() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedOrders.map((order: any) => (
-                  <TableRow key={order.orderid}>
-                    <TableCell>{order.orderid}</TableCell>
-                    <TableCell>
-                      {moment(order.orderdate).format("YYYY-MM-DD")}
-                    </TableCell>
-                    <TableCell>₱{order.orderamount.toFixed(2)}</TableCell>
-                    <TableCell>
-                      <span
-                        style={{
-                          color:
-                            order.status === "Open"
-                              ? "green"
-                              : order.status === "Pending"
-                              ? "orange"
-                              : "red",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        {order.status}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <StyledButton
-                        onClick={() =>
-                          navigate(`/orderTransactionDetails/${order.orderid}`)
-                        }
-                      >
-                        View
-                      </StyledButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {paginatedOrders.length > 0 ? (
+                  paginatedOrders.map((order: any) => (
+                    <TableRow key={order.orderid}>
+                      <TableCell>{order.orderid}</TableCell>
+                      <TableCell>{moment(order.orderdate).format("YYYY-MM-DD")}</TableCell>
+                      <TableCell>₱{order.orderamount.toFixed(2)}</TableCell>
+                      <TableCell>
+                        <span
+                          style={{
+                            color:
+                              order.status === "Open"
+                                ? "green"
+                                : order.status === "Pending"
+                                ? "orange"
+                                : "red",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {order.status}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <StyledButton
+                          sx={{ fontSize: "12px", padding: "5px 10px" }}
+                          onClick={() => navigate(`/orderTransactionDetails/${order.orderid}`)}
+                        >
+                          View
+                        </StyledButton>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  // Placeholder rows to maintain consistent height
+                  Array.from({ length: pageSize }).map((_, index) => (
+                    <TableRow key={index}>
+                      <TableCell colSpan={5} align="center" sx={{ color: "#999" }}>
+                        {index === 0 ? "No orders to display" : ""}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -187,18 +195,19 @@ export default function DealerDashboard() {
             page={ordersPage}
             onChange={(e, value) => setOrdersPage(value)}
             sx={{ mt: 2 }}
+            size="small"
           />
         </Paper>
       </Grid>
 
       {/* Customers Section */}
-      <Grid item xs={12} md={6}>
-        <Paper elevation={3} sx={{ padding: 3 }}>
-          <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
+      <Grid item xs={12} md={5}>
+        <Paper elevation={3} sx={{ padding: 2, height: "100%" }}>
+          <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", fontSize: "18px" }}>
             Dealer Customers
           </Typography>
-          <TableContainer>
-            <Table>
+          <TableContainer sx={{ maxHeight: "240px" }}>
+            <Table stickyHeader size="small">
               <TableHead>
                 <TableRow>
                   <TableCell>Customer ID</TableCell>
@@ -208,28 +217,43 @@ export default function DealerDashboard() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedCustomers.map((customer: any) => (
-                  <TableRow key={customer.customerID}>
-                    <TableCell>{customer.customerID}</TableCell>
-                    <TableCell>{customer.firstName}</TableCell>
-                    <TableCell>{customer.lastName}</TableCell>
-                    <TableCell>
-                      <StyledButton
-                        onClick={() =>
-                          navigate(`/update_customer/${customer.customerID}`)
-                        }
-                      >
-                        Edit
-                      </StyledButton>
-                      <StyledButton
-                        sx={{ ml: 1, backgroundColor: "red" }}
-                        onClick={() => console.log("Delete customer")}
-                      >
-                        Delete
-                      </StyledButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {paginatedCustomers.length > 0 ? (
+                  paginatedCustomers.map((customer: any) => (
+                    <TableRow key={customer.customerID}>
+                      <TableCell>{customer.customerID}</TableCell>
+                      <TableCell>{customer.firstName}</TableCell>
+                      <TableCell>{customer.lastName}</TableCell>
+                      <TableCell>
+                        <StyledButton
+                          sx={{ fontSize: "12px", padding: "5px 10px" }}
+                          onClick={() => navigate(`/update_customer/${customer.customerID}`)}
+                        >
+                          Edit
+                        </StyledButton>
+                        <StyledButton
+                          sx={{
+                            ml: 1,
+                            backgroundColor: "red",
+                            fontSize: "12px",
+                            padding: "5px 10px",
+                          }}
+                          onClick={() => console.log("Delete customer")}
+                        >
+                          Delete
+                        </StyledButton>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  // Placeholder rows to maintain consistent height
+                  Array.from({ length: pageSize }).map((_, index) => (
+                    <TableRow key={index}>
+                      <TableCell colSpan={4} align="center" sx={{ color: "#999" }}>
+                        {index === 0 ? "No customers to display" : ""}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -238,75 +262,7 @@ export default function DealerDashboard() {
             page={customersPage}
             onChange={(e, value) => setCustomersPage(value)}
             sx={{ mt: 2 }}
-          />
-        </Paper>
-      </Grid>
-
-      {/* Customer Orders Section */}
-      <Grid item xs={12}>
-        <Paper elevation={3} sx={{ padding: 3 }}>
-          <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
-            Customer Orders
-          </Typography>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Order ID</TableCell>
-                  <TableCell>Customer Name</TableCell>
-                  <TableCell>Order Date</TableCell>
-                  <TableCell>Amount</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {paginatedCustomerOrders.map((order: any) => (
-                  <TableRow key={order.orderid}>
-                    <TableCell>{order.orderid}</TableCell>
-                    <TableCell>
-                      {order.customer
-                        ? `${order.customer.firstName} ${order.customer.lastName}`
-                        : "N/A"}
-                    </TableCell>
-                    <TableCell>
-                      {moment(order.orderdate).format("YYYY-MM-DD")}
-                    </TableCell>
-                    <TableCell>₱{order.orderamount.toFixed(2)}</TableCell>
-                    <TableCell>
-                      <span
-                        style={{
-                          color:
-                            order.status === "Open"
-                              ? "green"
-                              : order.status === "Pending"
-                              ? "orange"
-                              : "red",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        {order.status}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <StyledButton
-                        onClick={() =>
-                          navigate(`/customerTransaction/${order.orderid}`)
-                        }
-                      >
-                        View
-                      </StyledButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <Pagination
-            count={Math.ceil(customerOrders.length / pageSize)}
-            page={customerOrdersPage}
-            onChange={(e, value) => setCustomerOrdersPage(value)}
-            sx={{ mt: 2 }}
+            size="small"
           />
         </Paper>
       </Grid>
