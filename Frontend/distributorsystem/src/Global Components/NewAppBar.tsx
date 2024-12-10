@@ -225,7 +225,8 @@ export default function NewAppBar(props: navProps) {
     const handleSettingsClick = (choice: string) => {
         switch (choice) {
             case 'Profile':
-                navigate(`/distributorProfileDetails/${userFromStorage.tableName.toLowerCase()}`);
+                const objectId = userFromStorage.distributor.distributorid;
+                navigate(`/distributorProfileDetails/${objectId}`);
                 break;
             case 'Dashboard':
                 navigate('/dashboard');
