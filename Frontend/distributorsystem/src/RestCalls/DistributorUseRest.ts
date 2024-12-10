@@ -58,7 +58,7 @@ export const useRestDistributor=():[(distributorID:string) => void, (distributor
         });
 
 
-        axios.post('http://distromentor.onrender.com/distributor/registerDistributor', formData, {
+        axios.post('https://distromentor.onrender.com/distributor/registerDistributor', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -77,7 +77,7 @@ export const useRestDistributor=():[(distributorID:string) => void, (distributor
 
     /* function newDistributor(distributor: IDistributor){
     
-        axios.post('http://distromentor.onrender.com/distributor/registerDistributor', {
+        axios.post('https://distromentor.onrender.com/distributor/registerDistributor', {
                 distributorid: distributor.distributorid,
                 firstname: distributor.firstname,
                 middlename: distributor.middlename,
@@ -106,7 +106,7 @@ export const useRestDistributor=():[(distributorID:string) => void, (distributor
  */
 
     function getDistributorByID(distributorID:String){
-        axios.get(`http://distromentor.onrender.com/distributor/getDistributorByID/${distributorID}`)
+        axios.get(`https://distromentor.onrender.com/distributor/getDistributorByID/${distributorID}`)
         .then((response)=>{
             setDistributor(response.data)
            
