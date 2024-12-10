@@ -291,7 +291,7 @@ export default function NewNavBarDealer({ moduleName }: NavProps) {
                         {/* Dropdown Items */}
                         <Collapse in={dropDownPayments} timeout="auto" unmountOnExit>
                             <List>
-                                <Link to="/salesSummary">
+                                <Link to="/customercollection">
                                     <StyledButton1
                                         onClick={() => setSelectedButton1(1)}
                                         selected1={selectedButton1 === 1}
@@ -300,7 +300,7 @@ export default function NewNavBarDealer({ moduleName }: NavProps) {
                                         <StyledText1 selected1={selectedButton1 === 1} primary="Invoices" />
                                     </StyledButton1>
                                 </Link>
-                                <Link to="/salesRecords">
+                                <Link to="/customerOrderForm">
                                     <StyledButton1
                                         onClick={() => setSelectedButton1(2)}
                                         selected1={selectedButton1 === 2}
@@ -354,7 +354,7 @@ export default function NewNavBarDealer({ moduleName }: NavProps) {
                                         selected1={selectedButton1 === 3}
                                         focusRipple
                                     >
-                                        <StyledText1 selected1={selectedButton1 === 3} primary="Customer Profiles" />
+                                        <StyledText1 selected1={selectedButton1 === 3} primary="Customer List" />
                                     </StyledButton1>
                                 </Link>
                                 <Link to="/customerRegistration">
