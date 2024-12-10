@@ -112,7 +112,7 @@ export const useRestDealer = (): [
 
 
 
-        axios.post('http://localhost:8080/dealer/registerDealer', formData, {
+        axios.post('http://distromentor.onrender.com/dealer/registerDealer', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -134,7 +134,7 @@ export const useRestDealer = (): [
     function confirmDealer(dealerID: string, creditLimit: number) {
 
 
-        axios.put(`http://localhost:8080/dealer/confirmDealer/${dealerID}`, null, {
+        axios.put(`http://distromentor.onrender.com/dealer/confirmDealer/${dealerID}`, null, {
             params: {
                 creditlimit: creditLimit,
             }
@@ -170,7 +170,7 @@ export const useRestDealer = (): [
     function markDealerAsPending(dealerID: string, reason: string) {
 
 
-        axios.put(`http://localhost:8080/dealer/updateDealerPending/${dealerID}`, null, {
+        axios.put(`http://distromentor.onrender.com/dealer/updateDealerPending/${dealerID}`, null, {
             params: {
                 remarks: reason,
             }
@@ -206,7 +206,7 @@ export const useRestDealer = (): [
     function declineDealer(dealerID: string, reason: string, dateArchived: string) {
         console.log(dealerID + dateArchived)
 
-        axios.put(`http://localhost:8080/dealer/updateDealerDecline/${dealerID}`, null, {
+        axios.put(`http://distromentor.onrender.com/dealer/updateDealerDecline/${dealerID}`, null, {
             params: {
                 remarks: reason,
                 datearchived: dateArchived,
@@ -242,7 +242,7 @@ export const useRestDealer = (): [
     }
 
     function updateDealerCreditLimit(dealerID: string, creditLimit: number) {
-        axios.put(`http://localhost:8080/dealer/updateCreditLimit/${dealerID}`, null, {
+        axios.put(`http://distromentor.onrender.com/dealer/updateCreditLimit/${dealerID}`, null, {
             params: {
                 creditlimit: creditLimit,
             }
@@ -278,7 +278,7 @@ export const useRestDealer = (): [
 
     function getDealerByID(dealerID: string) {
         // Fetch dealer details first
-        axios.get(`http://localhost:8080/dealer/getDealerByID/${dealerID}`)
+        axios.get(`http://distromentor.onrender.com/dealer/getDealerByID/${dealerID}`)
             .then((response) => {
                 if (response.data !== null) {
                     const fetchedDealer = response.data;
@@ -339,7 +339,7 @@ export const useRestDealer = (): [
 
     // Helper function to fetch total order amount
     function fetchTotalProductSubtotal(dealerID: string, creditLimit: number) {
-        axios.get(`http://localhost:8080/allProductSubtotals/getByDealerId/${dealerID}`)
+        axios.get(`http://distromentor.onrender.com/allProductSubtotals/getByDealerId/${dealerID}`)
             .then((response) => {
                 const totalProductSubtotal = response.data?.totalProductSubtotal || 0; // Default to 0 if undefined
 
@@ -385,7 +385,7 @@ export const useRestDealer = (): [
 
 
     function getDealerByIDForProfile(dealerID: string) {
-        axios.get(`http://localhost:8080/dealer/getDealerByID/${dealerID}`)
+        axios.get(`http://distromentor.onrender.com/dealer/getDealerByID/${dealerID}`)
             .then((response) => {
                 if (response.data !== null) {
                     setDealer(response.data);
@@ -402,7 +402,7 @@ export const useRestDealer = (): [
     }
 
     function getDealerByDistributor(dealerID: String, distributorid: string) {
-        axios.get(`http://localhost:8080/dealer/getDealerByDistributor/${dealerID}/${distributorid}`)
+        axios.get(`http://distromentor.onrender.com/dealer/getDealerByDistributor/${dealerID}/${distributorid}`)
             .then((response) => {
                 if (response.data !== '') {
                     if (response.data.isconfirmed !== false) {
@@ -464,7 +464,7 @@ export const useRestDealer = (): [
     function getRemainingDealerCredit(dealerID: string) {
 
         let remainingCredit = 0;
-        axios.get(`http://localhost:8080/dealer/getTotalOrderAmountByDealerID/${dealerID}`)
+        axios.get(`http://distromentor.onrender.com/dealer/getTotalOrderAmountByDealerID/${dealerID}`)
             .then((response) => {
 
                 remainingCredit = creditLimit - response.data;

@@ -183,7 +183,7 @@ const OrderingPage: React.FC = () => {
       console.log("Fetching products for dealer ID:", dealerID); // Log the dealer ID for debugging
 
       // Fetch dealer products by dealer ID
-      const response = await axios.get(`http://localhost:8080/api/dealer-products/dealer/${dealerID}`);
+      const response = await axios.get(`http://distromentor.onrender.com/api/dealer-products/dealer/${dealerID}`);
 
       console.log("API response:", response.data); // Log the full API response to check structure
 
@@ -226,7 +226,7 @@ const OrderingPage: React.FC = () => {
   const fetchCustomers = async () => {
     try {
       const dealerID = userFromStorage.dealer.dealerid;
-      const response = await axios.get(`http://localhost:8080/customer/dealer/${dealerID}`);
+      const response = await axios.get(`http://distromentor.onrender.com/customer/dealer/${dealerID}`);
       setCustomers(response.data);
     } catch (error) {
       console.error('Error fetching customers:', error);
@@ -359,7 +359,7 @@ const OrderingPage: React.FC = () => {
      };
 
      try {
-         const response = await axios.post('http://localhost:8080/customerOrder/newOrder', order);
+         const response = await axios.post('http://distromentor.onrender.com/customerOrder/newOrder', order);
          console.log('Order response:', response.data);
          setAlertMessage('Order saved successfully.');
          setAlertSeverity('success');
@@ -371,7 +371,7 @@ const OrderingPage: React.FC = () => {
                  try {
                      // Fetch the dealer product by dealer ID and product ID
                      const dealerProductsResponse = await axios.get(
-                         `http://localhost:8080/api/dealer-products/dealer/${dealerID}`
+                         `http://distromentor.onrender.com/api/dealer-products/dealer/${dealerID}`
                      );
 
                      const dealerProducts: DealerProduct[] = dealerProductsResponse.data;
@@ -386,7 +386,7 @@ const OrderingPage: React.FC = () => {
                          const updatedQuantity = existingDealerProduct.quantity - orderedProduct.selectedQuantity;
 
                          // Update the dealer product with the new quantity
-                         await axios.put(`http://localhost:8080/api/dealer-products/${existingDealerProduct.dealerproductid}`, {
+                         await axios.put(`http://distromentor.onrender.com/api/dealer-products/${existingDealerProduct.dealerproductid}`, {
                              ...existingDealerProduct,
                              quantity: updatedQuantity, // Update the quantity
                          });

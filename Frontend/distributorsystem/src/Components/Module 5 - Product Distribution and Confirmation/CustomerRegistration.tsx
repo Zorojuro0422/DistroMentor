@@ -140,7 +140,7 @@ export default function CustomerRegistration() {
       customerAddress: customerAddress,
     };
 
-    const url = 'http://localhost:8080/customer/createCustomer';
+    const url = 'http://distromentor.onrender.com/customer/createCustomer';
 
     axios
       .post(url, customerData)

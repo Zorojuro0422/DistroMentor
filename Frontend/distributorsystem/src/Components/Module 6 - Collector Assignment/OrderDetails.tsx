@@ -193,7 +193,7 @@ export function OrderDetails() {
 
     const getAllPaymentTransactionsByOrderID = () => {
         if (userFromStorage && userFromStorage.tableName === 'Sales Associate') {
-            axios.get(`http://localhost:8080/paymenttransaction/getAllPaymentTransactionsByOrderID/${objectId}/${userFromStorage.salesAssociate.distributor.distributorid}`)
+            axios.get(`http://distromentor.onrender.com/paymenttransaction/getAllPaymentTransactionsByOrderID/${objectId}/${userFromStorage.salesAssociate.distributor.distributorid}`)
                 .then((response) => {
 
                     setPaymentTransactions(response.data);
@@ -203,7 +203,7 @@ export function OrderDetails() {
                 });
         }
         else{
-            axios.get(`http://localhost:8080/paymenttransaction/getAllPaymentTransactionsByOrderID/${objectId}/${userFromStorage.distributor.distributorid}`)
+            axios.get(`http://distromentor.onrender.com/paymenttransaction/getAllPaymentTransactionsByOrderID/${objectId}/${userFromStorage.distributor.distributorid}`)
             .then((response) => {
 
                 setPaymentTransactions(response.data);

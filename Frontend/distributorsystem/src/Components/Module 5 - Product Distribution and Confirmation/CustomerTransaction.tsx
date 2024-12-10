@@ -201,7 +201,7 @@ export function CustomerTransaction() {
 
   useEffect(() => {
     axios
-      .get<ICustomerOrder>(`http://localhost:8080/customerOrder/getCustomerOrderById/${objectId}`)
+      .get<ICustomerOrder>(`http://distromentor.onrender.com/customerOrder/getCustomerOrderById/${objectId}`)
       .then((response) => setOrder(response.data))
       .catch((error) => {
         console.error("Error fetching order data:", error);
@@ -255,7 +255,7 @@ export function CustomerTransaction() {
       };
 
       axios
-        .put(`http://localhost:8080/customerOrder/${objectId}`, payload)
+        .put(`http://distromentor.onrender.com/customerOrder/${objectId}`, payload)
         .then(() => {
           headerHandleAlert("Success", "Deposit and status updated successfully.", "success");
           window.location.reload();

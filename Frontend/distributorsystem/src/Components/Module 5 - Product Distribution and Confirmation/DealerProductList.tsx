@@ -84,7 +84,7 @@ const ProductList: React.FC = () => {
   const fetchProducts = async () => {
     try {
       const dealerID = userFromStorage.dealer.dealerid;  // Get dealerid from user storage
-      const response = await axios.get(`http://localhost:8080/api/dealer-products/dealer/${dealerID}`);
+      const response = await axios.get(`http://distromentor.onrender.com/api/dealer-products/dealer/${dealerID}`);
       setProducts(response.data);  // Directly set the products from response
     } catch (error) {
       console.error('Error fetching products:', error);

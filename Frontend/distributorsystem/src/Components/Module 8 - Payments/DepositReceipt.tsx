@@ -90,7 +90,7 @@ export default function PaymentsListUI() {
 
   const fetchDealerById = async (dealerId: string) => {
     try {
-      const response = await axios.get<IDealer>(`http://localhost:8080/dealer/getDealerByID/${dealerId}`);
+      const response = await axios.get<IDealer>(`http://distromentor.onrender.com/dealer/getDealerByID/${dealerId}`);
       setDealers((prev) => ({ ...prev, [dealerId]: response.data }));
     } catch (error) {
       console.error(`Error fetching dealer ${dealerId}:`, error);
@@ -120,7 +120,7 @@ export default function PaymentsListUI() {
   const confirmDelete = async () => {
     try {
       if (depositIdToDelete) {
-        await axios.delete(`http://localhost:8080/api/deposits/${depositIdToDelete}`);
+        await axios.delete(`http://distromentor.onrender.com/api/deposits/${depositIdToDelete}`);
         setConfirmedDeposits((prev) => prev.filter((d) => d.depositid !== depositIdToDelete));
         setDeclinedDeposits((prev) => prev.filter((d) => d.depositid !== depositIdToDelete));
         setDeleteDialogOpen(false);
@@ -185,15 +185,15 @@ export default function PaymentsListUI() {
 
   useEffect(() => {
       getAllDeposits(
-        `http://localhost:8080/api/deposits/unconfirmed/distributor/${userFromStorage.distributor.distributorid}`,
+        `http://distromentor.onrender.com/api/deposits/unconfirmed/distributor/${userFromStorage.distributor.distributorid}`,
         setUnconfirmedDeposits
       );
       getAllDeposits(
-        `http://localhost:8080/api/deposits/confirmed/distributor/${userFromStorage.distributor.distributorid}`,
+        `http://distromentor.onrender.com/api/deposits/confirmed/distributor/${userFromStorage.distributor.distributorid}`,
         setConfirmedDeposits
       );
       getAllDeposits(
-        `http://localhost:8080/api/deposits/declined/distributor/${userFromStorage.distributor.distributorid}`,
+        `http://distromentor.onrender.com/api/deposits/declined/distributor/${userFromStorage.distributor.distributorid}`,
         setDeclinedDeposits
       );
     }, []);

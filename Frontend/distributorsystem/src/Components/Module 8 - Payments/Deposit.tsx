@@ -128,7 +128,7 @@ export default function DepositForm() {
   // Fetch dealer totals by dealer ID
   const fetchDealerTotals = (dealerId: string) => {
     axios
-      .get(`http://localhost:8080/dealerTotals/getByDealerId/${dealerId}`)
+      .get(`http://distromentor.onrender.com/dealerTotals/getByDealerId/${dealerId}`)
       .then((response) => {
         const { totalOrderAmount, totalSRP, profit } = response.data;
         setTotalAmount(totalOrderAmount);  // Needed to Deposit
@@ -180,7 +180,7 @@ export default function DepositForm() {
     formData.append('paymentDate', paymentDate);
     formData.append('isConfirm', String(isConfirm)); // Send as string ('false')
 
-    const url = 'http://localhost:8080/api/deposits/create';
+    const url = 'http://distromentor.onrender.com/api/deposits/create';
 
     axios
       .post(url, formData, {

@@ -69,7 +69,7 @@ export const useRestEmployee = (): [(employee: IEmployee, employeeDocuments: IEm
           }); 
 
 
-        axios.post('http://localhost:8080/employee/registerEmployee', formData, {
+        axios.post('http://distromentor.onrender.com/employee/registerEmployee', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -88,7 +88,7 @@ export const useRestEmployee = (): [(employee: IEmployee, employeeDocuments: IEm
 
     function getCollectorByID(collectorID:string) {
         
-         axios.get(`http://localhost:8080/employee/getCollectorByID/${collectorID}`)
+         axios.get(`http://distromentor.onrender.com/employee/getCollectorByID/${collectorID}`)
             .then((response) => {
                 setCollector(response.data)
                 
@@ -101,7 +101,7 @@ export const useRestEmployee = (): [(employee: IEmployee, employeeDocuments: IEm
 
     function getEmployeeByID(employeeid:string) {
         
-        axios.get(`http://localhost:8080/employee/getEmployeeByID/${employeeid}`)
+        axios.get(`http://distromentor.onrender.com/employee/getEmployeeByID/${employeeid}`)
            .then((response) => {
                setEmployee(response.data)
               

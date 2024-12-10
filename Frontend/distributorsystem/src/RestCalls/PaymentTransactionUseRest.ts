@@ -15,7 +15,7 @@ export const useRestPaymentTransaction = (): [(paymenttransactions: IPaymentTran
     const [totalPaidAmount, setTotalPaidAmount] = useState(0);
 
     function createPaymentTransaction(paymenttransactions: IPaymentTransaction[], orderid: string) {
-          axios.post(`http://localhost:8080ion/createPaymentTransaction/${orderid}`, paymenttransactions )
+          axios.post(`http://distromentor.onrender.com/createPaymentTransaction/${orderid}`, paymenttransactions )
             .then((response) => {
             
             })
@@ -25,7 +25,7 @@ export const useRestPaymentTransaction = (): [(paymenttransactions: IPaymentTran
 
 
     function getPaymentTransactionByID(paymenttransactionid: string) {
-        axios.get(`http://localhost:8080/paymenttransaction/getPaymentTransactionByID/${paymenttransactionid}`)
+        axios.get(`http://distromentor.onrender.com/paymenttransaction/getPaymentTransactionByID/${paymenttransactionid}`)
             .then((response) => {
 
                 setPaymentTransaction(response.data);
@@ -45,7 +45,7 @@ export const useRestPaymentTransaction = (): [(paymenttransactions: IPaymentTran
     
 
     function updatePaymentTransaction(paymentransactionid: string, paymentransaction: IPaymentTransaction) {
-        axios.put(`http://localhost:8080/paymenttransaction/updatePaymentTransaction/${paymentransactionid}`, paymentransaction)
+        axios.put(`http://distromentor.onrender.com/paymenttransaction/updatePaymentTransaction/${paymentransactionid}`, paymentransaction)
             .then((response) => {
                console.log("na update ra hoho")
                 toast.success('Installment ' + paymentransaction.installmentnumber + " schedule has been updated.", {
@@ -67,7 +67,7 @@ export const useRestPaymentTransaction = (): [(paymenttransactions: IPaymentTran
 
 
     function getRemainingPaymentAmount(paymenttransactionid: string) {
-        axios.get(`http://localhost:8080/paymenttransaction/getRemainingPaymentAmount/${paymenttransactionid}`)
+        axios.get(`http://distromentor.onrender.com/paymenttransaction/getRemainingPaymentAmount/${paymenttransactionid}`)
             .then((response) => {
                 setRemainingPaymentAmount(response.data)
                
@@ -81,7 +81,7 @@ export const useRestPaymentTransaction = (): [(paymenttransactions: IPaymentTran
     
 
     function getTotalPaidAmount(paymenttransactionid: string) {
-        axios.get(`http://localhost:8080/paymenttransaction/getTotalPaidAmount/${paymenttransactionid}`)
+        axios.get(`http://distromentor.onrender.com/paymenttransaction/getTotalPaidAmount/${paymenttransactionid}`)
             .then((response) => {
                 setTotalPaidAmount(response.data)
                

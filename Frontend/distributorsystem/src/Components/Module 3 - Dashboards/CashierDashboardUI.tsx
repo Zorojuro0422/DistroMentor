@@ -75,7 +75,7 @@ export default function CashierDashboard(){
     }
 
     const getAllUnconfirmedCollectionPaymentReceipts = () => {
-        axios.get(`http://localhost:8080/paymentreceipt/collectionpaymentreceipt/getAllUnconfirmedCollectionPaymentReceiptsByDistributorID/${userFromStorage.cashier.distributor.distributorid}`)
+        axios.get(`http://distromentor.onrender.com/paymentreceipt/collectionpaymentreceipt/getAllUnconfirmedCollectionPaymentReceiptsByDistributorID/${userFromStorage.cashier.distributor.distributorid}`)
             .then((response) => {
                 setUnconfirmedCollectionPaymentReceipts(response.data);
             })

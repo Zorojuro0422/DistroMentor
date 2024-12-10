@@ -125,7 +125,7 @@ export default function ProductRegistration() {
       distributorid: distributorId,
     };
 
-    const url = 'http://localhost:8080/product/AddProduct';
+    const url = 'http://distromentor.onrender.com/product/AddProduct';
 
     axios
       .post(url, productData)

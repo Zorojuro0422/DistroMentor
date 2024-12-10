@@ -335,7 +335,7 @@ export default function DealerRegistration() {
 
 
     function getAllDistributors() {
-        axios.get<IDistributor[]>('http://localhost:8080/distributor/getAllDistributors')
+        axios.get<IDistributor[]>('http://distromentor.onrender.com/distributor/getAllDistributors')
             .then((response) => {
                 setDistributors(response.data);
 

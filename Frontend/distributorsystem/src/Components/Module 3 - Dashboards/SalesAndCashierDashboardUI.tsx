@@ -118,7 +118,7 @@ export default function SalesAndCashierDashboard() {
     const userFromStorage = JSON.parse(localStorage.getItem("user")!);
 
     const getAllUnconfirmedOrders = () => {
-        axios.get(`http://localhost:8080/order/getAllUnconfirmedOrdersByDistributorID/${userFromStorage.salesAssociateAndCashier.distributor.distributorid}`)
+        axios.get(`http://distromentor.onrender.com/order/getAllUnconfirmedOrdersByDistributorID/${userFromStorage.salesAssociateAndCashier.distributor.distributorid}`)
             .then((response) => {
                 setUnconfirmedOrders(response.data);
             })
@@ -128,7 +128,7 @@ export default function SalesAndCashierDashboard() {
     }
 
     const getAllUnconfirmedCollectionPaymentReceipts = () => {
-        axios.get(`http://localhost:8080/paymentreceipt/collectionpaymentreceipt/getAllUnconfirmedCollectionPaymentReceiptsByDistributorID/${userFromStorage.salesAssociateAndCashier.distributor.distributorid}`)
+        axios.get(`http://distromentor.onrender.com/paymentreceipt/collectionpaymentreceipt/getAllUnconfirmedCollectionPaymentReceiptsByDistributorID/${userFromStorage.salesAssociateAndCashier.distributor.distributorid}`)
             .then((response) => {
                 setUnconfirmedCollectionPaymentReceipts(response.data);
             })

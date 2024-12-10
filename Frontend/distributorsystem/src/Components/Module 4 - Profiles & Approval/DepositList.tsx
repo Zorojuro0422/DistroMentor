@@ -20,7 +20,7 @@ export default function DepositList() {
 
   useEffect(() => {
     // Fetch deposits on component mount
-    axios.get('http://localhost:8080/api/deposits/all')  // Update the endpoint according to your backend
+    axios.get('http://distromentor.onrender.com/api/deposits/all')  // Update the endpoint according to your backend
       .then((response) => {
         setDeposits(response.data);
         setLoading(false);
@@ -64,7 +64,7 @@ export default function DepositList() {
                   <TableCell>
                     {deposit.proofOfRemittance ? (
                       <img
-                        src={`http://localhost:8080${deposit.proofOfRemittance}`}  // Adjust path based on application
+                        src={`http://distromentor.onrender.com${deposit.proofOfRemittance}`}  // Adjust path based on application
                         alt="Proof of Remittance"
                         style={{ width: '300px', height: '300px', objectFit: 'cover' }}  // Adjust the size to 300x300
                       />
