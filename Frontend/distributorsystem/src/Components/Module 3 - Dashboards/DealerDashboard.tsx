@@ -13,6 +13,7 @@ import {
   TableHead,
   TableRow,
   CircularProgress,
+  Pagination,
 } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
@@ -35,7 +36,6 @@ const StyledButton: React.FC<ButtonProps> = (props: ButtonProps) => (
   />
 );
 
-
 export default function DealerDashboard() {
   // State for orders, customers, and customer orders
   const [orders, setOrders] = useState([]);
@@ -44,6 +44,12 @@ export default function DealerDashboard() {
   const [loading, setLoading] = useState(true); // Loading state
   const navigate = useNavigate();
 
+  // Pagination states
+  const [ordersPage, setOrdersPage] = useState(1);
+  const [customersPage, setCustomersPage] = useState(1);
+  const [customerOrdersPage, setCustomerOrdersPage] = useState(1);
+
+  const pageSize = 5; // Items per page
   const userFromStorage = JSON.parse(localStorage.getItem("user")!);
 
   // Fetch confirmed orders
@@ -109,6 +115,17 @@ export default function DealerDashboard() {
     );
   }
 
+  // Paginated Data
+  const paginatedOrders = orders.slice((ordersPage - 1) * pageSize, ordersPage * pageSize);
+  const paginatedCustomers = customers.slice(
+    (customersPage - 1) * pageSize,
+    customersPage * pageSize
+  );
+  const paginatedCustomerOrders = customerOrders.slice(
+    (customerOrdersPage - 1) * pageSize,
+    customerOrdersPage * pageSize
+  );
+
   return (
     <Grid container spacing={4} sx={{ padding: 4 }}>
       {/* Orders Section */}
@@ -129,7 +146,7 @@ export default function DealerDashboard() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {orders.map((order: any) => (
+                {paginatedOrders.map((order: any) => (
                   <TableRow key={order.orderid}>
                     <TableCell>{order.orderid}</TableCell>
                     <TableCell>
@@ -165,6 +182,12 @@ export default function DealerDashboard() {
               </TableBody>
             </Table>
           </TableContainer>
+          <Pagination
+            count={Math.ceil(orders.length / pageSize)}
+            page={ordersPage}
+            onChange={(e, value) => setOrdersPage(value)}
+            sx={{ mt: 2 }}
+          />
         </Paper>
       </Grid>
 
@@ -185,7 +208,7 @@ export default function DealerDashboard() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {customers.map((customer: any) => (
+                {paginatedCustomers.map((customer: any) => (
                   <TableRow key={customer.customerID}>
                     <TableCell>{customer.customerID}</TableCell>
                     <TableCell>{customer.firstName}</TableCell>
@@ -210,6 +233,12 @@ export default function DealerDashboard() {
               </TableBody>
             </Table>
           </TableContainer>
+          <Pagination
+            count={Math.ceil(customers.length / pageSize)}
+            page={customersPage}
+            onChange={(e, value) => setCustomersPage(value)}
+            sx={{ mt: 2 }}
+          />
         </Paper>
       </Grid>
 
@@ -232,7 +261,7 @@ export default function DealerDashboard() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {customerOrders.map((order: any) => (
+                {paginatedCustomerOrders.map((order: any) => (
                   <TableRow key={order.orderid}>
                     <TableCell>{order.orderid}</TableCell>
                     <TableCell>
@@ -273,6 +302,12 @@ export default function DealerDashboard() {
               </TableBody>
             </Table>
           </TableContainer>
+          <Pagination
+            count={Math.ceil(customerOrders.length / pageSize)}
+            page={customerOrdersPage}
+            onChange={(e, value) => setCustomerOrdersPage(value)}
+            sx={{ mt: 2 }}
+          />
         </Paper>
       </Grid>
     </Grid>
