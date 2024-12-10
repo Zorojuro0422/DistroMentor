@@ -34,7 +34,7 @@ export const useRestOrder = (): [
 
 
     function newOrder(order: IOrder) {
-        axios.post('http://distromentor.onrender.com/order/createOrder', {
+        axios.post('https://distromentor.onrender.com/order/createOrder', {
             orderid: order.orderid,
             distributiondate: order.distributiondate,
             penaltyrate: order.penaltyrate,
