@@ -130,7 +130,7 @@ export default function DealerDashboard() {
     <Grid container spacing={3} sx={{ padding: 3, marginLeft: "40px" }}>
       {/* Orders Section */}
       <Grid item xs={12} md={6}>
-        <Paper elevation={3} sx={{ padding: 2, height: "100%", maxWidth: "50%" }}>
+        <Paper elevation={3} sx={{ padding: 2, height: "100%", maxWidth: "80%" }}>
           <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", fontSize: "18px" }}>
             Dealer Orders
           </Typography>
@@ -191,7 +191,7 @@ export default function DealerDashboard() {
 
       {/* Customers Section */}
       <Grid item xs={12} md={6}>
-        <Paper elevation={3} sx={{ padding: 2, height: "100%", maxWidth: "50%" }}>
+        <Paper elevation={3} sx={{ padding: 2, height: "100%", maxWidth: "80%" }}>
           <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", fontSize: "18px" }}>
             Dealer Customers
           </Typography>
