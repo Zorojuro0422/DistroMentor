@@ -87,7 +87,7 @@ export default function MainRoutes() {
 
                     {user && user!.tableName === "Dealer" && (
                         <Route path="/" element={<ContentDealer/>}>
-                            <Route path="/" element={<><ScrollToTop/><Navigate replace to="dealerOrderForm" /></>} />
+                            <Route path="/" element={<><ScrollToTop/><Navigate replace to="dealerdashboard" /></>} />
                             <Route path="/dealerOrderForm" element={<><ScrollToTop/><DealerOrderForm /></>} />
                             <Route path="/customerOrderForm" element={<><ScrollToTop/><CustomerOrderForm /></>} />
                             <Route path="/customerRegistration" element={<CustomerRegistration />} />
