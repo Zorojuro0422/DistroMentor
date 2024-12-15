@@ -134,7 +134,7 @@ export default function DealerDashboard() {
           <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", fontSize: "18px" }}>
             Dealer Orders
           </Typography>
-          <TableContainer sx={{ maxHeight: "200px" }}>
+          <TableContainer sx={{ maxHeight: "240px", maxWidth: "50%" }}>
             <Table stickyHeader size="small">
               <TableHead>
                 <TableRow>
@@ -195,7 +195,7 @@ export default function DealerDashboard() {
           <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", fontSize: "18px" }}>
             Dealer Customers
           </Typography>
-          <TableContainer sx={{ maxHeight: "200px" }}>
+          <TableContainer sx={{ maxHeight: "240px", maxWidth: "50%" }}>
             <Table stickyHeader size="small">
               <TableHead>
                 <TableRow>
@@ -236,7 +236,7 @@ export default function DealerDashboard() {
           <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", fontSize: "18px" }}>
             Customer Orders
           </Typography>
-          <TableContainer sx={{ maxHeight: "300px" }}>
+          <TableContainer sx={{ maxHeight: "300px", maxWidth: "50%" }}>
             <Table stickyHeader size="small">
               <TableHead>
                 <TableRow>
