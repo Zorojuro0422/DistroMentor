@@ -199,6 +199,8 @@ export function OrderTransactionDetails() {
   const { objectId } = useParams();
   const [proofOfRemittanceFiles, setProofOfRemittanceFiles] = useState<Record<string, File | null>>({});
 
+  const user = JSON.parse(localStorage.getItem('user')!) || {};
+
 
   useEffect(() => {
     axios
