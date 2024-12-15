@@ -130,11 +130,11 @@ export default function DealerDashboard() {
     <Grid container spacing={3} sx={{ padding: 3, marginLeft: "40px" }}>
       {/* Orders Section */}
       <Grid item xs={12} md={6}>
-        <Paper elevation={3} sx={{ padding: 2, height: "100%" }}>
+        <Paper elevation={3} sx={{ padding: 2, height: "100%", maxWidth: "50%" }}>
           <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", fontSize: "18px" }}>
             Dealer Orders
           </Typography>
-          <TableContainer sx={{ maxHeight: "240px", maxWidth: "50%" }}>
+          <TableContainer sx={{ maxHeight: "240px" }}>
             <Table stickyHeader size="small">
               <TableHead>
                 <TableRow>
@@ -191,11 +191,11 @@ export default function DealerDashboard() {
 
       {/* Customers Section */}
       <Grid item xs={12} md={6}>
-        <Paper elevation={3} sx={{ padding: 2, height: "100%" }}>
+        <Paper elevation={3} sx={{ padding: 2, height: "100%", maxWidth: "50%" }}>
           <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", fontSize: "18px" }}>
             Dealer Customers
           </Typography>
-          <TableContainer sx={{ maxHeight: "240px", maxWidth: "50%" }}>
+          <TableContainer sx={{ maxHeight: "240px" }}>
             <Table stickyHeader size="small">
               <TableHead>
                 <TableRow>
@@ -232,11 +232,11 @@ export default function DealerDashboard() {
 
       {/* Customer Orders Section */}
       <Grid item xs={12} sx={{ mt: 3 }}> {/* Added margin-top */}
-        <Paper elevation={3} sx={{ padding: 2 }}>
+        <Paper elevation={3} sx={{ padding: 2, maxWidth: "50%" }}>
           <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", fontSize: "18px" }}>
             Customer Orders
           </Typography>
-          <TableContainer sx={{ maxHeight: "300px", maxWidth: "50%" }}>
+          <TableContainer sx={{ maxHeight: "300px" }}>
             <Table stickyHeader size="small">
               <TableHead>
                 <TableRow>
