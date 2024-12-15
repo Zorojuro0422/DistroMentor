@@ -601,11 +601,13 @@ useEffect(() => {
                       maxWidth: "300px", // Optionally, set a max width for the container
                     }}
                   >
-                    <Grid item>
-                      <StyledButton variant="contained" onClick={handleOpenDialog}>
-                        Pay
-                      </StyledButton>
-                    </Grid>
+                    {user.tableName !== "Distributor" && ( // Conditionally render the button
+                      <Grid item>
+                        <StyledButton variant="contained" onClick={handleOpenDialog}>
+                          Pay
+                        </StyledButton>
+                      </Grid>
+                    )}
                   </Grid>
 
 
