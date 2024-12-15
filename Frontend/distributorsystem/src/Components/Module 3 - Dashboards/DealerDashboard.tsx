@@ -232,7 +232,7 @@ export default function DealerDashboard() {
 
       {/* Customer Orders Section */}
       <Grid item xs={12} sx={{ mt: 3, justifyContent: "center", alignItems: "center"  }}> {/* Added margin-top */}
-        <Paper elevation={3} sx={{ padding: 2, maxWidth: "90%" }}>
+        <Paper elevation={3} sx={{ padding: 2, maxWidth: "92%" }}>
           <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", fontSize: "18px" }}>
             Customer Orders
           </Typography>
