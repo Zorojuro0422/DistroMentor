@@ -14,7 +14,9 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true); // Allow cookies or credentials
-        config.addAllowedOrigin("https://distro-mentor-e4do.vercel.app"); // Add your frontend's URL
+        // Add both your deployed frontend and localhost URL
+        config.addAllowedOrigin("https://distro-mentor-e4do.vercel.app"); // Deployed frontend URL
+        config.addAllowedOrigin("http://localhost:3000"); // Localhost for development
         config.addAllowedHeader("*"); // Allow all headers
         config.addAllowedMethod("*"); // Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
         source.registerCorsConfiguration("/**", config); // Apply to all endpoints
