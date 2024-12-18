@@ -198,7 +198,7 @@ const PaperStyle = styled(Paper)({
   },
 });
 
-export function CustomerTransaction() {
+export function CustomerOrderTransaction() {
   const [order, setOrder] = useState<ICustomerOrder | null>(null);
   const [openAlert, setOpenAlert] = useState(false);
   const [alerttitle, setTitle] = useState('');
@@ -209,16 +209,6 @@ export function CustomerTransaction() {
   const [depositRecords, setDepositRecords] = useState<DepositRecord[]>([]);
   const [openDialog, setOpenDialog] = useState(false);
 
-  // Handle opening the dialog
-    const handleClickOpen = () => {
-      setOpenDialog(true);
-    };
-
-    // Handle closing the dialog
-    const handleClose = () => {
-      setOpenDialog(false);
-    };
-
   useEffect(() => {
     axios
       .get<ICustomerOrder>(`https://distromentor.onrender.com/customerOrder/getCustomerOrderById/${objectId}`)
@@ -228,20 +218,6 @@ export function CustomerTransaction() {
         headerHandleAlert('Error', "Failed to retrieve order data. Please try again.", 'error');
       });
   }, [objectId]);
-
-  useEffect(() => {
-    if (!order) return;
-
-    axios
-      .get(`https://distromentor.onrender.com/api/deposit/order/${order.orderid}`)
-      .then((response) => {
-        setDepositRecords(response.data);
-        console.log("Deposit records successfully fetched:", response.data); // Log the fetched deposit records
-      })
-      .catch((error) => {
-        console.error("Error fetching deposit records:", error);
-      });
-  }, [order]);
 
   const headerHandleAlert = (title: string, message: string, severity: 'success' | 'warning' | 'error') => {
     setTitle(title);
@@ -291,7 +267,6 @@ export function CustomerTransaction() {
       // Create the payload for the deposit record
       const depositRecordPayload = {
         orderid: order.orderid, // Assuming order.orderid is available
-        dealerid: order.dealerid,
         depositDate: new Date().toISOString().split('T')[0], // Current date in YYYY-MM-DD format
         deposit: deposit, // The new deposit value
         remainingBalance: order.orderamount - newDeposit
@@ -329,7 +304,7 @@ export function CustomerTransaction() {
                   <Grid>
                     <div style={{ display: "flex", flexDirection: 'row', paddingTop: 7, paddingLeft: 20 }}>
                       <Grid item>
-                        <ContentNameTypography>Payment Transaction Details</ContentNameTypography>
+                        <ContentNameTypography>Order Transaction Details</ContentNameTypography>
                       </Grid>
                       <Grid item className="no-print">
                         <StyledPrintDiv>
@@ -430,147 +405,6 @@ export function CustomerTransaction() {
                         </Grid>
                       </Grid>
                     </PaperStyle>
-
-                    {/* Deposit Record Section */}
-                    {depositRecords.length > 0 && (
-                      <>
-                        <Grid container style={{ position: 'relative', justifyContent: "center", alignItems: "center" }}>
-                          <StyleLabelData style={{ paddingTop: 100, marginLeft: -1030 }}>Payment</StyleLabelData>
-                        </Grid>
-                        <PaperStyle>
-                          <TableContainer>
-                            <Table aria-label="deposit records table">
-                              <TableHead style={{ backgroundColor: 'rgb(45, 133, 231, 0.08)' }}>
-                                <TableRow>
-                                  <TableHeaderCell align="center" sx={{ color: '#707070' }}>Deposit ID</TableHeaderCell>
-                                  <TableHeaderCell align="center" sx={{ color: '#707070' }}>Deposit Date</TableHeaderCell>
-                                  <TableHeaderCell align="center" sx={{ color: '#707070' }}>Deposit</TableHeaderCell>
-                                  <TableHeaderCell align="center" sx={{ color: '#707070' }}>Remaining Balance</TableHeaderCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {depositRecords.map((record, index) => (
-                                  <TableRow key={index} sx={{ backgroundColor: index % 2 === 0 ? 'inherit' : 'rgb(45, 133, 231, 0.08)' }}>
-                                    <TableCell align="center">{record.id}</TableCell>
-                                    <TableCell align="center">{record.depositDate}</TableCell>
-                                    <TableCell align="center">₱ {record.deposit}</TableCell>
-                                    <TableCell align="center">₱ {record.remainingBalance}</TableCell>
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                          </TableContainer>
-                          <Grid container style={{ position: 'relative', justifyContent: 'flex-end', alignItems: 'center', width: '100%' }}>
-                            <Grid item style={{ marginRight: '10px' }}>
-                              <StyleTotalLabel>Status:</StyleTotalLabel>
-                            </Grid>
-                            <Grid item>
-                              <StyleTotalPaper>
-                                <StyleTotalData
-                                  style={{
-                                    color: order?.status === 'Pending' ? 'orange' :
-                                           order?.status === 'Closed' ? 'red' :
-                                           'black', // Default color
-                                  }}
-                                >
-                                  {order?.status}
-                                </StyleTotalData>
-                              </StyleTotalPaper>
-                            </Grid>
-                          </Grid>
-                        </PaperStyle>
-                      </>
-                    )}
-
-
-                      <div className="no-print" style={{ zIndex: 5, position: 'relative' }}>
-                            <Grid
-                              container
-                              style={{
-                                position: "fixed", // Fix the container to the viewport
-                                top: 120, // Distance from the top of the page
-                                right: 70, // Distance from the right of the page
-                                justifyContent: "flex-end", // Align items to the right
-                                alignItems: "center", // Align items vertically in the center
-                                padding: "10px", // Add some padding for spacing
-                              }}
-                            >
-
-                              {/* Conditionally render the Pay Button if status is not Closed */}
-                              {order?.status !== "Closed" && (
-                                <Grid item>
-                                  <Button variant="contained" onClick={handleClickOpen}>
-                                    Pay
-                                  </Button>
-                                </Grid>
-                              )}
-                            </Grid>
-
-                            {/* Dialog for Deposit Payment */}
-                            <Dialog open={openDialog} onClose={handleClose}>
-                              <DialogTitle>Deposit Payment</DialogTitle>
-                              <DialogContent>
-                                {/* Displaying the Deposit, Remaining Balance, and Status inside the dialog */}
-                                <Paper style={{ padding: 20, marginBottom: 20 }}>
-                                  <Typography variant="subtitle1" style={{ fontWeight: "bold" }} color="textSecondary">
-                                    Deposit:{" "}
-                                    <span style={{ color: "green" }}>
-                                      {order && order.deposit > 0 ? order.deposit : "No deposit yet"}
-                                    </span>
-                                    <br />
-                                    Remaining Balance:{" "}
-                                    <span style={{ color: "red" }}>
-                                      {order ? Math.max(order.orderamount - (order.deposit || 0), 0) : "N/A"}
-                                    </span>
-                                    <br />
-                                    Status:{" "}
-                                    <span
-                                      style={{
-                                        color:
-                                          order?.status === "Pending"
-                                            ? "orange"
-                                            : order?.status === "Open"
-                                            ? "green"
-                                            : order?.status === "Closed"
-                                            ? "red"
-                                            : "black", // Default color if no status
-                                      }}
-                                    >
-                                      {order ? order.status : "N/A"}
-                                    </span>
-                                  </Typography>
-                                </Paper>
-
-                                {/* TextField for Deposit Amount */}
-                                <TextField
-                                  label="Deposit Amount"
-                                  type="number"
-                                  value={deposit === 0 ? "" : deposit}
-                                  onChange={(e) => setDeposit(Number(e.target.value))}
-                                  variant="outlined"
-                                  fullWidth
-                                  style={{ marginBottom: 20 }}
-                                />
-                              </DialogContent>
-
-                              {/* Dialog Actions */}
-                              <DialogActions>
-                                <Button
-                                  onClick={handleClose}
-                                  sx={{ color: 'red' }} // Red color for Cancel button
-                                >
-                                  Cancel
-                                </Button>
-                                <Button
-                                  onClick={handleDepositSubmit}
-                                  sx={{ color: 'green' }} // Green color for Submit button
-                                >
-                                  Submit
-                                </Button>
-                              </DialogActions>
-
-                            </Dialog>
-                          </div>
                     {/* Alerts */}
                     <Snackbar open={openAlert} autoHideDuration={3000} onClose={handleCloseAlert} anchorOrigin={{
                       vertical: 'top',

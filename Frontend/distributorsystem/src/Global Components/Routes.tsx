@@ -46,6 +46,7 @@ import UpdateProduct from '../Components/Module 2 - Registrations/UpdateProduct'
 import UpdateCustomer from '../Components/Module 4 - Profiles & Approval/UpdateCustomer';
 import CustomerRegistration from '../Components/Module 5 - Product Distribution and Confirmation/CustomerRegistration';
 import DealerProductList from '../Components/Module 5 - Product Distribution and Confirmation/DealerProductList';
+import PaymentRecord from '../Components/Module 5 - Product Distribution and Confirmation/PaymentRecord';
 import CustomerOrderForm from '../Components/Module 5 - Product Distribution and Confirmation/CustomerOrderForm';
 import CustomerList from '../Components/Module 4 - Profiles & Approval/CustomerList';
 import DepositList from '../Components/Module 4 - Profiles & Approval/DepositList';
@@ -56,7 +57,9 @@ import DepositDetail from "../Components/Module 8 - Payments/DepositDetail";
 import DepositConfirmation from "../Components/Module 8 - Payments/DepositConfirmation";
 import Invoices from '../Components/Module 5 - Product Distribution and Confirmation/Invoices';
 import { CustomerTransaction } from '../Components/Module 5 - Product Distribution and Confirmation/CustomerTransaction';
+import { CustomerOrderTransaction } from '../Components/Module 5 - Product Distribution and Confirmation/CustomerOrderTransaction';
 import CustomerCollection from '../Components/Module 6 - Collector Assignment/CustomerCollection';
+import CustomerOrder from '../Components/Module 6 - Collector Assignment/CustomerOrder';
 import Payment from "../Components/Module 8 - Payments/Payment";
 
 
@@ -92,16 +95,19 @@ export default function MainRoutes() {
                             <Route path="/customerOrderForm" element={<><ScrollToTop/><CustomerOrderForm /></>} />
                             <Route path="/customerRegistration" element={<CustomerRegistration />} />
                             <Route path="/dealerProduct" element={<DealerProductList />} />
+                            <Route path="/paymentRecord" element={<PaymentRecord />} />
                             <Route path="/customerlist" element={<CustomerList />} />
                             <Route path="/depositlist" element={<DepositList />} />
                             <Route path="/dealerdashboard" element={<><ScrollToTop/><DealerDashboard /></>} />
                             <Route path="/deposit" element={<Deposit />} />
                             <Route path="/customercollection" element={<CustomerCollection/>} />
+                            <Route path="/customerorder" element={<CustomerOrder/>} />
                             <Route path="/payment" element={<Payment/>} />
                             <Route path="/update_customer/:objectId" element={<UpdateCustomer />} />
                             <Route path="/dealerProfileDetails/:objectId" element={<><ScrollToTop/><DealerProfileDetails/></>} />
                             <Route path="/orderTransactionDetails/:objectId" element={<><ScrollToTop/><OrderTransactionDetails /></>} />
                             <Route path="/customerTransaction/:objectId" element={<><ScrollToTop/><CustomerTransaction/></>} />
+                            <Route path="/customerOrderTransaction/:objectId" element={<><ScrollToTop/><CustomerOrderTransaction/></>} />
                         </Route>
                     )}
 
