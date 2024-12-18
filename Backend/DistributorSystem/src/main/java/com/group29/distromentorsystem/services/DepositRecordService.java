@@ -17,25 +17,23 @@ public class DepositRecordService {
         this.depositRecordRepository = depositRecordRepository;
     }
 
-    // Save a new DepositRecord
+    // Save a new deposit record
     public DepositRecord saveDepositRecord(DepositRecord depositRecord) {
         return depositRecordRepository.save(depositRecord);
     }
 
-    // Retrieve all DepositRecords
+    // Retrieve all deposit records
     public List<DepositRecord> getAllDepositRecords() {
         return depositRecordRepository.findAll();
     }
 
-    // Retrieve DepositRecord by order ID
-    public List<DepositRecord> getDepositRecordsByOrderId(String orderid) {
-        return depositRecordRepository.findByOrderid(orderid);
+    // Retrieve deposit records by order ID
+    public List<DepositRecord> getDepositRecordsByOrderId(String orderId) {
+        return depositRecordRepository.findByOrderId(orderId);
     }
 
-    // Service method to fetch deposit records by dealerid
-    public List<DepositRecord> getDepositRecordsByDealer(String dealerid) {
-        return depositRecordRepository.findByDealerid(dealerid);
+    // Retrieve deposit records by dealer ID
+    public List<DepositRecord> getDepositRecordsByDealer(String dealerId) {
+        return depositRecordRepository.findByDealerId(dealerId);
     }
-
-    // You can add other custom business logic as needed
 }
