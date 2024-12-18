@@ -5,20 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0dcae2e2-d05e-445c-92af-dded0365df7e" name="Changes" comment="new update">
-      <change afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/DepositRecordController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/models/DepositRecord.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/repositories/DepositRecordRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/services/DepositRecordService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/CustomerOrderTransaction.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/PaymentRecord.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 6 - Collector Assignment/CustomerOrder.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/CustomerTransaction.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/CustomerTransaction.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/DealerOrderFormUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/DealerOrderFormUI.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Global Components/ContentsDealer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Global Components/ContentsDealer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Global Components/NewNavBarDealer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Global Components/NewNavBarDealer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Global Components/Routes.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Global Components/Routes.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/RestCalls/SignInUseRest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/RestCalls/SignInUseRest.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,13 +109,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1721712519041</updated>
-    </task>
-    <task id="LOCAL-00002" summary="new update">
-      <created>1728482154411</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1728482154411</updated>
     </task>
     <task id="LOCAL-00003" summary="new update">
       <created>1728500022780</created>
@@ -466,7 +446,14 @@
       <option name="project" value="LOCAL" />
       <updated>1734456126952</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="new update">
+      <created>1734505704027</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1734505704027</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="UnknownFeatures">
