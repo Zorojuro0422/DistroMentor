@@ -29,11 +29,11 @@ public class DepositRecordService {
 
     // Retrieve deposit records by order ID
     public List<DepositRecord> getDepositRecordsByOrderId(String orderId) {
-        return depositRecordRepository.findByOrderId(orderId);
+        return depositRecordRepository.findByOrderid(orderId);
     }
 
     // Retrieve deposit records by dealer ID
     public List<DepositRecord> getDepositRecordsByDealer(String dealerId) {
-        return depositRecordRepository.findByDealerId(dealerId);
+        return depositRecordRepository.findByDealerid(dealerId);
     }
 }

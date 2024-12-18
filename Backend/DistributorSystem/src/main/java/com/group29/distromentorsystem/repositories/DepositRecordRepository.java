@@ -6,6 +6,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 
 public interface DepositRecordRepository extends MongoRepository<DepositRecord, String> {
-    List<DepositRecord> findByOrderId(String orderId);
-    List<DepositRecord> findByDealerId(String dealerId);
+    List<DepositRecord> findByOrderid(String orderId);
+    List<DepositRecord> findByDealerid(String dealerId);
 }
