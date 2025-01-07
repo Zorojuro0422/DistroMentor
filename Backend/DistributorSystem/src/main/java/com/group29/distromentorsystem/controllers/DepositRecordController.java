@@ -8,15 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/deposit")
 public class DepositRecordController {
 
-    private final DepositRecordService depositRecordService;
-
     @Autowired
-    public DepositRecordController(DepositRecordService depositRecordService) {
-        this.depositRecordService = depositRecordService;
-    }
+    private DepositRecordService depositRecordService;
 
     // Endpoint to create a new deposit record
     @PostMapping("/create")
