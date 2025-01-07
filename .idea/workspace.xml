@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0dcae2e2-d05e-445c-92af-dded0365df7e" name="Changes" comment="latest deploy">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="0dcae2e2-d05e-445c-92af-dded0365df7e" name="Changes" comment="fixing error">
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/DistributorSystemApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/DistributorSystemApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/DistributorSystemApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/DistributorSystemApplication.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,13 +110,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1721712519041</updated>
-    </task>
-    <task id="LOCAL-00011" summary="new update">
-      <created>1733798651269</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1733798651269</updated>
     </task>
     <task id="LOCAL-00012" summary="new update">
       <created>1733798861827</created>
@@ -453,7 +447,14 @@
       <option name="project" value="LOCAL" />
       <updated>1736229006418</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="fixing error">
+      <created>1736230415059</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1736230415059</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -476,7 +477,8 @@
     <MESSAGE value="new update" />
     <MESSAGE value="to fix deployment" />
     <MESSAGE value="latest deploy" />
-    <option name="LAST_COMMIT_MESSAGE" value="latest deploy" />
+    <MESSAGE value="fixing error" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixing error" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/DistroMentor_Capstone$DistributorSystemApplication.ic" NAME="DistributorSystemApplication Coverage Results" MODIFIED="1727617030339" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
