@@ -75,7 +75,7 @@ export default function DepositDetailsUI() {
   // Fetch the deposit by ID
   const fetchDepositById = async (id: string) => {
     try {
-      const response = await axios.get<IDeposit>(`https://distromentor.onrender.com/api/deposits/${id}`);
+      const response = await axios.get<IDeposit>(`http://localhost:8080/api/deposits/${id}`);
       setDeposit(response.data);
       fetchDealerById(response.data.dealerid); // Fetch the dealer details
     } catch (error) {
@@ -88,17 +88,17 @@ export default function DepositDetailsUI() {
   // Fetch the dealer details by dealer ID
   const fetchDealerById = async (dealerId: string) => {
     try {
-      const dealerResponse = await axios.get<IDealer>(`https://distromentor.onrender.com/dealer/getDealerByID/${dealerId}`);
+      const dealerResponse = await axios.get<IDealer>(`http://localhost:8080/dealer/getDealerByID/${dealerId}`);
       setDealer(dealerResponse.data);
 
       // Fetch dealer total sales (Total Order Amount), total SRP, and profit
-      const salesResponse = await axios.get<IDealerTotalResponse>(`https://distromentor.onrender.com/dealerTotals/getByDealerId/${dealerId}`);
+      const salesResponse = await axios.get<IDealerTotalResponse>(`http://localhost:8080/dealerTotals/getByDealerId/${dealerId}`);
       setDealerTotalSales(salesResponse.data.totalOrderAmount);  // Set total sales
       setDealerTotalSRP(salesResponse.data.totalSRP);            // Set total SRP
       setDealerProfit(salesResponse.data.profit);                // Set profit
 
       // Fetch dealer total debt (Total Ordered Products Subtotal)
-      const debtResponse = await axios.get<IProductSubtotalResponse>(`https://distromentor.onrender.com/allProductSubtotals/getByDealerId/${dealerId}`);
+      const debtResponse = await axios.get<IProductSubtotalResponse>(`http://localhost:8080/allProductSubtotals/getByDealerId/${dealerId}`);
       setDealerTotalDebt(debtResponse.data.totalProductSubtotal); // Set total debt
 
     } catch (error) {
@@ -117,14 +117,14 @@ export default function DepositDetailsUI() {
 
     try {
       // Update dealer totals in the backend
-      await axios.put(`https://distromentor.onrender.com/dealerTotals/updateByDealerId/${dealer!.dealerid}`, {
+      await axios.put(`http://localhost:8080/dealerTotals/updateByDealerId/${dealer!.dealerid}`, {
         totalOrderAmount: 0,   // Updated total sales
         totalSRP: 0,              // Pass the existing SRP
         profit: dealerProfit,                  // Pass the existing profit
       });
 
       // Update dealer total debt in the backend (AllProductSubtotals table)
-      await axios.put(`https://distromentor.onrender.com/allProductSubtotals/updateByDealerId/${dealer!.dealerid}`, {
+      await axios.put(`http://localhost:8080/allProductSubtotals/updateByDealerId/${dealer!.dealerid}`, {
           totalProductSubtotal: updatedTotalDebt, // Updated total debt (subtotal)
       });
 
@@ -147,11 +147,11 @@ export default function DepositDetailsUI() {
 
     try {
       // Confirm deposit in the backend
-      await axios.patch(`https://distromentor.onrender.com/api/deposits/confirm/${objectId}`);
+      await axios.patch(`http://localhost:8080/api/deposits/confirm/${objectId}`);
 
       // Fetch the latest order data
       const orderResponse = await axios.get(
-        `https://distromentor.onrender.com/order/getOrderByID/${deposit.orderid}`
+        `http://localhost:8080/order/getOrderByID/${deposit.orderid}`
       );
       const order = orderResponse.data;
 
@@ -170,13 +170,13 @@ export default function DepositDetailsUI() {
 
       // Send the update request for the order
       await axios.put(
-        `https://distromentor.onrender.com/order/updateOrder/${deposit.orderid}`,
+        `http://localhost:8080/order/updateOrder/${deposit.orderid}`,
         updatedOrder
       );
 
       // Update the specific payment record to "Paid"
       await axios.put(
-        `https://distromentor.onrender.com/payment-records/${deposit.paymentid}`,
+        `http://localhost:8080/payment-records/${deposit.paymentid}`,
         {
           ...deposit, // Spread the existing deposit object
           status: "Paid", // Update only the status field
@@ -198,7 +198,7 @@ export default function DepositDetailsUI() {
 
           // Fetch the current totalProductSubtotal
           const response = await axios.get(
-            `https://distromentor.onrender.com/allProductSubtotals/getByDealerId/${deposit.dealerid}`
+            `http://localhost:8080/allProductSubtotals/getByDealerId/${deposit.dealerid}`
           );
 
           // Log the fetched response
@@ -216,7 +216,7 @@ export default function DepositDetailsUI() {
 
           // Update the allProductSubtotals in the backend
           const updateResponse = await axios.put(
-            `https://distromentor.onrender.com/allProductSubtotals/updateByDealerId/${deposit.dealerid}`,
+            `http://localhost:8080/allProductSubtotals/updateByDealerId/${deposit.dealerid}`,
             {
               totalProductSubtotal: updatedTotalDebt, // Updated total debt (subtotal)
             }
@@ -232,7 +232,7 @@ export default function DepositDetailsUI() {
 
       // Refetch the updated order data to ensure UI is in sync
       const updatedOrderResponse = await axios.get(
-        `https://distromentor.onrender.com/order/getOrderByID/${deposit.orderid}`
+        `http://localhost:8080/order/getOrderByID/${deposit.orderid}`
       );
       console.log("Updated Order from Backend:", updatedOrderResponse.data);
 
@@ -254,7 +254,7 @@ export default function DepositDetailsUI() {
   // Handle decline action
   const handleDecline = async () => {
     try {
-      await axios.patch(`https://distromentor.onrender.com/api/deposits/decline/${objectId}`, null, {
+      await axios.patch(`http://localhost:8080/api/deposits/decline/${objectId}`, null, {
         params: { reason: declineReason },
       });
       alert("Deposit declined.");
@@ -321,7 +321,7 @@ export default function DepositDetailsUI() {
 
           <Typography variant="h6">Proof of Remittance:</Typography>
           <Typography gutterBottom>
-            <a href={`https://distromentor.onrender.com${deposit.proofOfRemittance}`} target="_blank" rel="noopener noreferrer">
+            <a href={`http://localhost:8080${deposit.proofOfRemittance}`} target="_blank" rel="noopener noreferrer">
               View Proof
             </a>
           </Typography>

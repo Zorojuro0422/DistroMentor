@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { IOrder } from "../../RestCalls/Interfaces";
 import axios from "axios";
 import { Alert, AlertTitle, Box, Button, Card, CircularProgress, Slide, SlideProps, Snackbar, Tab, Tabs, Typography, styled } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import AddIcon from '@mui/icons-material/Add';
 
@@ -201,73 +201,66 @@ export default function ProductDistributionList() {
         setOpenAlert(false);
     };
 
-
-    {/** Columns for DataGrid */ }
-    const columnsPending: GridColDef[] = [
-        { field: 'dealerId', headerName: 'Dealer ID', width: 250 },
-        { field: 'dealerName', headerName: 'Dealer Name', width: 250 },
-        { field: 'orderId', headerName: 'Order Transaction ID', width: 250 },
-        { field: 'orderDate', headerName: 'Order Date', width: 250 },
-        {
-            field: 'action', headerName: '', width: 310,
-            renderCell: (params: { row: any; }) => {
-                return (
-                    <StyledButton
-                        onClick={() => {
-                            // Handle button click for this row here
-                            if (params.row.confirmed === false) {
-
-                                handleViewButtonFalse(params.row.orderId);
-                            } else {
-                                handleViewButtonClick(params.row.orderId);
-                            }
-                        }}
-                    >
-                        View
-                    </StyledButton>
-                )
-            }
-        }
-
-    ]
-    {/** Rows for DataGrid */ }
-    const rowsPending = (order || []).filter((order) => (!order.confirmed)).map((orderItem) => ({
-        id: orderItem.orderid,
-        dealerId: orderItem.dealer.dealerid,
-        dealerName: `${orderItem.dealer.firstname} ${orderItem.dealer.middlename} ${orderItem.dealer.lastname}`,
-        orderId: orderItem.orderid,
-        orderDate: orderItem.orderdate,
-        confirmed: orderItem.confirmed
-    }));
-
     {/** Rows for DataGrid */ }
    const rowsConfirmed = (order || [])
-     .filter((orderItem) => orderItem.confirmed === true) // Check if order is confirmed and status is not 'Closed'
+     .filter((orderItem) => orderItem.confirmed === true) // Check if order is confirmed
      .map((orderItem) => ({
        id: orderItem.orderid,
        dealerId: orderItem.dealer.dealerid,
        dealerName: `${orderItem.dealer.firstname} ${orderItem.dealer.middlename} ${orderItem.dealer.lastname}`,
        orderId: orderItem.orderid,
        orderDate: orderItem.orderdate,
+       orderAmount: orderItem.orderamount, // Assuming 'amount' is the property for order amount
+       status: orderItem.status, // Assuming 'status' is the property for order status
        confirmed: orderItem.confirmed,
      }));
 
    const columnsConfirmed: GridColDef[] = [
-     { field: 'dealerId', headerName: 'Dealer ID', width: 250 },
-     { field: 'dealerName', headerName: 'Dealer Name', width: 250 },
-     { field: 'orderId', headerName: 'Order Transaction ID', width: 250 },
-     { field: 'orderDate', headerName: 'Order Date', width: 250 },
+     { field: 'dealerId', headerName: 'Dealer ID', width: 200 },
+     { field: 'dealerName', headerName: 'Dealer Name', width: 200 },
+     { field: 'orderId', headerName: 'Order Transaction ID', width: 200 },
+     { field: 'orderDate', headerName: 'Order Date', width: 200 },
+     { field: 'orderAmount', headerName: 'Order Amount', width: 200 },
+     {
+       field: 'status',
+       headerName: 'Status',
+       width: 200,
+       renderCell: (params: GridRenderCellParams) => {
+         const status = params.value as string; // Cast `params.value` to `string`
+         let color = '';
+
+         switch (status) {
+           case 'Open':
+             color = 'green';
+             break;
+           case 'Pending':
+             color = 'orange';
+             break;
+           case 'Closed':
+             color = 'red';
+             break;
+           default:
+             color = 'gray';
+         }
+
+         return (
+           <span style={{ color, fontWeight: 'bold' }}>
+             {status || 'Unknown'}
+           </span>
+         );
+       },
+     },
      {
        field: 'action',
        headerName: '',
        width: 350,
-       renderCell: (params: { row: any }) => {
+       renderCell: (params: GridRenderCellParams) => {
          return (
            <StyledButton
              onClick={() =>
                params.row.confirmed
-                 ? handleViewButtonClick(params.row.orderId) // Action for confirmed orders
-                 : handleViewButtonFalse(params.row.orderId) // Action for unconfirmed orders
+                 ? handleViewButtonClick(params.row.orderId)
+                 : handleViewButtonFalse(params.row.orderId)
              }
            >
              View
@@ -277,48 +270,6 @@ export default function ProductDistributionList() {
      },
    ];
 
-
-
-
-    const rowsClosed = (order || [])
-        .filter((orderItem) => orderItem.status === 'Closed') // Check if status is 'Closed'
-        .map((orderItem) => ({
-            id: orderItem.orderid,
-            dealerId: orderItem.dealer.dealerid,
-            dealerName: `${orderItem.dealer.firstname} ${orderItem.dealer.middlename} ${orderItem.dealer.lastname}`,
-            orderId: orderItem.orderid,
-            orderDate: orderItem.orderdate,
-            confirmed: orderItem.confirmed
-        }));
-
-    {/** Columns for DataGrid */ }
-    const columnsClosed: GridColDef[] = [
-        { field: 'dealerId', headerName: 'Dealer ID', width: 235 },
-        { field: 'dealerName', headerName: 'Dealer Name', width: 255 },
-        { field: 'orderId', headerName: 'Order Transaction ID', width: 235 },
-        { field: 'orderDate', headerName: 'Order Date', width: 235 },
-        {
-            field: 'action', headerName: '', width: 350,
-            renderCell: (params: { row: any; }) => {
-                return (
-                    <StyledButton
-                        onClick={() => {
-                            // Handle button click for this row here
-                            if (params.row.confirmed === false) {
-
-                                handleViewButtonFalse(params.row.orderId);
-                            } else {
-                                handleViewButtonClick(params.row.orderId);
-                            }
-                        }}
-                    >
-                        View
-                    </StyledButton>
-                )
-            }
-        }
-
-    ]
 
     const handleViewButtonClick = (objectId: string) => {
         // Use the `navigate` function to navigate to the details page with the objectId as a parameter
@@ -342,8 +293,7 @@ export default function ProductDistributionList() {
                 <Box sx={{ width: '100%', marginTop: 2, marginLeft: 0.5 }}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" style={{ marginLeft: 40 }}>
-                            <TabStyle label="Confirmed Orders" {...a11yProps(0)} />
-                            <TabStyle label="Pending Orders" {...a11yProps(1)} />
+                            <TabStyle label="Order History" {...a11yProps(0)} />
                         </Tabs>
                     </Box>
                     <CustomTabPanel value={value} index={0}>
@@ -363,55 +313,6 @@ export default function ProductDistributionList() {
                                     pagination: {
                                         paginationModel: {
                                             pageSize: 5,
-                                        },
-                                    },
-                                }}
-                                pageSizeOptions={[10]}
-
-                            />
-                        )}
-                    </CustomTabPanel>
-                    <CustomTabPanel value={value} index={1}>
-                        {order === null ? (
-
-                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', marginTop: '200px' }}>
-                                <CircularProgress />
-                            </div>
-                        ) : (
-                            <DataGridStyle
-                                rows={rowsPending}
-                                columns={columnsPending.map((column) => ({
-                                    ...column,
-                                }))}
-                                initialState={{
-                                    pagination: {
-                                        paginationModel: {
-                                            pageSize: 10,
-                                        },
-                                    },
-                                }}
-                                pageSizeOptions={[10]}
-
-                            />
-                        )}
-                    </CustomTabPanel>
-
-                    <CustomTabPanel value={value} index={2}>
-                        {order === null ? (
-
-                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', marginTop: '200px' }}>
-                                <CircularProgress />
-                            </div>
-                        ) : (
-                            <DataGridStyle
-                                rows={rowsClosed}
-                                columns={columnsClosed.map((column) => ({
-                                    ...column,
-                                }))}
-                                initialState={{
-                                    pagination: {
-                                        paginationModel: {
-                                            pageSize: 10,
                                         },
                                     },
                                 }}

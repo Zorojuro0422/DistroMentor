@@ -54,6 +54,8 @@ import Customer from '../Components/Module 4 - Profiles & Approval/Customer';
 import Deposit from "../Components/Module 8 - Payments/Deposit";
 import DepositReceipt from "../Components/Module 8 - Payments/DepositReceipt";
 import DepositDetail from "../Components/Module 8 - Payments/DepositDetail";
+import DistributorOrderHistory from "../Components/Module 8 - Payments/DistributorOrderHistory";
+import History from "../Components/Module 8 - Payments/History";
 import DepositConfirmation from "../Components/Module 8 - Payments/DepositConfirmation";
 import Invoices from '../Components/Module 5 - Product Distribution and Confirmation/Invoices';
 import { CustomerTransaction } from '../Components/Module 5 - Product Distribution and Confirmation/CustomerTransaction';
@@ -103,6 +105,7 @@ export default function MainRoutes() {
                             <Route path="/customercollection" element={<CustomerCollection/>} />
                             <Route path="/customerorder" element={<CustomerOrder/>} />
                             <Route path="/payment" element={<Payment/>} />
+                            <Route path="/history" element={<History/>} />
                             <Route path="/update_customer/:objectId" element={<UpdateCustomer />} />
                             <Route path="/dealerProfileDetails/:objectId" element={<><ScrollToTop/><DealerProfileDetails/></>} />
                             <Route path="/orderTransactionDetails/:objectId" element={<><ScrollToTop/><OrderTransactionDetails /></>} />
@@ -141,7 +144,7 @@ export default function MainRoutes() {
                             <Route path="/depositConfirmation/:objectId" element={<DepositConfirmation />} />
                             <Route path="/dealerApproval" element={<><ScrollToTop/><DealerApproval /></>} />
                             <Route path="/orderDetails/:objectId" element={<><ScrollToTop/><OrderDetails /></>} />
-                        
+                            <Route path="/distributorOrderHistory" element={<DistributorOrderHistory />} />
                             <Route path="/distributorProfileDetails/:objectId" element={<><ScrollToTop/><DistributorProfileDetails /></>}></Route>
                         </Route>
                     )}

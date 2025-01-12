@@ -12,7 +12,8 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**") // Allow all paths
                 .allowedOrigins(
                         "https://distro-mentor-e4do.vercel.app", // Allow your deployed frontend URL
-                        "http://localhost:3000" // Allow localhost for development
+                        "http://localhost:3000", // Allow localhost for development (port 3000)
+                        "http://localhost:3001" // Allow localhost for development (port 3001)
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE") // Allow these HTTP methods
                 .allowCredentials(true); // Allow cookies or credentials

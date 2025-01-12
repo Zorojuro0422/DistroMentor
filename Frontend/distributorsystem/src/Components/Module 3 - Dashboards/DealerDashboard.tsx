@@ -56,7 +56,7 @@ export default function DealerDashboard() {
   const fetchOrders = async () => {
     try {
       const response = await axios.get(
-        `https://distromentor.onrender.com/order/getAllConfirmedOrdersByDealerId/${userFromStorage.userId}`
+        `http://localhost:8080/order/getAllConfirmedOrdersByDealerId/${userFromStorage.userId}`
       );
       setOrders(response.data);
     } catch (error) {
@@ -68,7 +68,7 @@ export default function DealerDashboard() {
   const fetchCustomers = async () => {
     try {
       const response = await axios.get(
-        `https://distromentor.onrender.com/customer/dealer/${userFromStorage.userId}`
+        `http://localhost:8080/customer/dealer/${userFromStorage.userId}`
       );
       setCustomers(response.data);
     } catch (error) {
@@ -80,7 +80,7 @@ export default function DealerDashboard() {
   const fetchCustomerOrders = async () => {
     try {
       const response = await axios.get(
-        `https://distromentor.onrender.com/customerOrder/getAllCustomerOrdersByDealerId/${userFromStorage.userId}`
+        `http://localhost:8080/customerOrder/getAllCustomerOrdersByDealerId/${userFromStorage.userId}`
       );
       setCustomerOrders(response.data);
     } catch (error) {

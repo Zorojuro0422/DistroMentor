@@ -15,10 +15,12 @@ public class DepositRecord {
     private LocalDate depositDate;  // The date the deposit was made
     private Double deposit;     // The amount of the deposit
     private Double remainingBalance; // The remaining balance after the deposit
+    private Double penalty; // New field for the penalty amount
 
     // Constructor to generate a UUID as the ID when creating a new DepositRecord
     public DepositRecord() {
         this.id = UUID.randomUUID().toString().substring(0, 8); // Generate an 8-character UUID
+        this.penalty = 0.0; // Default penalty to 0
     }
 
     // Getters and Setters
@@ -70,6 +72,14 @@ public class DepositRecord {
         this.remainingBalance = remainingBalance;
     }
 
+    public Double getPenalty() {
+        return penalty;
+    }
+
+    public void setPenalty(Double penalty) {
+        this.penalty = penalty;
+    }
+
     @Override
     public String toString() {
         return "DepositRecord{" +
@@ -79,6 +89,7 @@ public class DepositRecord {
                 ", depositDate=" + depositDate +
                 ", deposit=" + deposit +
                 ", remainingBalance=" + remainingBalance +
+                ", penalty=" + penalty +
                 '}';
     }
 }

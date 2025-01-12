@@ -184,6 +184,8 @@ export default function DealerOrderForm() {
 
   const [paymentTerm, setPaymentTerm] = useState(1);
 
+  const [paymentInterval, setPaymentInterval] = useState(7);
+
   const [totalAmount, setTotalAmount] = useState(0);
 
   const [quantity, setQuantity] = useState<string>('');
@@ -254,7 +256,7 @@ export default function DealerOrderForm() {
     }
 
     axios
-      .get(`https://distromentor.onrender.com/product/getProductsByDistributor/${distributorId}`)
+      .get(`http://localhost:8080/product/getProductsByDistributor/${distributorId}`)
       .then((response) => {
         setProducts(response.data);
       })
@@ -458,75 +460,65 @@ export default function DealerOrderForm() {
       const response = await newOrder(newOrderObj);
 
       headerHandleAlert(
-        'Success Saving Order',
-        'Your ordered products have been successfully saved!',
-        'success'
+        "Success Saving Order",
+        "Your ordered products have been successfully saved!",
+        "success"
       );
       clearInputValues();
 
       if (paymentTerm === 1) {
         // Full Payment
-        const dueDate = moment().add(15, 'days').format('YYYY-MM-DD');
+        const dueDate = moment().add(paymentInterval, "days").format("YYYY-MM-DD"); // Use dynamic paymentInterval
         const paymentRecord = {
           dueDate,
           amount: orderAmount,
-          status: 'Open',
+          status: "Open",
           orderid: newOrderObj.orderid,
         };
 
-        await axios.post('https://distromentor.onrender.com/payment-records', paymentRecord);
-        toast.success('Payment record created successfully.', {
-          position: 'bottom-right',
+        await axios.post("http://localhost:8080/payment-records", paymentRecord);
+        toast.success("Payment record created successfully.", {
+          position: "bottom-right",
           autoClose: 5000,
           hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          theme: 'colored',
+          theme: "colored",
         });
-      } else if (paymentTerm === 2) {
-        // Installment (2 Payments)
-        const installmentAmount = orderAmount / 2;
+      } else if (paymentTerm >= 2 && paymentTerm <= 6) {
+        // Installments (2 to 6 Payments)
+        const installmentAmount = orderAmount / paymentTerm;
 
-        const firstPaymentRecord = {
-          dueDate: moment().add(15, 'days').format('YYYY-MM-DD'),
-          amount: installmentAmount,
-          status: 'Open',
-          orderid: newOrderObj.orderid,
-        };
+        for (let i = 1; i <= paymentTerm; i++) {
+          const dueDate = moment()
+            .add(paymentInterval * i, "days") // Use dynamic paymentInterval
+            .format("YYYY-MM-DD");
+          const paymentRecord = {
+            dueDate,
+            amount: installmentAmount,
+            status: "Open",
+            orderid: newOrderObj.orderid,
+          };
 
-        const secondPaymentRecord = {
-          dueDate: moment().add(30, 'days').format('YYYY-MM-DD'),
-          amount: installmentAmount,
-          status: 'Open',
-          orderid: newOrderObj.orderid,
-        };
-
-        await axios.post('https://distromentor.onrender.com/payment-records', firstPaymentRecord);
-        toast.success('First payment record created successfully.', {
-          position: 'bottom-right',
-          autoClose: 5000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          theme: 'colored',
-        });
-
-        await axios.post('https://distromentor.onrender.com/payment-records', secondPaymentRecord);
-        toast.success('Second payment record created successfully.', {
-          position: 'bottom-right',
-          autoClose: 5000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          theme: 'colored',
-        });
+          await axios.post("http://localhost:8080/payment-records", paymentRecord);
+          toast.success(
+            `Payment record ${i} of ${paymentTerm} created successfully.`,
+            {
+              position: "bottom-right",
+              autoClose: 5000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              theme: "colored",
+            }
+          );
+        }
       }
     } catch (error) {
-      console.error('Error saving order:', error);
-      headerHandleAlert('Error', 'Error saving order. Please try again.', 'error');
+      console.error("Error saving order:", error);
+      headerHandleAlert("Error", "Error saving order. Please try again.", "error");
     }
   };
 
@@ -534,48 +526,64 @@ export default function DealerOrderForm() {
     <div>
       <OverallGrid container>
 
-      {/* Added Payment Term Field */}
-      <Grid
-        item
-        container
-        spacing={4}
-        sx={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginTop: '10px',
-          marginRight: '250px',
-        }}
-      >
-        <Grid item>
-          <Paper
-            sx={{
-              padding: 2,
-              backgroundColor: '#ffffff',
-              borderRadius: "10px",
-              width: '150px', /* Reduced width */
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start', /* Ensure proper alignment inside */
-            }}
-          >
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  select
-                  fullWidth
-                  label="Payment Terms"
-                  variant="outlined"
-                  value={paymentTerm}
-                  onChange={(e) => setPaymentTerm(Number(e.target.value))}
-                >
-                  <MenuItem value={1}>Full Payment</MenuItem>
-                  <MenuItem value={2}>Installment</MenuItem>
-                </TextField>
-              </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
-      </Grid>
+      {/* Payment Term Field */}
+            <Grid
+                    item
+                    container
+                    spacing={4}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      marginTop: "10px",
+                      marginRight: "250px",
+                    }}
+                  >
+                    <Grid item>
+                      <Paper
+                        sx={{
+                          padding: 2,
+                          backgroundColor: "#ffffff",
+                          borderRadius: "10px",
+                          display: "flex",
+                          flexDirection: "row", // Horizontal layout
+                          alignItems: "center", // Align items in the center
+                          justifyContent: "space-between", // Add space between the fields
+                          gap: "10px", // Space between the two fields
+                        }}
+                      >
+                        {/* Payment Terms Field */}
+                        <TextField
+                          select
+                          label="Payment Terms"
+                          variant="outlined"
+                          value={paymentTerm}
+                          onChange={(e) => setPaymentTerm(Number(e.target.value))}
+                          sx={{ minWidth: "150px" }} // Set a minimum width for consistency
+                        >
+                          <MenuItem value={1}>Full Payment</MenuItem>
+                          <MenuItem value={2}>2</MenuItem>
+                          <MenuItem value={3}>3</MenuItem>
+                          <MenuItem value={4}>4</MenuItem>
+                          <MenuItem value={5}>5</MenuItem>
+                          <MenuItem value={6}>6</MenuItem>
+                        </TextField>
+
+                        {/* Payment Interval Field */}
+                        <TextField
+                          select
+                          label="Payment Interval"
+                          variant="outlined"
+                          value={paymentInterval}
+                          onChange={(e) => setPaymentInterval(Number(e.target.value))}
+                          sx={{ minWidth: "150px" }} // Set a minimum width for consistency
+                        >
+                          <MenuItem value={7}>7 Days</MenuItem>
+                          <MenuItem value={15}>15 Days</MenuItem>
+                          <MenuItem value={30}>30 Days</MenuItem>
+                        </TextField>
+                      </Paper>
+                    </Grid>
+                  </Grid>
 
 
 

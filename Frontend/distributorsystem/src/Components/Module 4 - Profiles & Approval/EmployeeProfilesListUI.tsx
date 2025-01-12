@@ -85,7 +85,7 @@ export default function EmployeeProfileListUI() {
     //userFromStorage.distributor.
 
     function getAllEmployees() {
-        axios.get<IEmployee[]>(`https://distromentor.onrender.com/employee/getAllEmployeesByDistributorID/${userFromStorage.distributor.distributorid}`)
+        axios.get<IEmployee[]>(`http://localhost:8080/employee/getAllEmployeesByDistributorID/${userFromStorage.distributor.distributorid}`)
             .then((response) => {
                 setEmployees(response.data);
                

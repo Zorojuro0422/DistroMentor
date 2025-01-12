@@ -11,6 +11,15 @@ function SlideTransitionDown(props: SlideProps) {
   return <Slide {...props} direction="down" />;
 }
 
+interface DepositRecord {
+  id: string;
+  orderid: string;
+  depositDate: string;
+  deposit: number;
+  remainingBalance: number;
+  penalty: number;
+}
+
 const ContentNameTypography = styled(Typography)({
   marginTop: 40,
   marginLeft: -620,
@@ -41,8 +50,10 @@ const StyledButton = styled(Button)({
 });
 
 const StyledPrintDiv = styled('div')({
+  position: 'relative', // Ensure it stays in the normal flow
   paddingTop: 40,
   marginLeft: -500,
+  zIndex: 10, // Higher z-index to ensure it's on top
   '& Button': {
     fontSize: 12,
     color: '#000',
@@ -50,28 +61,25 @@ const StyledPrintDiv = styled('div')({
     width: '50px',
     height: 40,
     marginLeft: 10,
+    backgroundColor: '#f5f5f5', // Visible background
+    border: '1px solid #ccc',
+    cursor: 'pointer',
     ':hover': {
       backgroundColor: '#2C85E7',
       transform: 'scale(1.1)',
     },
+    ':focus': {
+      outline: '2px solid #2C85E7',
+    },
     transition: 'all 0.4s',
     '@media(max-width:900px)': {
       height: 40,
-      marginLeft: 350,
+      marginLeft: 0,
     },
   },
 
- // Print-specific styles using the @media print query
   '@media print': {
-    '& Button': {
-      display: 'none', // Hide buttons during print
-    },
-    '.no-print': {
-      display: 'none', // Hide elements with this class during print
-    },
-    '@page': {
-      size: 'landscape',
-    },
+    display: 'none',
   },
 });
 
@@ -182,10 +190,12 @@ const PaperStyle = styled(Paper)({
   position: 'relative',
   margin: '100px 0px 0px 90px',
   '@media print': {
-          margin: '10px 0px 0px 30px',
-          width: 'auto',
-          pageBreakInside: 'avoid', // Prevent page break inside this element
-      }
+    margin: '10px 0px 0px 10px', // Reduce margins for print
+    width: '100%', // Expand to fit the page
+    pageBreakInside: 'avoid', // Avoid page breaks inside the container
+    boxShadow: 'none', // Remove box shadow
+    background: 'white', // Remove background gradient
+  },
 });
 
 export function OrderTransactionDetails() {
@@ -198,13 +208,15 @@ export function OrderTransactionDetails() {
   const [openDialog, setOpenDialog] = useState(false); // Dialog open state
   const { objectId } = useParams();
   const [proofOfRemittanceFiles, setProofOfRemittanceFiles] = useState<Record<string, File | null>>({});
-
+  const [depositRecords, setDepositRecords] = useState<DepositRecord[]>([]);
   const user = JSON.parse(localStorage.getItem('user')!) || {};
+  const [totalPenalty, setTotalPenalty] = useState(0);
+
 
 
   useEffect(() => {
     axios
-      .get<IOrder>(`https://distromentor.onrender.com/order/getOrderByID/${objectId}`)
+      .get<IOrder>(`http://localhost:8080/order/getOrderByID/${objectId}`)
       .then((response) => {
         const orderData = response.data;
         console.log("Fetched Order Data:", orderData); // Log the entire order data
@@ -217,9 +229,23 @@ export function OrderTransactionDetails() {
       });
   }, [objectId]);
 
+   useEffect(() => {
+      if (!order) return;
+
+      axios
+        .get(`http://localhost:8080/api/deposit/order/${objectId}`)
+        .then((response) => {
+          setDepositRecords(response.data);
+          console.log("Deposit records successfully fetched:", response.data); // Log the fetched deposit records
+        })
+        .catch((error) => {
+          console.error("Error fetching deposit records:", error);
+        });
+    }, [order]);
+
   const fetchPaymentRecords = () => {
     axios
-      .get(`https://distromentor.onrender.com/payment-records/order/${objectId}`)
+      .get(`http://localhost:8080/payment-records/order/${objectId}`)
       .then((response) => {
         console.log("Fetched Payment Records:", response.data); // Log the fetched data
         setPaymentRecords(response.data); // Store the fetched data
@@ -309,7 +335,7 @@ export function OrderTransactionDetails() {
 
       // Make API request
       const response = await axios.post(
-        "https://distromentor.onrender.com/api/deposits/create",
+        "http://localhost:8080/api/deposits/create",
         formData,
         {
           headers: {
@@ -322,7 +348,7 @@ export function OrderTransactionDetails() {
 
        // If deposit creation is successful, update the payment record status to Pending
           const updateResponse = await axios.put(
-            `https://distromentor.onrender.com/payment-records/${record.paymentId}`,
+            `http://localhost:8080/payment-records/${record.paymentId}`,
             {
               ...record,
               status: "Pending", // Change the status to Pending
@@ -347,40 +373,46 @@ export function OrderTransactionDetails() {
     }
   };
 
+useEffect(() => {
+  handleOverduePayments();
+}, [objectId]);
+
 const handleOverduePayments = async () => {
   try {
     const currentDate = moment().startOf('day');
-    console.log("Current Date:", currentDate.format('YYYY-MM-DD')); // Log the current date
+    console.log("Current Date:", currentDate.format('YYYY-MM-DD'));
 
-    // Fetch order details if not available
+    // Fetch order details
     console.log("Fetching order details for object ID:", objectId);
-    const orderResponse = await axios.get<IOrder>(
-      `https://distromentor.onrender.com/order/getOrderByID/${objectId}`
+    const orderResponse = await axios.get(
+      `http://localhost:8080/order/getOrderByID/${objectId}`
     );
     const order = orderResponse.data;
     console.log("Fetched Order Details:", order);
 
-    // Extract dealerId from the order
     const dealerId = order?.dealer?.dealerid;
     console.log("Dealer ID:", dealerId);
 
     if (!dealerId) {
       console.error("Dealer ID not found in the order data.");
-      return; // Exit if dealerId is not available
+      return;
     }
 
     // Fetch payment records
     console.log("Fetching payment records for order ID:", objectId);
-    const response = await axios.get<PaymentRecord[]>(
-      `https://distromentor.onrender.com/payment-records/order/${objectId}`
+    const response = await axios.get(
+      `http://localhost:8080/payment-records/order/${objectId}`
     );
     const paymentRecords = response.data;
     console.log("Fetched Payment Records:", paymentRecords);
 
-    // Loop through payment records and check for overdue payments
+    let totalPenalty = 0; // Total penalty for the dealer's payments
+
+    // Process each payment record
     for (const record of paymentRecords) {
       console.log("Processing payment record:", record);
 
+      // Process only "Open" payments that are overdue
       if (
         record.status === "Open" &&
         moment(record.dueDate).isBefore(currentDate)
@@ -389,63 +421,65 @@ const handleOverduePayments = async () => {
           `Payment record ${record.paymentId} is overdue. Status: ${record.status}, Due Date: ${record.dueDate}`
         );
 
-        // Change status to "Overdue"
-        const updatedRecord = { ...record, status: "Overdue" };
-        console.log("Updating payment record status to 'Overdue':", updatedRecord);
-
-        await axios.put(
-          `https://distromentor.onrender.com/payment-records/${record.paymentId}`,
-          updatedRecord
-        );
-        console.log(`Updated payment record ${record.paymentId} to 'Overdue'`);
-
         // Calculate penalty (10% of the overdue amount)
         const penalty = record.amount * 0.1;
         console.log(`Penalty calculated for payment ID ${record.paymentId}: ₱${penalty}`);
 
-        await axios.post(
-          `https://distromentor.onrender.com/api/total-interest/${dealerId}?interest=${penalty}`
-        );
-        console.log(`Penalty of ₱${penalty} recorded in Total Interest for dealer ${dealerId}`);
+        // Add penalty to the total penalty for this dealer
+        totalPenalty += penalty;
 
-        // Deduct penalty from dealer's credit limit
-        console.log("Fetching dealer details for dealer ID:", dealerId);
-        const dealerResponse = await axios.get(
-          `https://distromentor.onrender.com/dealer/getDealerByID/${dealerId}`
-        );
-        const dealer = dealerResponse.data;
-        console.log("Fetched Dealer Details:", dealer);
-        const creditLimit = dealer?.creditlimit;
-        console.log("Dealer Credit Limit:", creditLimit);
-
-        const updatedCreditLimit = creditLimit - penalty;
-        console.log(
-          `Dealer ${dealerId} current credit limit: ₱${creditLimit}, Updated credit limit: ₱${updatedCreditLimit}`
-        );
-
-        // Update dealer credit limit
+        // Update the individual payment record
+        const updatedAmount = record.amount + penalty;
+        const updatedRecord = { ...record, status: "Overdue", amount: updatedAmount };
         await axios.put(
-          `https://distromentor.onrender.com/dealer/updateCreditLimit/${dealerId}?creditlimit=${updatedCreditLimit}`
+          `http://localhost:8080/payment-records/${record.paymentId}`,
+          updatedRecord
         );
-        console.log(`Updated dealer ${dealerId} credit limit to ₱${updatedCreditLimit}`);
-
-        // Log success message
-        console.log(
-          `Penalty of ₱${penalty} deducted from dealer ${dealerId}. New credit limit: ₱${updatedCreditLimit}`
-        );
-
-        // Show alert
-        headerHandleAlert(
-          "Overdue Payment",
-          ` Unable to pay on time. A penalty of ₱${penalty} has been deducted from the dealer's credit limit.`,
-          "warning"
-        );
+        console.log(`Updated payment record ${record.paymentId} to 'Overdue' with updated amount ₱${updatedAmount}`);
       } else {
         console.log(
           `Payment record ${record.paymentId} is not overdue. Status: ${record.status}, Due Date: ${record.dueDate}`
         );
       }
     }
+
+    // After processing all payment records, handle penalties and order updates
+    if (totalPenalty > 0) {
+      const dividedPenalty = totalPenalty / 2; // Divide totalPenalty by 2
+
+      // Update the order's total amount
+      const updatedOrderAmount = order.orderamount + totalPenalty;
+      const updatedOrder = { ...order, orderamount: updatedOrderAmount };
+      await axios.put(
+        `http://localhost:8080/order/updateOrder/${objectId}`,
+        updatedOrder
+      );
+      console.log(`Updated order amount for order ID ${objectId} to ₱${updatedOrderAmount}`);
+
+      // Record divided penalty in Total Interest for the dealer
+      await axios.post(
+        `http://localhost:8080/api/total-interest/${dealerId}?interest=${totalPenalty}`
+      );
+      console.log(`Divided penalty of ₱${totalPenalty} recorded in Total Interest for dealer ${dealerId}`);
+
+      // Post divided penalty to the product subtotal
+      await axios.post('http://localhost:8080/allProductSubtotals/saveOrUpdate', {
+        dealerid: dealerId,
+        totalProductSubtotal: dividedPenalty,
+      });
+      console.log(`Divided penalty of ₱${totalPenalty} successfully posted for dealer ${dealerId}`);
+
+      // Show alert
+      headerHandleAlert(
+        "Overdue Payment",
+        `Unable to pay on time. A total penalty of ₱${totalPenalty} has been added to the payment records and dealer's credit limit adjusted.`,
+        "warning"
+      );
+    } else {
+      console.log("No overdue payments found to apply penalties.");
+    }
+
+
 
     console.log("Finished processing all payment records.");
   } catch (error) {
@@ -457,14 +491,6 @@ const handleOverduePayments = async () => {
     );
   }
 };
-const [hasCheckedOverdue, setHasCheckedOverdue] = useState(false);
-
-useEffect(() => {
-  if (objectId && !hasCheckedOverdue) {
-    handleOverduePayments();
-    setHasCheckedOverdue(true); // Mark it as executed
-  }
-}, [objectId, hasCheckedOverdue]);
 
   const handleFileChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -480,7 +506,6 @@ useEffect(() => {
 
   return (
     <div>
-      {!printing ? (
         <div>
           {order ? (
             <div>
@@ -502,7 +527,7 @@ useEffect(() => {
                   </div>
                 </Grid>
                 <Grid container style={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
-                  <StyleLabelData style={{ paddingTop: 75, marginLeft: -890 }}>Dealer Contact Information</StyleLabelData>
+                  <StyleLabelData style={{ paddingTop: 75, marginRight: -78 }}>Dealer Contact Information</StyleLabelData>
                 </Grid>
                 <Grid container style={{ position: 'relative', justifyContent: "center", alignItems: "center" }}>
                   <Grid item>
@@ -531,7 +556,7 @@ useEffect(() => {
                   </Grid>
                 </Grid>
                 <Grid container style={{ paddingTop: 10, position: 'relative', justifyContent: "center", alignItems: "center" }}>
-                  <StyleLabelData style={{ paddingTop: 75, marginLeft: -860 }}>Order Transaction Information</StyleLabelData>
+                  <StyleLabelData style={{ paddingTop: 75, marginRight: -100 }}>Order Transaction Information</StyleLabelData>
                 </Grid>
                 <Grid container style={{ position: 'relative', justifyContent: "center", alignItems: "center" }}>
                   <Grid item>
@@ -590,6 +615,58 @@ useEffect(() => {
                     </Grid>
                   </PaperStyle>
 
+                  {/* Deposit Record Section */}
+                  {depositRecords.length > 0 && (
+                    <>
+                      <Grid container style={{ position: 'relative', justifyContent: "center", alignItems: "center" }}>
+                        <StyleLabelData style={{ paddingTop: 100, marginLeft: -1030 }}>Payment</StyleLabelData>
+                      </Grid>
+                      <PaperStyle>
+                        <TableContainer>
+                          <Table aria-label="deposit records table">
+                            <TableHead style={{ backgroundColor: 'rgb(45, 133, 231, 0.08)' }}>
+                              <TableRow>
+                                <TableHeaderCell align="center" sx={{ color: '#707070' }}>Deposit ID</TableHeaderCell>
+                                <TableHeaderCell align="center" sx={{ color: '#707070' }}>Deposit Date</TableHeaderCell>
+                                <TableHeaderCell align="center" sx={{ color: '#707070' }}>Deposit</TableHeaderCell>
+                                <TableHeaderCell align="center" sx={{ color: '#707070' }}>Remaining Balance</TableHeaderCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {depositRecords.map((record, index) => (
+                                <TableRow key={index} sx={{ backgroundColor: index % 2 === 0 ? 'inherit' : 'rgb(45, 133, 231, 0.08)' }}>
+                                  <TableCell align="center">{record.id}</TableCell>
+                                  <TableCell align="center">{record.depositDate}</TableCell>
+                                  <TableCell align="center">₱ {record.deposit}</TableCell>
+                                  <TableCell align="center">₱ {record.remainingBalance}</TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                        <Grid container style={{ position: 'relative', justifyContent: 'flex-end', alignItems: 'center', width: '100%' }}>
+                          <Grid item style={{ marginRight: '10px' }}>
+                            <StyleTotalLabel>Status:</StyleTotalLabel>
+                          </Grid>
+                          <Grid item>
+                            <StyleTotalPaper>
+                              <StyleTotalData
+                                style={{
+                                  color: order?.status === 'Pending' ? 'orange' :
+                                         order?.status === 'Closed' ? 'red' :
+                                         'black', // Default color
+                                }}
+                              >
+                                {order?.status}
+                              </StyleTotalData>
+                            </StyleTotalPaper>
+                          </Grid>
+                        </Grid>
+                      </PaperStyle>
+                    </>
+                  )}
+
+                  <div className="no-print" style={{ zIndex: 5, position: 'relative' }}>
                   <Grid
                     container
                     sx={{
@@ -603,7 +680,7 @@ useEffect(() => {
                       maxWidth: "300px", // Optionally, set a max width for the container
                     }}
                   >
-                    {user.tableName !== "Distributor" && ( // Conditionally render the button
+                    {user.tableName !== "Distributor" && order.status !== "Closed" && ( // Add order.status check here
                       <Grid item>
                         <StyledButton variant="contained" onClick={handleOpenDialog}>
                           Pay
@@ -611,6 +688,7 @@ useEffect(() => {
                       </Grid>
                     )}
                   </Grid>
+                  </div>
 
 
                   <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
@@ -618,85 +696,82 @@ useEffect(() => {
                     <DialogContent>
                       {paymentRecords ? (
                         <div>
-                          {paymentRecords.map((record, index) => (
-                            <div
-                              key={index}
-                              style={{
-                                marginBottom: "16px",
-                                padding: "8px",
-                                border: "1px solid #ddd",
-                                borderRadius: "8px",
-                              }}
-                            >
-                              <Typography>Amount: ₱ {record.amount}</Typography>
+                          {/* Sort payment records by due date */}
+                          {paymentRecords
+                            .filter(record => record.status !== "Paid") // Filter out paid records
+                            .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()) // Sort by due date in ascending order
+                            .slice(0, 1) // Only show the first due date (next unpaid record)
+                            .map((record, index) => (
+                              <div
+                                key={index}
+                                style={{
+                                  marginBottom: "16px",
+                                  padding: "8px",
+                                  border: "1px solid #ddd",
+                                  borderRadius: "8px",
+                                }}
+                              >
+                                <Typography>Amount: ₱ {record.amount}</Typography>
 
-                              {/* Conditionally render Due Date */}
-                              {record.status !== "Paid" && (
+                                {/* Conditionally render Due Date for the next unpaid record */}
                                 <Typography>Due Date: {record.dueDate}</Typography>
-                              )}
 
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  justifyContent: "space-between",
-                                  alignItems: "center",
-                                  marginTop: "8px",
-                                }}
-                              >
-                                <Typography>
-                                  Status:{" "}
-                                  <span
-                                    style={{
-                                      color:
-                                        record.status === "Pending"
-                                          ? "orange"
-                                          : record.status === "Paid" || record.status === "Overdue"
-                                          ? "red"
-                                          : record.status === "Open"
-                                          ? "green"
-                                          : "inherit",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    {record.status}
-                                  </span>
-                                </Typography>
-                              </Box>
-
-                              {/* File upload for proof of remittance */}
-                              <Box
-                                sx={{
-                                  marginTop: "8px",
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  gap: "8px",
-                                }}
-                              >
-                                <input
-                                  type="file"
-                                  accept="image/*"
-                                  onChange={(event) =>
-                                    handleFileChange(event, record.paymentId) // Handle file selection
-                                  }
-                                  disabled={
-                                    record.status === "Paid" ||
-                                    record.status === "Pending"
-                                  } // Disable file upload if already paid or overdue
-                                />
-                                <Button
-                                  variant="contained"
-                                  color="primary"
-                                  onClick={() => handlePayWithProof(record)}
-                                  disabled={
-                                    record.status === "Paid" ||
-                                    record.status === "Pending"
-                                  } // Disable button if already paid or overdue
+                                <Box
+                                  sx={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                    marginTop: "8px",
+                                  }}
                                 >
-                                  Pay
-                                </Button>
-                              </Box>
-                            </div>
-                          ))}
+                                  <Typography>
+                                    Status:{" "}
+                                    <span
+                                      style={{
+                                        color:
+                                          record.status === "Pending"
+                                            ? "orange"
+                                            : record.status === "Paid" || record.status === "Overdue"
+                                            ? "red"
+                                            : record.status === "Open"
+                                            ? "green"
+                                            : "inherit",
+                                        fontWeight: "bold",
+                                      }}
+                                    >
+                                      {record.status}
+                                    </span>
+                                  </Typography>
+                                </Box>
+
+                                {/* File upload for proof of remittance */}
+                                <Box
+                                  sx={{
+                                    marginTop: "8px",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: "8px",
+                                  }}
+                                >
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(event) =>
+                                      handleFileChange(event, record.paymentId) // Handle file selection
+                                    }
+                                    disabled={record.status === "Paid" || record.status === "Pending"} // Disable file upload if already paid or overdue
+                                  />
+                                  <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => handlePayWithProof(record)}
+                                    disabled={record.status === "Paid" || record.status === "Pending"} // Disable button if already paid or overdue
+                                  >
+                                    Pay
+                                  </Button>
+                                </Box>
+                              </div>
+                            ))}
                         </div>
                       ) : (
                         <Typography>Loading payment records...</Typography>
@@ -709,7 +784,6 @@ useEffect(() => {
                       </Button>
                     </DialogActions>
                   </Dialog>
-
 
 
                   {/* Alerts */}
@@ -732,9 +806,6 @@ useEffect(() => {
             </Box>
           )}
         </div>
-      ) : (
-        <OrderTransactionDetailsPrint order={order!} />
-      )}
     </div>
   );
 }
