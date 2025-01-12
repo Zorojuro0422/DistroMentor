@@ -224,7 +224,7 @@ export default function DepositConfirmation() {
     const fetchDepositById = async (id: string) => {
       try {
         console.log("Fetching deposit data for ID:", id); // Log the ID being fetched
-        const response = await axios.get<IDeposit>(`https://distromentor.onrender.com/api/deposits/${id}`);
+        const response = await axios.get<IDeposit>(`https://distromentor.onrender.com/deposits/${id}`);
         setDeposit(response.data);
         console.log("Fetched deposit data successfully:", response.data); // Log the fetched data
       } catch (error) {
@@ -266,7 +266,7 @@ export default function DepositConfirmation() {
       if (!order) return; // Don't fetch if no order
 
       axios
-        .get<DepositRecord[]>(`https://distromentor.onrender.com/api/deposit/order/${order.orderid}`) // Assuming order.id is the correct field for orderID
+        .get<DepositRecord[]>(`https://distromentor.onrender.com/deposit/order/${order.orderid}`) // Assuming order.id is the correct field for orderID
         .then((response) => {
           setDepositRecords(response.data);
           console.log("Deposit records successfully fetched:", response.data);
@@ -281,7 +281,7 @@ export default function DepositConfirmation() {
       if (!order) return; // Ensure order is available before fetching total interest
 
       axios
-        .get(`https://distromentor.onrender.com/api/total-interest/${order.orderid}`) // Fetch total interest using order.orderid
+        .get(`https://distromentor.onrender.com/total-interest/${order.orderid}`) // Fetch total interest using order.orderid
         .then((response) => {
           setTotalInterest(response.data); // Assuming response.data contains the total interest data
           console.log("Total interest successfully fetched:", response.data);
@@ -381,7 +381,7 @@ export default function DepositConfirmation() {
 
       // Make API request
       const response = await axios.post(
-        "https://distromentor.onrender.com/api/deposits/create",
+        "https://distromentor.onrender.com/deposits/create",
         formData,
         {
           headers: {
@@ -433,7 +433,7 @@ const handleSnackbarClose = () => {
 
       try {
         // Confirm deposit in the backend
-        await axios.patch(`https://distromentor.onrender.com/api/deposits/confirm/${objectId}`);
+        await axios.patch(`https://distromentor.onrender.com/deposits/confirm/${objectId}`);
 
         // Fetch the latest order data
         const orderResponse = await axios.get(
@@ -527,7 +527,7 @@ const handleSnackbarClose = () => {
               };
 
               await axios
-                .post("https://distromentor.onrender.com/api/deposit/create", depositRecordPayload)
+                .post("https://distromentor.onrender.com/deposit/create", depositRecordPayload)
                 .then(() => {
                   headerHandleAlert(
                     "Success",
@@ -572,7 +572,7 @@ const handleSnackbarClose = () => {
 
     const handleDecline = async () => {
         try {
-          await axios.patch(`https://distromentor.onrender.com/api/deposits/decline/${objectId}`, null, {
+          await axios.patch(`https://distromentor.onrender.com/deposits/decline/${objectId}`, null, {
             params: { reason: declineReason },
           });
           alert("Deposit declined.");

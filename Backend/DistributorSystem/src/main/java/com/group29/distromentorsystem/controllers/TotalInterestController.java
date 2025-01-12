@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/total-interest")
+@RequestMapping("/total-interest")
 public class TotalInterestController {
 
     @Autowired

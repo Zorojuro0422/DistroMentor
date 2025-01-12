@@ -224,7 +224,7 @@ export default function Dashboard() {
 
     const getAllUnconfirmedDeposits = () => {
         axios
-          .get<IDeposit[]>(`https://distromentor.onrender.com/api/deposits/unconfirmed/distributor/${userFromStorage.distributor.distributorid}`)
+          .get<IDeposit[]>(`https://distromentor.onrender.com/deposits/unconfirmed/distributor/${userFromStorage.distributor.distributorid}`)
           .then((response) => {
             setUnconfirmedDeposits(response.data);
           })

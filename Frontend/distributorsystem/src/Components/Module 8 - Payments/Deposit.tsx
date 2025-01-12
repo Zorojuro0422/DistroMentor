@@ -180,7 +180,7 @@ export default function DepositForm() {
     formData.append('paymentDate', paymentDate);
     formData.append('isConfirm', String(isConfirm)); // Send as string ('false')
 
-    const url = 'https://distromentor.onrender.com/api/deposits/create';
+    const url = 'https://distromentor.onrender.com/deposits/create';
 
     axios
       .post(url, formData, {

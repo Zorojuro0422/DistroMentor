@@ -120,7 +120,7 @@ export default function PaymentsListUI() {
   const confirmDelete = async () => {
     try {
       if (depositIdToDelete) {
-        await axios.delete(`https://distromentor.onrender.com/api/deposits/${depositIdToDelete}`);
+        await axios.delete(`https://distromentor.onrender.com/deposits/${depositIdToDelete}`);
         setConfirmedDeposits((prev) => prev.filter((d) => d.depositid !== depositIdToDelete));
         setDeclinedDeposits((prev) => prev.filter((d) => d.depositid !== depositIdToDelete));
         setDeleteDialogOpen(false);
@@ -185,15 +185,15 @@ export default function PaymentsListUI() {
 
   useEffect(() => {
       getAllDeposits(
-        `https://distromentor.onrender.com/api/deposits/unconfirmed/distributor/${userFromStorage.distributor.distributorid}`,
+        `https://distromentor.onrender.com/deposits/unconfirmed/distributor/${userFromStorage.distributor.distributorid}`,
         setUnconfirmedDeposits
       );
       getAllDeposits(
-        `https://distromentor.onrender.com/api/deposits/confirmed/distributor/${userFromStorage.distributor.distributorid}`,
+        `https://distromentor.onrender.com/deposits/confirmed/distributor/${userFromStorage.distributor.distributorid}`,
         setConfirmedDeposits
       );
       getAllDeposits(
-        `https://distromentor.onrender.com/api/deposits/declined/distributor/${userFromStorage.distributor.distributorid}`,
+        `https://distromentor.onrender.com/deposits/declined/distributor/${userFromStorage.distributor.distributorid}`,
         setDeclinedDeposits
       );
     }, []);

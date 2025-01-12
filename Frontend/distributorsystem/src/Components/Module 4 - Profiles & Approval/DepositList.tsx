@@ -20,7 +20,7 @@ export default function DepositList() {
 
   useEffect(() => {
     // Fetch deposits on component mount
-    axios.get('https://distromentor.onrender.com/api/deposits/all')  // Update the endpoint according to your backend
+    axios.get('https://distromentor.onrender.com/deposits/all')  // Update the endpoint according to your backend
       .then((response) => {
         setDeposits(response.data);
         setLoading(false);

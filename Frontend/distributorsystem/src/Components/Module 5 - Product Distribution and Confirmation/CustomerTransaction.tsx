@@ -234,7 +234,7 @@ export function CustomerTransaction() {
     if (!order) return;
 
     axios
-      .get(`https://distromentor.onrender.com/api/deposit/order/${order.orderid}`)
+      .get(`https://distromentor.onrender.com/deposit/order/${order.orderid}`)
       .then((response) => {
         setDepositRecords(response.data);
         console.log("Deposit records successfully fetched:", response.data); // Log the fetched deposit records
@@ -304,7 +304,7 @@ export function CustomerTransaction() {
         .then(() => {
           // On successful order update, create the deposit record
           axios
-            .post('https://distromentor.onrender.com/api/deposit/create', depositRecordPayload) // Using the correct endpoint
+            .post('https://distromentor.onrender.com/deposit/create', depositRecordPayload) // Using the correct endpoint
             .then(() => {
               headerHandleAlert("Success", "Deposit and status updated successfully, deposit record created.", "success");
               window.location.reload();

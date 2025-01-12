@@ -278,7 +278,7 @@ export function CustomerOrderTransaction() {
         .then(() => {
           // On successful order update, create the deposit record
           axios
-            .post('https://distromentor.onrender.com/api/deposit/create', depositRecordPayload) // Using the correct endpoint
+            .post('https://distromentor.onrender.com/deposit/create', depositRecordPayload) // Using the correct endpoint
             .then(() => {
               headerHandleAlert("Success", "Deposit and status updated successfully, deposit record created.", "success");
               window.location.reload();
