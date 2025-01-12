@@ -7,27 +7,27 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class TotalInterest {
 
     @Id
-    private String dealerId; // Primary key (MongoDB automatically treats @Id as unique)
+    private String orderId; // Primary key (MongoDB automatically treats @Id as unique)
 
-    private double interest; // Total interest for the dealer
+    private double interest; // Total interest for the order
 
     // Default Constructor
     public TotalInterest() {
     }
 
     // Parameterized Constructor
-    public TotalInterest(String dealerId, double interest) {
-        this.dealerId = dealerId;
+    public TotalInterest(String orderId, double interest) {
+        this.orderId = orderId;
         this.interest = interest;
     }
 
     // Getters and Setters
-    public String getDealerId() {
-        return dealerId;
+    public String getOrderId() {
+        return orderId;
     }
 
-    public void setDealerId(String dealerId) {
-        this.dealerId = dealerId;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     public double getInterest() {
@@ -41,7 +41,7 @@ public class TotalInterest {
     @Override
     public String toString() {
         return "TotalInterest{" +
-                "dealerId='" + dealerId + '\'' +
+                "orderId='" + orderId + '\'' +
                 ", interest=" + interest +
                 '}';
     }

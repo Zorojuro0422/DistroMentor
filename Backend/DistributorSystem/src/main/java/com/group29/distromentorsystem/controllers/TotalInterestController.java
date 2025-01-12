@@ -16,25 +16,32 @@ public class TotalInterestController {
     @Autowired
     private TotalInterestService totalInterestService;
 
-    // Get TotalInterest by Dealer ID
-    @GetMapping("/{dealerId}")
-    public ResponseEntity<TotalInterest> getTotalInterest(@PathVariable String dealerId) {
-        Optional<TotalInterest> totalInterest = totalInterestService.getTotalInterestByDealerId(dealerId);
+    // Get TotalInterest by Order ID
+    @GetMapping("/{orderId}")
+    public ResponseEntity<TotalInterest> getTotalInterest(@PathVariable String orderId) {
+        Optional<TotalInterest> totalInterest = totalInterestService.getTotalInterestByOrderId(orderId);
         return totalInterest.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     // Create or Update TotalInterest
-    @PostMapping("/{dealerId}")
-    public ResponseEntity<TotalInterest> addInterest(@PathVariable String dealerId, @RequestParam double interest) {
-        TotalInterest updatedTotalInterest = totalInterestService.createOrUpdateTotalInterest(dealerId, interest);
+    @PostMapping("/{orderId}")
+    public ResponseEntity<TotalInterest> addInterest(@PathVariable String orderId, @RequestParam double interest) {
+        TotalInterest updatedTotalInterest = totalInterestService.createOrUpdateTotalInterest(orderId, interest);
         return ResponseEntity.ok(updatedTotalInterest);
     }
 
-    // Delete TotalInterest by Dealer ID
-    @DeleteMapping("/{dealerId}")
-    public ResponseEntity<String> deleteTotalInterest(@PathVariable String dealerId) {
-        totalInterestService.deleteTotalInterest(dealerId);
+    // Delete TotalInterest by Order ID
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<String> deleteTotalInterest(@PathVariable String orderId) {
+        totalInterestService.deleteTotalInterest(orderId);
         return ResponseEntity.ok("Total interest record deleted successfully.");
+    }
+
+    // Update TotalInterest by Order ID (PUT method)
+    @PutMapping("/{orderId}")
+    public ResponseEntity<TotalInterest> updateInterest(@PathVariable String orderId, @RequestParam double interest) {
+        TotalInterest updatedTotalInterest = totalInterestService.updateTotalInterestByOrderId(orderId, interest);
+        return ResponseEntity.ok(updatedTotalInterest);
     }
 }

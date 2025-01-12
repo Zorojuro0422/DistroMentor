@@ -211,8 +211,7 @@ export function OrderTransactionDetails() {
   const [depositRecords, setDepositRecords] = useState<DepositRecord[]>([]);
   const user = JSON.parse(localStorage.getItem('user')!) || {};
   const [totalPenalty, setTotalPenalty] = useState(0);
-
-
+   const [totalInterest, setTotalInterest] = useState<{ dealerId: string; interest: number } | null>(null);
 
   useEffect(() => {
     axios
@@ -445,6 +444,7 @@ const handleOverduePayments = async () => {
 
     // After processing all payment records, handle penalties and order updates
     if (totalPenalty > 0) {
+      setTotalPenalty(totalPenalty);
       const dividedPenalty = totalPenalty / 2; // Divide totalPenalty by 2
 
       // Update the order's total amount
@@ -458,9 +458,9 @@ const handleOverduePayments = async () => {
 
       // Record divided penalty in Total Interest for the dealer
       await axios.post(
-        `http://localhost:8080/api/total-interest/${dealerId}?interest=${totalPenalty}`
+        `http://localhost:8080/api/total-interest/${objectId}?interest=${dividedPenalty}`
       );
-      console.log(`Divided penalty of ₱${totalPenalty} recorded in Total Interest for dealer ${dealerId}`);
+      console.log(`Total Penalty of ₱${totalPenalty} recorded in Total Interest for dealer ${dealerId}`);
 
       // Post divided penalty to the product subtotal
       await axios.post('http://localhost:8080/allProductSubtotals/saveOrUpdate', {
@@ -476,10 +476,9 @@ const handleOverduePayments = async () => {
         "warning"
       );
     } else {
+        setTotalPenalty(0);
       console.log("No overdue payments found to apply penalties.");
     }
-
-
 
     console.log("Finished processing all payment records.");
   } catch (error) {
@@ -491,6 +490,24 @@ const handleOverduePayments = async () => {
     );
   }
 };
+
+
+useEffect(() => {
+      if (!objectId) return;
+
+      axios
+        .get(`http://localhost:8080/api/total-interest/${objectId}`)
+        .then((response) => {
+          setTotalInterest(response.data);
+          console.log("total interest successfully fetched:", response.data); // Log the fetched deposit records
+        })
+        .catch((error) => {
+          console.error("Error fetching total deposit:", error);
+        });
+    }, [objectId]);
+
+
+
 
   const handleFileChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -641,6 +658,12 @@ const handleOverduePayments = async () => {
                                   <TableCell align="center">₱ {record.remainingBalance}</TableCell>
                                 </TableRow>
                               ))}
+                              {totalInterest && totalInterest.interest > 0 && (
+                                <TableRow sx={{ backgroundColor: 'rgb(45, 133, 231, 0.08)' }}>
+                                  <TableCell colSpan={3} align="center">Penalty Applied:</TableCell>
+                                  <TableCell align="center">+ ₱{totalInterest.interest}</TableCell>
+                                </TableRow>
+                              )}
                             </TableBody>
                           </Table>
                         </TableContainer>

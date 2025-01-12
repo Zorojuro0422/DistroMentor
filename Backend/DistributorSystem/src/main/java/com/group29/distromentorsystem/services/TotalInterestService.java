@@ -13,21 +13,31 @@ public class TotalInterestService {
     @Autowired
     private TotalInterestRepository totalInterestRepository;
 
-    // Get TotalInterest by Dealer ID
-    public Optional<TotalInterest> getTotalInterestByDealerId(String dealerId) {
-        return totalInterestRepository.findById(dealerId);
+    // Get TotalInterest by Order ID
+    public Optional<TotalInterest> getTotalInterestByOrderId(String orderId) {
+        return totalInterestRepository.findByOrderId(orderId);  // Use findByOrderId instead of findById
+    }
+
+    // Update TotalInterest by Order ID (PUT method)
+    public TotalInterest updateTotalInterestByOrderId(String orderId, double interest) {
+        TotalInterest totalInterest = totalInterestRepository.findByOrderId(orderId)
+                .orElseThrow(() -> new RuntimeException("TotalInterest for orderId " + orderId + " not found"));
+
+        totalInterest.setInterest(totalInterest.getInterest() + interest); // Update the interest
+
+        return totalInterestRepository.save(totalInterest); // Save updated TotalInterest
     }
 
     // Create or Update TotalInterest
-    public TotalInterest createOrUpdateTotalInterest(String dealerId, double interest) {
-        TotalInterest totalInterest = totalInterestRepository.findById(dealerId)
-                .orElse(new TotalInterest(dealerId, 0.0));
+    public TotalInterest createOrUpdateTotalInterest(String orderId, double interest) {
+        TotalInterest totalInterest = totalInterestRepository.findByOrderId(orderId)
+                .orElse(new TotalInterest(orderId, 0.0));  // Use orderId here
         totalInterest.setInterest(totalInterest.getInterest() + interest); // Add to existing interest
         return totalInterestRepository.save(totalInterest);
     }
 
-    // Delete TotalInterest by Dealer ID
-    public void deleteTotalInterest(String dealerId) {
-        totalInterestRepository.deleteById(dealerId);
+    // Delete TotalInterest by Order ID
+    public void deleteTotalInterest(String orderId) {
+        totalInterestRepository.deleteById(orderId);  // Use orderId here
     }
 }

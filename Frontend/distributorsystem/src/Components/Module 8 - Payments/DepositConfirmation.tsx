@@ -11,6 +11,16 @@ function SlideTransitionDown(props: SlideProps) {
   return <Slide {...props} direction="down" />;
 }
 
+
+interface DepositRecord {
+  id: string;
+  orderid: string;
+  depositDate: string;
+  deposit: number;
+  remainingBalance: number;
+  penalty: number;
+}
+
 const ContentNameTypography = styled(Typography)({
   marginTop: 40,
   marginLeft: -620,
@@ -207,6 +217,8 @@ export default function DepositConfirmation() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
+  const [depositRecords, setDepositRecords] = useState<DepositRecord[]>([]);
+  const [totalInterest, setTotalInterest] = useState<any>(null);
 
   useEffect(() => {
     const fetchDepositById = async (id: string) => {
@@ -249,6 +261,35 @@ export default function DepositConfirmation() {
       console.log("No order ID available in deposit data."); // Log if orderid is not available
     }
   }, [deposit]); // Dependency on `deposit` ensures it runs when `deposit` updates
+
+   useEffect(() => {
+      if (!order) return; // Don't fetch if no order
+
+      axios
+        .get<DepositRecord[]>(`http://localhost:8080/api/deposit/order/${order.orderid}`) // Assuming order.id is the correct field for orderID
+        .then((response) => {
+          setDepositRecords(response.data);
+          console.log("Deposit records successfully fetched:", response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching deposit records:", error);
+          setError("Failed to retrieve deposit records.");
+        });
+    }, [order]);
+
+    useEffect(() => {
+      if (!order) return; // Ensure order is available before fetching total interest
+
+      axios
+        .get(`http://localhost:8080/api/total-interest/${order.orderid}`) // Fetch total interest using order.orderid
+        .then((response) => {
+          setTotalInterest(response.data); // Assuming response.data contains the total interest data
+          console.log("Total interest successfully fetched:", response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching total interest:", error);
+        });
+    }, [order]);
 
   const fetchPaymentRecords = () => {
     if (!deposit || !deposit.orderid) {
@@ -771,102 +812,92 @@ const handleSnackbarClose = () => {
 
 
 
-                  <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
+                  <Dialog
+                    open={openDialog}
+                    onClose={handleCloseDialog}
+                    maxWidth="xl"
+                    fullWidth
+                    disableScrollLock // Disables adding scrollbars
+                    sx={{
+                      "& .MuiDialog-paper": {
+                        width: "80%",
+                        height: "70vh", // Use height instead of maxHeight for strict height control
+                        overflow: "hidden", // Prevent scrolling inside the dialog
+                      },
+                    }}
+                  >
                     <DialogTitle sx={{ fontWeight: "bold" }}>Payment Records</DialogTitle>
-                    <DialogContent>
-                      {paymentRecords ? (
-                        <div>
-                          {paymentRecords.map((record, index) => (
-                            <div
-                              key={index}
-                              style={{
-                                marginBottom: "16px",
-                                padding: "8px",
-                                border: "1px solid #ddd",
-                                borderRadius: "8px",
-                              }}
-                            >
-                              <Typography>Amount: ₱ {record.amount}</Typography>
-
-                              {/* Conditionally render Due Date */}
-                              {record.status !== "Paid" && (
-                                <Typography>Due Date: {record.dueDate}</Typography>
-                              )}
-
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  justifyContent: "space-between",
-                                  alignItems: "center",
-                                  marginTop: "8px",
-                                }}
+                      <DialogContent>
+                        {depositRecords.length > 0 ? (
+                          <>
+                            <Grid container style={{ position: 'relative', justifyContent: "center", alignItems: "center" }}></Grid>
+                            <PaperStyle>
+                              <TableContainer>
+                                <Table aria-label="deposit records table">
+                                  <TableHead style={{ backgroundColor: 'rgb(45, 133, 231, 0.08)' }}>
+                                    <TableRow>
+                                      <TableHeaderCell align="center" sx={{ color: '#707070' }}>Deposit ID</TableHeaderCell>
+                                      <TableHeaderCell align="center" sx={{ color: '#707070' }}>Deposit Date</TableHeaderCell>
+                                      <TableHeaderCell align="center" sx={{ color: '#707070' }}>Deposit</TableHeaderCell>
+                                      <TableHeaderCell align="center" sx={{ color: '#707070' }}>Remaining Balance</TableHeaderCell>
+                                    </TableRow>
+                                  </TableHead>
+                                  <TableBody>
+                                    {depositRecords.map((record, index) => (
+                                      <TableRow
+                                        key={index}
+                                        sx={{ backgroundColor: index % 2 === 0 ? 'inherit' : 'rgb(45, 133, 231, 0.08)' }}
+                                      >
+                                        <TableCell align="center">{record.id}</TableCell>
+                                        <TableCell align="center">{record.depositDate}</TableCell>
+                                        <TableCell align="center">₱ {record.deposit}</TableCell>
+                                        <TableCell align="center">₱ {record.remainingBalance}</TableCell>
+                                      </TableRow>
+                                    ))}
+                                    {totalInterest && totalInterest.interest > 0 && (
+                                      <TableRow sx={{ backgroundColor: 'rgb(45, 133, 231, 0.08)' }}>
+                                        <TableCell colSpan={3} align="center">Penalty Applied:</TableCell>
+                                        <TableCell align="center">+ ₱{totalInterest.interest}</TableCell>
+                                      </TableRow>
+                                    )}
+                                  </TableBody>
+                                </Table>
+                              </TableContainer>
+                              <Grid
+                                container
+                                style={{ position: 'relative', justifyContent: 'flex-end', alignItems: 'center', width: '100%' }}
                               >
-                                <Typography>
-                                  Status:{" "}
-                                  <span
-                                    style={{
-                                      color:
-                                        record.status === "Pending"
-                                          ? "orange"
-                                          : record.status === "Paid" || record.status === "Overdue"
-                                          ? "red"
-                                          : record.status === "Open"
-                                          ? "green"
-                                          : "inherit",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    {record.status}
-                                  </span>
-                                </Typography>
-                              </Box>
-
-                              {/* File upload for proof of remittance */}
-                              <Box
-                                sx={{
-                                  marginTop: "8px",
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  gap: "8px",
-                                }}
-                              >
-
-                              </Box>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <Typography>Loading payment records...</Typography>
-                      )}
-                    </DialogContent>
-
-                    <DialogActions>
-                      <Button onClick={handleCloseDialog} sx={{ color: "red", fontWeight: "bold" }}>
-                        Close
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
-                  <Dialog open={isDeclineDialogOpen} onClose={() => setIsDeclineDialogOpen(false)}>
-                          <DialogTitle>Decline Deposit</DialogTitle>
-                          <DialogContent>
-                            <TextField
-                              autoFocus
-                              margin="dense"
-                              label="Reason for Decline"
-                              fullWidth
-                              value={declineReason}
-                              onChange={(e) => setDeclineReason(e.target.value)}
-                            />
-                          </DialogContent>
-                          <DialogActions>
-                            <Button onClick={() => setIsDeclineDialogOpen(false)} color="primary">
-                              Cancel
-                            </Button>
-                            <Button onClick={handleDecline} color="secondary">
-                              Decline
-                            </Button>
-                          </DialogActions>
-                        </Dialog>
+                                <Grid item style={{ marginRight: '10px' }}>
+                                  <StyleTotalLabel>Status:</StyleTotalLabel>
+                                </Grid>
+                                <Grid item>
+                                  <StyleTotalPaper>
+                                    <StyleTotalData
+                                      style={{
+                                        color: order?.status === 'Pending' ? 'orange' :
+                                               order?.status === 'Closed' ? 'red' :
+                                               'black', // Default color
+                                      }}
+                                    >
+                                      {order?.status}
+                                    </StyleTotalData>
+                                  </StyleTotalPaper>
+                                </Grid>
+                              </Grid>
+                            </PaperStyle>
+                          </>
+                        ) : (
+                          <Typography variant="body1" align="center" sx={{ color: '#707070', marginTop: 2 }}>
+                            No deposit records available.
+                          </Typography>
+                        )}
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={handleCloseDialog} sx={{ color: "red", fontWeight: "bold" }}>
+                          Close
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
 
                   {/* Alerts */}
                   <Snackbar open={openAlert} autoHideDuration={3000} onClose={handleCloseAlert} anchorOrigin={{
