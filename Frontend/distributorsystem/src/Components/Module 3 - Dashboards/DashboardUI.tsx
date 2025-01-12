@@ -203,7 +203,7 @@ export default function Dashboard() {
     //userFromStorage.distributor.
 
     const getAllUnconfirmedDealers = () => {
-        axios.get(`http://localhost:8080/dealer/getAllUnconfirmedDealersByDistributorID/${userFromStorage.distributor.distributorid}`)
+        axios.get(`https://distromentor.onrender.com/dealer/getAllUnconfirmedDealersByDistributorID/${userFromStorage.distributor.distributorid}`)
             .then((response) => {
                 setUnconfirmedDealers(response.data);
             })
@@ -213,7 +213,7 @@ export default function Dashboard() {
     }
 
     const getAllUnconfirmedOrders = () => {
-        axios.get(`http://localhost:8080/order/getAllUnconfirmedOrdersByDistributorID/${userFromStorage.distributor.distributorid}`)
+        axios.get(`https://distromentor.onrender.com/order/getAllUnconfirmedOrdersByDistributorID/${userFromStorage.distributor.distributorid}`)
             .then((response) => {
                 setUnconfirmedOrders(response.data);
             })
@@ -224,7 +224,7 @@ export default function Dashboard() {
 
     const getAllUnconfirmedDeposits = () => {
         axios
-          .get<IDeposit[]>(`http://localhost:8080/api/deposits/unconfirmed/distributor/${userFromStorage.distributor.distributorid}`)
+          .get<IDeposit[]>(`https://distromentor.onrender.com/api/deposits/unconfirmed/distributor/${userFromStorage.distributor.distributorid}`)
           .then((response) => {
             setUnconfirmedDeposits(response.data);
           })
@@ -247,7 +247,7 @@ export default function Dashboard() {
 
     const fetchDealerById = async (dealerid: string) => {
         try {
-          const response = await axios.get<IDealer>(`http://localhost:8080/dealer/getDealerByID/${dealerid}`);
+          const response = await axios.get<IDealer>(`https://distromentor.onrender.com/dealer/getDealerByID/${dealerid}`);
           setDealers((prevDealers) => ({ ...prevDealers, [dealerid]: response.data }));
         } catch (error) {
           console.error(`Error fetching dealer ${dealerid}:`, error);

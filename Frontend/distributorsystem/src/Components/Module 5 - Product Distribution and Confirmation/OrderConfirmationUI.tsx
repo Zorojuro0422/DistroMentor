@@ -257,7 +257,7 @@ export default function OrderConfirmation() {
   }
 
   function getAllProducts() {
-    axios.get<IProduct[]>('http://localhost:8080/product/getAllProducts')
+    axios.get<IProduct[]>('https://distromentor.onrender.com/product/getAllProducts')
       .then((response) => {
         setProducts(response.data);
       })
@@ -427,13 +427,13 @@ export default function OrderConfirmation() {
         const updateProductQuantities = orderedProducts.map(async (orderedProduct) => {
           try {
             const product = orderedProduct.product;
-            const response = await axios.get<IProduct>(`http://localhost:8080/product/getAllProducts/${product.productid}`);
+            const response = await axios.get<IProduct>(`https://distromentor.onrender.com/product/getAllProducts/${product.productid}`);
             const existingQuantity = response.data.quantity;
 
             const updatedQuantity = existingQuantity - orderedProduct.quantity;
 
             // Update the product with the new quantity
-            await axios.put(`http://localhost:8080/product/${product.productid}`, {
+            await axios.put(`https://distromentor.onrender.com/product/${product.productid}`, {
               name: product.name,
               quantity: updatedQuantity,
               unit: product.unit,
@@ -442,7 +442,7 @@ export default function OrderConfirmation() {
 
             // Fetch dealer products to check if the product already exists for the dealer
             const dealerProductsResponse = await axios.get<DealerProduct[]>(
-              `http://localhost:8080/api/dealer-products/dealer/${order?.dealer.dealerid}`
+              `https://distromentor.onrender.com/api/dealer-products/dealer/${order?.dealer.dealerid}`
             );
 
             const existingDealerProduct = dealerProductsResponse.data.find(
@@ -453,7 +453,7 @@ export default function OrderConfirmation() {
               // If the product exists, update the quantity by adding the new quantity
               const newQuantity = existingDealerProduct.quantity + orderedProduct.quantity;
               await axios.put(
-                `http://localhost:8080/api/dealer-products/${existingDealerProduct.dealerproductid}`,
+                `https://distromentor.onrender.com/api/dealer-products/${existingDealerProduct.dealerproductid}`,
                 {
                   dealerproductid: existingDealerProduct.dealerproductid,
                   dealerid: existingDealerProduct.dealerid,
@@ -481,7 +481,7 @@ export default function OrderConfirmation() {
               };
 
               // Post the new dealer product to the API
-              await axios.post('http://localhost:8080/api/dealer-products', dealerProductPayload);
+              await axios.post('https://distromentor.onrender.com/api/dealer-products', dealerProductPayload);
             }
           } catch (error) {
             console.error('Error updating product quantity or posting dealer product:', error);
@@ -492,7 +492,7 @@ export default function OrderConfirmation() {
         await Promise.all(updateProductQuantities);
 
         // Post the AllProductSubtotal after confirming the order
-        await axios.post('http://localhost:8080/allProductSubtotals/saveOrUpdate', {
+        await axios.post('https://distromentor.onrender.com/allProductSubtotals/saveOrUpdate', {
           dealerid: order?.dealer.dealerid!, // Make sure this dealerid exists and is correct
           totalProductSubtotal: orderAmount, // Pass the subtotal (orderAmount) here
         });

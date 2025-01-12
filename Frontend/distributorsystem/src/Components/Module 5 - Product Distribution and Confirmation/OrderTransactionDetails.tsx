@@ -215,7 +215,7 @@ export function OrderTransactionDetails() {
 
   useEffect(() => {
     axios
-      .get<IOrder>(`http://localhost:8080/order/getOrderByID/${objectId}`)
+      .get<IOrder>(`https://distromentor.onrender.com/order/getOrderByID/${objectId}`)
       .then((response) => {
         const orderData = response.data;
         console.log("Fetched Order Data:", orderData); // Log the entire order data
@@ -232,7 +232,7 @@ export function OrderTransactionDetails() {
       if (!order) return;
 
       axios
-        .get(`http://localhost:8080/api/deposit/order/${objectId}`)
+        .get(`https://distromentor.onrender.com/api/deposit/order/${objectId}`)
         .then((response) => {
           setDepositRecords(response.data);
           console.log("Deposit records successfully fetched:", response.data); // Log the fetched deposit records
@@ -244,7 +244,7 @@ export function OrderTransactionDetails() {
 
   const fetchPaymentRecords = () => {
     axios
-      .get(`http://localhost:8080/payment-records/order/${objectId}`)
+      .get(`https://distromentor.onrender.com/payment-records/order/${objectId}`)
       .then((response) => {
         console.log("Fetched Payment Records:", response.data); // Log the fetched data
         setPaymentRecords(response.data); // Store the fetched data
@@ -334,7 +334,7 @@ export function OrderTransactionDetails() {
 
       // Make API request
       const response = await axios.post(
-        "http://localhost:8080/api/deposits/create",
+        "https://distromentor.onrender.com/api/deposits/create",
         formData,
         {
           headers: {
@@ -347,7 +347,7 @@ export function OrderTransactionDetails() {
 
        // If deposit creation is successful, update the payment record status to Pending
           const updateResponse = await axios.put(
-            `http://localhost:8080/payment-records/${record.paymentId}`,
+            `https://distromentor.onrender.com/payment-records/${record.paymentId}`,
             {
               ...record,
               status: "Pending", // Change the status to Pending
@@ -384,7 +384,7 @@ const handleOverduePayments = async () => {
     // Fetch order details
     console.log("Fetching order details for object ID:", objectId);
     const orderResponse = await axios.get(
-      `http://localhost:8080/order/getOrderByID/${objectId}`
+      `https://distromentor.onrender.com/order/getOrderByID/${objectId}`
     );
     const order = orderResponse.data;
     console.log("Fetched Order Details:", order);
@@ -400,7 +400,7 @@ const handleOverduePayments = async () => {
     // Fetch payment records
     console.log("Fetching payment records for order ID:", objectId);
     const response = await axios.get(
-      `http://localhost:8080/payment-records/order/${objectId}`
+      `https://distromentor.onrender.com/payment-records/order/${objectId}`
     );
     const paymentRecords = response.data;
     console.log("Fetched Payment Records:", paymentRecords);
@@ -431,7 +431,7 @@ const handleOverduePayments = async () => {
         const updatedAmount = record.amount + penalty;
         const updatedRecord = { ...record, status: "Overdue", amount: updatedAmount };
         await axios.put(
-          `http://localhost:8080/payment-records/${record.paymentId}`,
+          `https://distromentor.onrender.com/payment-records/${record.paymentId}`,
           updatedRecord
         );
         console.log(`Updated payment record ${record.paymentId} to 'Overdue' with updated amount ₱${updatedAmount}`);
@@ -451,19 +451,19 @@ const handleOverduePayments = async () => {
       const updatedOrderAmount = order.orderamount + totalPenalty;
       const updatedOrder = { ...order, orderamount: updatedOrderAmount };
       await axios.put(
-        `http://localhost:8080/order/updateOrder/${objectId}`,
+        `https://distromentor.onrender.com/order/updateOrder/${objectId}`,
         updatedOrder
       );
       console.log(`Updated order amount for order ID ${objectId} to ₱${updatedOrderAmount}`);
 
       // Record divided penalty in Total Interest for the dealer
       await axios.post(
-        `http://localhost:8080/api/total-interest/${objectId}?interest=${dividedPenalty}`
+        `https://distromentor.onrender.com/api/total-interest/${objectId}?interest=${dividedPenalty}`
       );
       console.log(`Total Penalty of ₱${totalPenalty} recorded in Total Interest for dealer ${dealerId}`);
 
       // Post divided penalty to the product subtotal
-      await axios.post('http://localhost:8080/allProductSubtotals/saveOrUpdate', {
+      await axios.post('https://distromentor.onrender.com/allProductSubtotals/saveOrUpdate', {
         dealerid: dealerId,
         totalProductSubtotal: dividedPenalty,
       });
@@ -496,7 +496,7 @@ useEffect(() => {
       if (!objectId) return;
 
       axios
-        .get(`http://localhost:8080/api/total-interest/${objectId}`)
+        .get(`https://distromentor.onrender.com/api/total-interest/${objectId}`)
         .then((response) => {
           setTotalInterest(response.data);
           console.log("total interest successfully fetched:", response.data); // Log the fetched deposit records

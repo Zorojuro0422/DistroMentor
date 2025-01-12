@@ -34,7 +34,7 @@ export const useRestOrder = (): [
 
 
     function newOrder(order: IOrder) {
-        axios.post('http://localhost:8080/order/createOrder', {
+        axios.post('https://distromentor.onrender.com/order/createOrder', {
             orderid: order.orderid,
             distributiondate: order.distributiondate,
             penaltyrate: order.penaltyrate,
@@ -110,7 +110,7 @@ export const useRestOrder = (): [
         updatedOrder.orderedproducts.map((op) => {
             
         })
-        axios.put(`http://localhost:8080/order/updateOrder/${orderID}`, updatedOrder)
+        axios.put(`https://distromentor.onrender.com/order/updateOrder/${orderID}`, updatedOrder)
             .then((response) => {
 
               
@@ -124,7 +124,7 @@ export const useRestOrder = (): [
 
     function getOrderByID(orderid: string, distributorid: string) {
 
-        axios.get(`http://localhost:8080/order/getOrderByIDUnderDistributor/${orderid}/${distributorid}`)
+        axios.get(`https://distromentor.onrender.com/order/getOrderByIDUnderDistributor/${orderid}/${distributorid}`)
             .then((response) => {
 
                 if (response.data !== '') {
@@ -149,7 +149,7 @@ export const useRestOrder = (): [
 
     function getOrderByPaymentTransactionID(paymenttransactionid: string) {
 
-        axios.get(`http://localhost:8080/order/getOrderByPaymentTransactionID/${paymenttransactionid}`)
+        axios.get(`https://distromentor.onrender.com/order/getOrderByPaymentTransactionID/${paymenttransactionid}`)
             .then((response) => {
                 
                 setOrderFromPaymentTransaction(response.data);
@@ -163,7 +163,7 @@ export const useRestOrder = (): [
 
 
     function assignCollector(collectorid: string, orderids: string[]) {
-        axios.put(`http://localhost:8080/order/assignCollector/${collectorid}`, orderids)
+        axios.put(`https://distromentor.onrender.com/order/assignCollector/${collectorid}`, orderids)
             .then((response) => {
                 setAssignedStatus(true);
             })
@@ -173,7 +173,7 @@ export const useRestOrder = (): [
     }
 
     function removeCollector(orderID: string) {
-        axios.put(`http://localhost:8080/order/removeCollector/${orderID}`)
+        axios.put(`https://distromentor.onrender.com/order/removeCollector/${orderID}`)
             .then((response) => {
                 setRemoveStatus(true);
             })
@@ -184,7 +184,7 @@ export const useRestOrder = (): [
     }
 
     function closedOrder(orderID: string) {
-        axios.put(`http://localhost:8080/order/updateOrderClosedStatus/${orderID}`)
+        axios.put(`https://distromentor.onrender.com/order/updateOrderClosedStatus/${orderID}`)
             .then((response) => {
 
             })
@@ -194,7 +194,7 @@ export const useRestOrder = (): [
     }
 
     function applyPenalty(orderID: string | undefined) {
-        axios.put(`http://localhost:8080/order/applyPenalty/${orderID}`)
+        axios.put(`https://distromentor.onrender.com/order/applyPenalty/${orderID}`)
             .then((response) => {
 
             })

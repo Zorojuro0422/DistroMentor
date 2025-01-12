@@ -90,7 +90,7 @@ const UpdateCustomer: React.FC = () => {
 
   const fetchCustomer = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/customer/${objectId}`);
+      const response = await axios.get(`https://distromentor.onrender.com/customer/${objectId}`);
       setCustomer(response.data);
     } catch (error) {
       console.error('Error fetching customer:', error);
@@ -110,7 +110,7 @@ const UpdateCustomer: React.FC = () => {
     }
 
     try {
-      await axios.put(`http://localhost:8080/customer/${objectId}`, customer);
+      await axios.put(`https://distromentor.onrender.com/customer/${objectId}`, customer);
       setUpdateSuccess(true);
       setTimeout(() => {
         navigate('/customerList');
