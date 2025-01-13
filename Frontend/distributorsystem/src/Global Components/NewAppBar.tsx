@@ -90,7 +90,7 @@ export default function NewAppBar(props: navProps) {
           try {
             if (dealer?.dealerid) {
               const dealerResponse = await axios.get(
-                `https://distromentor.onrender.com/dealer/getDealerByID/${dealer.dealerid}`
+                `http://localhost:8080/dealer/getDealerByID/${dealer.dealerid}`
               );
               const updatedDealer = dealerResponse.data;
 
@@ -125,7 +125,7 @@ export default function NewAppBar(props: navProps) {
     const fetchTotalOrderAmount = async (dealerId: string) => {
         try {
             const response = await axios.get(
-                `https://distromentor.onrender.com/allProductSubtotals/getByDealerId/${dealerId}`
+                `http://localhost:8080/allProductSubtotals/getByDealerId/${dealerId}`
             );
             const totalProductSubtotal = response.data?.totalProductSubtotal || 0;
             setTotalOrderAmount(totalProductSubtotal);
@@ -163,7 +163,7 @@ export default function NewAppBar(props: navProps) {
         if (employeeId) {
             axios
                 .get<IEmployeeDocument[]>(
-                    `https://distromentor.onrender.com/employeeDocument/findAllDocumentsByEmployeeId/${employeeId}`
+                    `http://localhost:8080/employeeDocument/findAllDocumentsByEmployeeId/${employeeId}`
                 )
                 .then((response) => setEmployeeDocuments(response.data))
                 .catch(console.error);
@@ -173,7 +173,7 @@ export default function NewAppBar(props: navProps) {
     const getAllDealerDocuments = () => {
         axios
             .get<IDealerDocument[]>(
-                `https://distromentor.onrender.com/dealerdocument/findAllDocumentsByDealerId/${userFromStorage.dealer!.dealerid}`
+                `http://localhost:8080/dealerdocument/findAllDocumentsByDealerId/${userFromStorage.dealer!.dealerid}`
             )
             .then((response) => setDealerDocuments(response.data))
             .catch(console.error);
@@ -182,7 +182,7 @@ export default function NewAppBar(props: navProps) {
     const getAllDistributorDocuments = () => {
         axios
             .get<IDistributorDocument[]>(
-                `https://distromentor.onrender.com/distributorDocument/findAllDocumentsByDistributorId/${userFromStorage.distributor!.distributorid}`
+                `http://localhost:8080/distributorDocument/findAllDocumentsByDistributorId/${userFromStorage.distributor!.distributorid}`
             )
             .then((response) => setDistributorDocuments(response.data))
             .catch(console.error);

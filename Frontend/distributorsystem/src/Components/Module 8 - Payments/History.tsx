@@ -86,7 +86,7 @@ export default function CustomerCollection() {
      // Fetch confirmed orders by dealer ID
      const getOrderByDealerId = (dealerID: string) => {
        axios
-         .get<IOrder[]>(`https://distromentor.onrender.com/order/getAllConfirmedOrdersByDealerId/${dealerID}`)
+         .get<IOrder[]>(`http://localhost:8080/order/getAllConfirmedOrdersByDealerId/${dealerID}`)
          .then((response) => {
            console.log("Fetched Confirmed Orders:", response.data); // Debug the data
            setOrders(response.data); // Save confirmed orders
@@ -99,7 +99,7 @@ export default function CustomerCollection() {
      // Fetch customer orders by dealer ID
      const fetchCustomerOrders = (dealerID: string) => {
        axios
-         .get<ICustomerOrder[]>(`https://distromentor.onrender.com/customerOrder/getAllCustomerOrdersByDealerId/${dealerID}`)
+         .get<ICustomerOrder[]>(`http://localhost:8080/customerOrder/getAllCustomerOrdersByDealerId/${dealerID}`)
          .then((response) => {
            console.log("Fetched Customer Orders:", response.data); // Debug the data
            setCustomerOrders(response.data); // Save customer orders

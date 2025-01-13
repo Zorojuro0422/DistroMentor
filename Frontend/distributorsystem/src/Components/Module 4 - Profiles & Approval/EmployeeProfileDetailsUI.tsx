@@ -158,7 +158,7 @@ export function EmployeeProfileDetails() {
   };
 
   function getAllEmployeeDocuments() {
-    axios.get<IEmployeeDocument[]>(`https://distromentor.onrender.com/employeeDocument/findAllDocumentsByEmployeeId/${objectId!}`)
+    axios.get<IEmployeeDocument[]>(`http://localhost:8080/employeeDocument/findAllDocumentsByEmployeeId/${objectId!}`)
       .then((response) => {
         setEmployeeDocuments(response.data);
       })

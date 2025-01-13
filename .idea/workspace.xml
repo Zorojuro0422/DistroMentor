@@ -4,23 +4,55 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0dcae2e2-d05e-445c-92af-dded0365df7e" name="Changes" comment="13/02/25 yayayaya">
+    <list default="true" id="0dcae2e2-d05e-445c-92af-dded0365df7e" name="Changes" comment="13/02/25 hey">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/DepositController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/DepositController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/DepositRecordController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/DepositRecordController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/TotalInterestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/TotalInterestController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/DepositController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/DepositController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/DepositRecordController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/DepositRecordController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/TotalInterestController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/TotalInterestController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/A - SplashScreen/WelcomeScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/A - SplashScreen/WelcomeScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 1 - Distributor System Sign-in/SignInUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 1 - Distributor System Sign-in/SignInUI.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 2 - Registrations/AddProductUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 2 - Registrations/AddProductUI.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 2 - Registrations/DealerRegistrationUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 2 - Registrations/DealerRegistrationUI.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 2 - Registrations/UpdateProduct.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 2 - Registrations/UpdateProduct.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 3 - Dashboards/DashboardUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 3 - Dashboards/DashboardUI.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 3 - Dashboards/DealerDashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 3 - Dashboards/DealerDashboard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/Customer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/Customer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/CustomerList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/CustomerList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/DealerProfileDetailsUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/DealerProfileDetailsUI.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/DealerProfilesListUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/DealerProfilesListUI.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/DepositList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/DepositList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/DistributorProfileDetailsUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/DistributorProfileDetailsUI.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/EmployeeProfileDetailsUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/EmployeeProfileDetailsUI.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/EmployeeProfilesListUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/EmployeeProfilesListUI.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/ProductListUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/ProductListUI.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/UpdateCustomer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 4 - Profiles &amp; Approval/UpdateCustomer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/CustomerOrderForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/CustomerOrderForm.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/CustomerOrderTransaction.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/CustomerOrderTransaction.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/CustomerRegistration.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/CustomerRegistration.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/CustomerTransaction.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/CustomerTransaction.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/DealerOrderFormUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/DealerOrderFormUI.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/DealerProductList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/DealerProductList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/DistributorOrderFormUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/DistributorOrderFormUI.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/Invoices.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/Invoices.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/OrderConfirmationUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/OrderConfirmationUI.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/OrderTransactionDetails.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/OrderTransactionDetails.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/PaymentRecord.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/PaymentRecord.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/ProductDistributionsListUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 5 - Product Distribution and Confirmation/ProductDistributionsListUI.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 6 - Collector Assignment/CustomerCollection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 6 - Collector Assignment/CustomerCollection.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 6 - Collector Assignment/CustomerOrder.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 6 - Collector Assignment/CustomerOrder.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 6 - Collector Assignment/OrderDetails.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 6 - Collector Assignment/OrderDetails.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/Deposit.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/Deposit.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/DepositConfirmation.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/DepositConfirmation.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/DepositDetail.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/DepositDetail.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/DepositReceipt.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/DepositReceipt.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/DistributorOrderHistory.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/DistributorOrderHistory.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/History.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/History.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/Payment.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 8 - Payments/Payment.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Global Components/NewAppBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Global Components/NewAppBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/RestCalls/DealerUseRest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/RestCalls/DealerUseRest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/RestCalls/DistributorUseRest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/RestCalls/DistributorUseRest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/RestCalls/EmployeeUseRest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/RestCalls/EmployeeUseRest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/RestCalls/OrderUseRest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/RestCalls/OrderUseRest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/RestCalls/PaymentReceiptUseRest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/RestCalls/PaymentReceiptUseRest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/RestCalls/PaymentTransactionUseRest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/RestCalls/PaymentTransactionUseRest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/RestCalls/SignInUseRest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/RestCalls/SignInUseRest.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,13 +156,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1721712519041</updated>
-    </task>
-    <task id="LOCAL-00020" summary="new update">
-      <created>1733806761205</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1733806761205</updated>
     </task>
     <task id="LOCAL-00021" summary="new update">
       <created>1733807180405</created>
@@ -468,7 +493,14 @@
       <option name="project" value="LOCAL" />
       <updated>1736724478294</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="13/02/25 hey">
+      <created>1736726692360</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1736726692361</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -495,7 +527,8 @@
     <MESSAGE value="12/01/25" />
     <MESSAGE value="13/01/25" />
     <MESSAGE value="13/02/25 yayayaya" />
-    <option name="LAST_COMMIT_MESSAGE" value="13/02/25 yayayaya" />
+    <MESSAGE value="13/02/25 hey" />
+    <option name="LAST_COMMIT_MESSAGE" value="13/02/25 hey" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/DistroMentor_Capstone$DistributorSystemApplication.ic" NAME="DistributorSystemApplication Coverage Results" MODIFIED="1727617030339" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
