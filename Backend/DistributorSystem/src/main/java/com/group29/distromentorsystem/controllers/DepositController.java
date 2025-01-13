@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/deposits")
+@RequestMapping("/api/deposits")
 public class DepositController {
 
     @Value("${file.upload-dir}")

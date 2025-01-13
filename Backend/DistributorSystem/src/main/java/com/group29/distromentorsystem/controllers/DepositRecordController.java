@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/deposit")
+@RequestMapping("/api/deposit")
 public class DepositRecordController {
 
     @Autowired

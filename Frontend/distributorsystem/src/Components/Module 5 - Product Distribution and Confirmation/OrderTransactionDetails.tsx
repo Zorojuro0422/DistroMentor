@@ -232,7 +232,7 @@ export function OrderTransactionDetails() {
       if (!order) return;
 
       axios
-        .get(`https://distromentor.onrender.com/deposit/order/${objectId}`)
+        .get(`https://distromentor.onrender.com/api/deposit/order/${objectId}`)
         .then((response) => {
           setDepositRecords(response.data);
           console.log("Deposit records successfully fetched:", response.data); // Log the fetched deposit records
@@ -334,7 +334,7 @@ export function OrderTransactionDetails() {
 
       // Make API request
       const response = await axios.post(
-        "https://distromentor.onrender.com/deposits/create",
+        "https://distromentor.onrender.com/api/deposits/create",
         formData,
         {
           headers: {
@@ -458,7 +458,7 @@ const handleOverduePayments = async () => {
 
       // Record divided penalty in Total Interest for the dealer
       await axios.post(
-        `https://distromentor.onrender.com/total-interest/${objectId}?interest=${dividedPenalty}`
+        `https://distromentor.onrender.com/api/total-interest/${objectId}?interest=${dividedPenalty}`
       );
       console.log(`Total Penalty of ₱${totalPenalty} recorded in Total Interest for dealer ${dealerId}`);
 
@@ -496,7 +496,7 @@ useEffect(() => {
       if (!objectId) return;
 
       axios
-        .get(`https://distromentor.onrender.com/total-interest/${objectId}`)
+        .get(`https://distromentor.onrender.com/api/total-interest/${objectId}`)
         .then((response) => {
           setTotalInterest(response.data);
           console.log("total interest successfully fetched:", response.data); // Log the fetched deposit records

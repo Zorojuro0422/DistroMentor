@@ -6,10 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="0dcae2e2-d05e-445c-92af-dded0365df7e" name="Changes" comment="13/02/25 yayayaya">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/DealerProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/DealerProductController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/DepositController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/DepositController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/DepositRecordController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/DepositRecordController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/TotalInterestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/src/main/java/com/group29/distromentorsystem/controllers/TotalInterestController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/DepositController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/DepositController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/DepositRecordController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/DepositRecordController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/TotalInterestController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/TotalInterestController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 3 - Dashboards/DashboardUI.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/distributorsystem/src/Components/Module 3 - Dashboards/DashboardUI.tsx" afterDir="false" />
@@ -124,20 +124,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1721712519041</updated>
-    </task>
-    <task id="LOCAL-00018" summary="new update">
-      <created>1733804401804</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1733804401804</updated>
-    </task>
-    <task id="LOCAL-00019" summary="new update">
-      <created>1733806333537</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1733806333537</updated>
     </task>
     <task id="LOCAL-00020" summary="new update">
       <created>1733806761205</created>
@@ -468,7 +454,21 @@
       <option name="project" value="LOCAL" />
       <updated>1736720966574</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="13/02/25 yayayaya">
+      <created>1736724401207</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1736724401207</updated>
+    </task>
+    <task id="LOCAL-00068" summary="13/02/25 yayayaya">
+      <created>1736724478294</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1736724478294</updated>
+    </task>
+    <option name="localTasksCounter" value="69" />
     <servers />
   </component>
   <component name="UnknownFeatures">

@@ -75,7 +75,7 @@ export default function DepositDetailsUI() {
   // Fetch the deposit by ID
   const fetchDepositById = async (id: string) => {
     try {
-      const response = await axios.get<IDeposit>(`https://distromentor.onrender.com/deposits/${id}`);
+      const response = await axios.get<IDeposit>(`https://distromentor.onrender.com/api/deposits/${id}`);
       setDeposit(response.data);
       fetchDealerById(response.data.dealerid); // Fetch the dealer details
     } catch (error) {
@@ -147,7 +147,7 @@ export default function DepositDetailsUI() {
 
     try {
       // Confirm deposit in the backend
-      await axios.patch(`https://distromentor.onrender.com/deposits/confirm/${objectId}`);
+      await axios.patch(`https://distromentor.onrender.com/api/deposits/confirm/${objectId}`);
 
       // Fetch the latest order data
       const orderResponse = await axios.get(
@@ -254,7 +254,7 @@ export default function DepositDetailsUI() {
   // Handle decline action
   const handleDecline = async () => {
     try {
-      await axios.patch(`https://distromentor.onrender.com/deposits/decline/${objectId}`, null, {
+      await axios.patch(`https://distromentor.onrender.com/api/deposits/decline/${objectId}`, null, {
         params: { reason: declineReason },
       });
       alert("Deposit declined.");
