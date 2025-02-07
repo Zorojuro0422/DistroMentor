@@ -43,9 +43,11 @@ public class PaymentRecordService {
                     existingRecord.setDueDate(updatedRecord.getDueDate());
                     existingRecord.setAmount(updatedRecord.getAmount());
                     existingRecord.setStatus(updatedRecord.getStatus());
+                    existingRecord.setBalance(updatedRecord.getBalance()); // Update the balance
                     return paymentRecordRepository.save(existingRecord);
                 });
     }
+
 
     // Delete a payment record by ID
     public boolean deletePaymentRecord(String id) {

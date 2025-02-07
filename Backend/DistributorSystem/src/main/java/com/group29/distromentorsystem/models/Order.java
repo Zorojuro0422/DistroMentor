@@ -21,6 +21,8 @@ public class Order {
 
     private double orderamount;
 
+    private double amount; // Added field for amount
+
     private Distributor distributor;
 
     private Dealer dealer;
@@ -33,18 +35,19 @@ public class Order {
 
     private OrderStatus status;
 
-    private double deposit; // Added field for deposit
+    private double deposit;
 
     public Order() {
     }
 
-    public Order(String orderid, LocalDate orderdate, LocalDate distributiondate, float penaltyrate, int paymentterms, double orderamount, Distributor distributor, Dealer dealer, Employee collector, Set<OrderedProduct> orderedproducts, boolean isconfirmed, OrderStatus status, double deposit) {
+    public Order(String orderid, LocalDate orderdate, LocalDate distributiondate, float penaltyrate, int paymentterms, double orderamount, double amount, Distributor distributor, Dealer dealer, Employee collector, Set<OrderedProduct> orderedproducts, boolean isconfirmed, OrderStatus status, double deposit) {
         this.orderid = orderid;
         this.orderdate = orderdate;
         this.distributiondate = distributiondate;
         this.penaltyrate = penaltyrate;
         this.paymentterms = paymentterms;
         this.orderamount = orderamount;
+        this.amount = amount; // Initialize the amount
         this.distributor = distributor;
         this.dealer = dealer;
         this.collector = collector;
@@ -102,6 +105,14 @@ public class Order {
         this.orderamount = orderamount;
     }
 
+    public double getAmount() { // Getter for amount
+        return amount;
+    }
+
+    public void setAmount(double amount) { // Setter for amount
+        this.amount = amount;
+    }
+
     public Distributor getDistributor() {
         return distributor;
     }
@@ -150,11 +161,11 @@ public class Order {
         this.status = status;
     }
 
-    public double getDeposit() { // Getter for deposit
+    public double getDeposit() {
         return deposit;
     }
 
-    public void setDeposit(double deposit) { // Setter for deposit
+    public void setDeposit(double deposit) {
         this.deposit = deposit;
     }
 

@@ -100,7 +100,7 @@ export default function DealerProfileListUI() {
 
     const handleDeleteConfirm = () => {
             // Send DELETE request to the API
-            axios.delete(`http://localhost:8080/dealer/deleteDealer/${dealerId}`)
+            axios.delete(`https://distromentor.onrender.com/dealer/deleteDealer/${dealerId}`)
                 .then(response => {
                     // Handle successful deletion, e.g., show a message to the user
                     console.log('Dealer deleted successfully.');
@@ -116,7 +116,7 @@ export default function DealerProfileListUI() {
         };
     const handleDeleteConfirmed = () => {
                 // Send DELETE request to the API
-                axios.delete(`http://localhost:8080/archived/deleteArchivedDealerById/${dealerId}`)
+                axios.delete(`https://distromentor.onrender.com/archived/deleteArchivedDealerById/${dealerId}`)
                     .then(response => {
                         // Handle successful deletion, e.g., show a message to the user
                         console.log('Dealer deleted successfully.');
@@ -137,7 +137,7 @@ export default function DealerProfileListUI() {
     };
 
     function getAllDealers() {
-        axios.get<IDealer[]>(`http://localhost:8080/dealer/getAllDealersByDistributorID/${userFromStorage.distributor.distributorid}`)
+        axios.get<IDealer[]>(`https://distromentor.onrender.com/dealer/getAllDealersByDistributorID/${userFromStorage.distributor.distributorid}`)
             .then((response) => {
                 setDealers(response.data);
 
@@ -149,7 +149,7 @@ export default function DealerProfileListUI() {
     }
 
     function getAllArchivedDealers() {
-        axios.get<IArchivedDealer[]>(`http://localhost:8080/archived/getAllArchivedDealersByDistributorID/${userFromStorage.distributor.distributorid}`)
+        axios.get<IArchivedDealer[]>(`https://distromentor.onrender.com/archived/getAllArchivedDealersByDistributorID/${userFromStorage.distributor.distributorid}`)
             .then((response) => {
                 setArchivedDealer(response.data);
 

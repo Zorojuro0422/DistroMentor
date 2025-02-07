@@ -115,7 +115,7 @@ export default function WelcomeScreen(){
 
    const [distributorsss, setDistributorsss] = useState<IDistributor[]>([]);
     function getAllDistributors() {
-        axios.get<IDistributor[]>('http://localhost:8080/distributor/getAllDistributors')
+        axios.get<IDistributor[]>('https://distromentor.onrender.com/distributor/getAllDistributors')
             .then((response) => {
                 setDistributorsss(response.data);
 

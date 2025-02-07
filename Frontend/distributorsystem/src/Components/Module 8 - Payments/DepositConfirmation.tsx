@@ -2,6 +2,7 @@ import { Alert, TextField, AlertTitle, Box, Button, Grid, LinearProgress, Paper,
 import { IOrder, PaymentRecord, IDeposit } from "../../RestCalls/Interfaces";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import React from "react";
 import { useParams } from "react-router-dom";
 import logo5 from '../../Global Components/Images/logo5.png';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
@@ -224,7 +225,7 @@ export default function DepositConfirmation() {
     const fetchDepositById = async (id: string) => {
       try {
         console.log("Fetching deposit data for ID:", id); // Log the ID being fetched
-        const response = await axios.get<IDeposit>(`http://localhost:8080/api/deposits/${id}`);
+        const response = await axios.get<IDeposit>(`https://distromentor.onrender.com/api/deposits/${id}`);
         setDeposit(response.data);
         console.log("Fetched deposit data successfully:", response.data); // Log the fetched data
       } catch (error) {
@@ -248,7 +249,7 @@ export default function DepositConfirmation() {
     if (deposit && deposit.orderid) {
       console.log("Fetching order data for order ID:", deposit.orderid); // Log the order ID being fetched
       axios
-        .get<IOrder>(`http://localhost:8080/order/getOrderByID/${deposit.orderid}`)
+        .get<IOrder>(`https://distromentor.onrender.com/order/getOrderByID/${deposit.orderid}`)
         .then((response) => {
           setOrder(response.data);
           console.log("Fetched order data successfully:", response.data); // Log the fetched order data
@@ -266,7 +267,7 @@ export default function DepositConfirmation() {
       if (!order) return; // Don't fetch if no order
 
       axios
-        .get<DepositRecord[]>(`http://localhost:8080/api/deposit/order/${order.orderid}`) // Assuming order.id is the correct field for orderID
+        .get<DepositRecord[]>(`https://distromentor.onrender.com/api/deposit/order/${order.orderid}`) // Assuming order.id is the correct field for orderID
         .then((response) => {
           setDepositRecords(response.data);
           console.log("Deposit records successfully fetched:", response.data);
@@ -277,20 +278,6 @@ export default function DepositConfirmation() {
         });
     }, [order]);
 
-    useEffect(() => {
-      if (!order) return; // Ensure order is available before fetching total interest
-
-      axios
-        .get(`http://localhost:8080/api/total-interest/${order.orderid}`) // Fetch total interest using order.orderid
-        .then((response) => {
-          setTotalInterest(response.data); // Assuming response.data contains the total interest data
-          console.log("Total interest successfully fetched:", response.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching total interest:", error);
-        });
-    }, [order]);
-
   const fetchPaymentRecords = () => {
     if (!deposit || !deposit.orderid) {
       console.error("No deposit or order ID available to fetch payment records.");
@@ -298,7 +285,7 @@ export default function DepositConfirmation() {
     }
 
     axios
-      .get(`http://localhost:8080/payment-records/order/${deposit.orderid}`)
+      .get(`https://distromentor.onrender.com/payment-records/order/${deposit.orderid}`)
       .then((response) => {
         console.log("Fetched Payment Records:", response.data); // Log the fetched data
         setPaymentRecords(response.data); // Store the fetched data
@@ -381,7 +368,7 @@ export default function DepositConfirmation() {
 
       // Make API request
       const response = await axios.post(
-        "http://localhost:8080/api/deposits/create",
+        "https://distromentor.onrender.com/api/deposits/create",
         formData,
         {
           headers: {
@@ -394,7 +381,7 @@ export default function DepositConfirmation() {
 
        // If deposit creation is successful, update the payment record status to Pending
           const updateResponse = await axios.put(
-            `http://localhost:8080/payment-records/${record.paymentId}`,
+            `https://distromentor.onrender.com/payment-records/${record.paymentId}`,
             {
               ...record,
               status: "Pending", // Change the status to Pending
@@ -433,11 +420,11 @@ const handleSnackbarClose = () => {
 
       try {
         // Confirm deposit in the backend
-        await axios.patch(`http://localhost:8080/api/deposits/confirm/${objectId}`);
+        await axios.patch(`https://distromentor.onrender.com/api/deposits/confirm/${objectId}`);
 
         // Fetch the latest order data
         const orderResponse = await axios.get(
-          `http://localhost:8080/order/getOrderByID/${deposit.orderid}`
+          `https://distromentor.onrender.com/order/getOrderByID/${deposit.orderid}`
         );
         const order = orderResponse.data;
 
@@ -449,8 +436,8 @@ const handleSnackbarClose = () => {
         }
 
         // Update the deposit amount and determine the updated status
-        const updatedDeposit = (order.deposit || 0) + deposit.amount; // Add deposit amount to the existing deposit
-        const updatedStatus = updatedDeposit === order.orderamount ? "Closed" : "Pending"; // Determine the new status
+        const updatedDeposit = (order.deposit || 0) + deposit.amount;
+        const updatedStatus = updatedDeposit === order.orderamount ? "Closed" : "Pending";
 
         // Update the order object with the new deposit and status
         const updatedOrder = { ...order, deposit: updatedDeposit, status: updatedStatus };
@@ -458,102 +445,121 @@ const handleSnackbarClose = () => {
 
         // Send the update request for the order
         await axios.put(
-          `http://localhost:8080/order/updateOrder/${deposit.orderid}`,
+          `https://distromentor.onrender.com/order/updateOrder/${deposit.orderid}`,
           updatedOrder
         );
 
         // Update the specific payment record to "Paid"
-        const updateResponse = await axios.put(
-          `http://localhost:8080/payment-records/${deposit.paymentid}`,
+        await axios.put(
+          `https://distromentor.onrender.com/payment-records/${deposit.paymentid}`,
           {
-            ...deposit, // Spread all existing data from the `deposit`
-            status: "Paid", // Update only the `status` field
+            ...deposit,
+            status: "Paid",
           }
         );
 
-        console.log("Payment Record Updated:", updateResponse.data);
-
         const dealerId = order.dealer?.dealerid;
 
-                if (!dealerId) {
-                  console.error("Dealer ID is missing!");
-                  return;
-                }
+        if (!dealerId) {
+          console.error("Dealer ID is missing!");
+          return;
+        }
 
-                try {
-                  // Log the dealer ID
-                  console.log("Fetching totalProductSubtotal for dealerId:", dealerId);
+        try {
+          console.log("Fetching totalProductSubtotal for dealerId:", dealerId);
 
-                  // Fetch the current totalProductSubtotal
-                  const response = await axios.get(
-                    `http://localhost:8080/allProductSubtotals/getByDealerId/${deposit.dealerid}`
-                  );
+          // Fetch the current totalProductSubtotal
+          const response = await axios.get(
+            `https://distromentor.onrender.com/allProductSubtotals/getByDealerId/${dealerId}`
+          );
 
-                  // Log the fetched response
-                  console.log("Response from getByDealerId API:", response.data);
+          const totalProductSubtotal = response.data.totalProductSubtotal;
+          const updatedTotalDebt = totalProductSubtotal - deposit.amount;
 
-                  const totalProductSubtotal = response.data.totalProductSubtotal;
+          // Update the allProductSubtotals in the backend
+          await axios.put(
+            `https://distromentor.onrender.com/allProductSubtotals/updateByDealerId/${dealerId}`,
+            {
+              totalProductSubtotal: updatedTotalDebt,
+            }
+          );
 
-                  // Log the current totalProductSubtotal
-                  console.log("Current totalProductSubtotal:", totalProductSubtotal);
+          console.log("Updated totalProductSubtotal successfully:", updatedTotalDebt);
+        } catch (error) {
+          console.error("Error occurred while fetching or updating totalProductSubtotal:", error);
+        }
 
-                  const updatedTotalDebt = totalProductSubtotal - deposit.amount;
+        const remainingBal = order.orderamount - order.deposit;
 
-                  // Log the updated totalProductSubtotal
-                  console.log("Updated totalProductSubtotal after deduction:", updatedTotalDebt);
+        // Create a deposit record
+        const depositRecordPayload = {
+          orderid: order.orderid,
+          dealerid: dealerId,
+          depositDate: new Date().toISOString().split("T")[0],
+          deposit: deposit.amount,
+          remainingBalance: remainingBal - deposit.amount,
+        };
 
-                  // Update the allProductSubtotals in the backend
-                  const updateResponse = await axios.put(
-                    `http://localhost:8080/allProductSubtotals/updateByDealerId/${deposit.dealerid}`,
-                    {
-                      totalProductSubtotal: updatedTotalDebt, // Updated total debt (subtotal)
-                    }
-                  );
+        await axios.post("https://distromentor.onrender.com/api/deposit/create", depositRecordPayload);
 
-                  // Log the response from the update API
-                  console.log("Response from updateByDealerId API:", updateResponse.data);
-
-                  console.log("Updated totalProductSubtotal successfully:", updatedTotalDebt);
-                } catch (error) {
-                  console.error("Error occurred while fetching or updating totalProductSubtotal:", error);
-                }
-          const remainingBal = order.orderamount - order.deposit
-          const depositRecordPayload = {
-                orderid: order.orderid,
-                dealerid: dealerId,
-                depositDate: new Date().toISOString().split('T')[0], // Current date in YYYY-MM-DD format
-                deposit: deposit.amount,
-                remainingBalance: remainingBal - deposit.amount
-              };
-
-              await axios
-                .post("http://localhost:8080/api/deposit/create", depositRecordPayload)
-                .then(() => {
-                  headerHandleAlert(
-                    "Success",
-                    "Deposit and status updated successfully, deposit record created.",
-                    "success"
-                  );
-                  window.location.reload();
-                })
-                .catch((error) => {
-                  console.error("Error creating deposit record:", error);
-                  headerHandleAlert("Error", "Failed to create deposit record. Please try again.", "error");
-                });
-
-
-        // Refetch the updated order data to ensure UI is in sync
-        const updatedOrderResponse = await axios.get(
-          `http://localhost:8080/order/getOrderByID/${deposit.orderid}`
+        // Fetch payment records for the order
+        console.log("Fetching payment records for order ID:", order.orderid);
+        const paymentRecordsResponse = await axios.get(
+          `https://distromentor.onrender.com/payment-records/order/${order.orderid}`
         );
-        console.log("Updated Order from Backend:", updatedOrderResponse.data);
 
-        setSnackbarMessage("Deposit confirmed, order and payment record updated successfully!");
+        const paymentRecords = paymentRecordsResponse.data;
+        console.log("Payment Records Retrieved:", paymentRecords);
+
+        if (paymentRecords && paymentRecords.length > 0) {
+          // Filter out records that are not "Paid" or "Overdue"
+          const nonPaidNonOverdueRecords = paymentRecords.filter(
+            (record: { status: string }) => record.status !== "Paid" && record.status !== "Overdue"
+          );
+
+          if (nonPaidNonOverdueRecords.length > 0) {
+            // Divide the remaining balance among the filtered records
+            const remainingBalanceToDivide =
+              (remainingBal - deposit.amount) / nonPaidNonOverdueRecords.length;
+
+            // Update the filtered payment records
+            for (const record of nonPaidNonOverdueRecords) {
+              const updatedRecordAmount = remainingBalanceToDivide;
+              const updatedRemainingBalance = remainingBal - deposit.amount;
+
+              try {
+                await axios.put(
+                  `https://distromentor.onrender.com/payment-records/${record.paymentId}`,
+                  {
+                    ...record,
+                    amount: updatedRecordAmount, // Update amount
+                    balance: updatedRemainingBalance, // Update balance
+                  }
+                );
+
+                console.log(
+                  `Updated Payment Record ${record.paymentId} with new amount: ${updatedRecordAmount} and balance: ${updatedRemainingBalance}`
+                );
+              } catch (error) {
+                console.error(
+                  `Error updating payment record ${record.paymentId}:`,
+                  error
+                );
+              }
+            }
+          } else {
+            console.log("No payment records to update (all are Paid or Overdue).");
+          }
+        } else {
+          console.log("No payment records found for the specified order.");
+        }
+
+        setSnackbarMessage("Deposit confirmed, order and payment records updated successfully!");
         setSnackbarSeverity("success");
         setSnackbarOpen(true);
         navigate("/depositReceipt", {
-              state: { tab: "Confirmed Deposits" }, // Pass state to pre-select the Confirmed tab
-            }); // Navigate back after confirmation
+          state: { tab: "Confirmed Deposits" },
+        });
       } catch (error) {
         console.error("Error confirming deposit or updating order:", error);
 
@@ -572,7 +578,7 @@ const handleSnackbarClose = () => {
 
     const handleDecline = async () => {
         try {
-          await axios.patch(`http://localhost:8080/api/deposits/decline/${objectId}`, null, {
+          await axios.patch(`https://distromentor.onrender.com/api/deposits/decline/${objectId}`, null, {
             params: { reason: declineReason },
           });
           alert("Deposit declined.");
@@ -648,7 +654,7 @@ const handleSnackbarClose = () => {
                           <Button
                             variant="contained"
                             color="primary"
-                            onClick={() => window.open(`http://localhost:8080${deposit.proofOfRemittance}`, "_blank")}
+                            onClick={() => window.open(`https://distromentor.onrender.com${deposit.proofOfRemittance}`, "_blank")}
                             sx={{
                               marginTop: "0px",
                               fontSize: "14px",
@@ -736,12 +742,13 @@ const handleSnackbarClose = () => {
                       </Grid>
                       <Grid item>
                         <StyleTotalPaper>
-                          <StyleTotalData>₱ {order?.orderamount}</StyleTotalData>
+                          <StyleTotalData>₱ {order?.amount}</StyleTotalData>
                         </StyleTotalPaper>
                       </Grid>
                     </Grid>
                   </PaperStyle>
 
+                  {deposit?.status !== "confirmed" && deposit?.status !== "declined" && (
                   <Box
                     sx={{
                       position: "absolute", // Position it relative to the parent container
@@ -779,7 +786,7 @@ const handleSnackbarClose = () => {
                       Decline
                     </StyledButton>
                   </Box>
-
+                  )}
 
 
                   <Grid
@@ -830,7 +837,7 @@ const handleSnackbarClose = () => {
                       <DialogContent>
                         {depositRecords.length > 0 ? (
                           <>
-                            <Grid container style={{ position: 'relative', justifyContent: "center", alignItems: "center" }}></Grid>
+                            <Grid container style={{ position: 'relative', justifyContent: 'center', alignItems: 'center' }}></Grid>
                             <PaperStyle>
                               <TableContainer>
                                 <Table aria-label="deposit records table">
@@ -844,22 +851,37 @@ const handleSnackbarClose = () => {
                                   </TableHead>
                                   <TableBody>
                                     {depositRecords.map((record, index) => (
-                                      <TableRow
-                                        key={index}
-                                        sx={{ backgroundColor: index % 2 === 0 ? 'inherit' : 'rgb(45, 133, 231, 0.08)' }}
-                                      >
-                                        <TableCell align="center">{record.id}</TableCell>
-                                        <TableCell align="center">{record.depositDate}</TableCell>
-                                        <TableCell align="center">₱ {record.deposit}</TableCell>
-                                        <TableCell align="center">₱ {record.remainingBalance}</TableCell>
-                                      </TableRow>
-                                    ))}
-                                    {totalInterest && totalInterest.interest > 0 && (
-                                      <TableRow sx={{ backgroundColor: 'rgb(45, 133, 231, 0.08)' }}>
-                                        <TableCell colSpan={3} align="center">Penalty Applied:</TableCell>
-                                        <TableCell align="center">+ ₱{totalInterest.interest}</TableCell>
-                                      </TableRow>
-                                    )}
+                                    <React.Fragment key={index}>
+                                      {/* Render the regular deposit row only if there's no penalty */}
+                                      {(record.penalty === undefined || record.penalty === null || record.penalty === 0) ? (
+                                        <TableRow
+                                          sx={{
+                                            backgroundColor: index % 2 === 0 ? 'inherit' : 'rgb(45, 133, 231, 0.08)',
+                                          }}
+                                        >
+                                          <TableCell align="center">{record.id}</TableCell>
+                                          <TableCell align="center">{record.depositDate}</TableCell>
+                                          <TableCell align="center">₱ {record.deposit}</TableCell>
+                                          <TableCell align="center">₱ {record.remainingBalance}</TableCell>
+                                        </TableRow>
+                                      ) : null}
+
+                                      {/* Render the penalty row only if penalty exists and is non-zero */}
+                                      {record.penalty !== 0 && (
+                                        <TableRow sx={{ backgroundColor: 'rgb(255, 233, 153, 0.4)' }}>
+                                          <TableCell colSpan={2} align="center" sx={{ fontWeight: 'bold' }}>
+                                            Penalty Date: {record.depositDate || 'N/A'}
+                                          </TableCell>
+                                          <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+                                            Penalty: ₱ {record.penalty}
+                                          </TableCell>
+                                          <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+                                            Remaining Balance after Penalty: ₱ {record.remainingBalance}
+                                          </TableCell>
+                                        </TableRow>
+                                      )}
+                                    </React.Fragment>
+                                  ))}
                                   </TableBody>
                                 </Table>
                               </TableContainer>
@@ -876,6 +898,7 @@ const handleSnackbarClose = () => {
                                       style={{
                                         color: order?.status === 'Pending' ? 'orange' :
                                                order?.status === 'Closed' ? 'red' :
+                                               order?.status === 'Open' ? 'green' : // Add 'Open' status color here
                                                'black', // Default color
                                       }}
                                     >

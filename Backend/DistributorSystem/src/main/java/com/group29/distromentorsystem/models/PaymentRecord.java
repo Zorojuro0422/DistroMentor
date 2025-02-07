@@ -11,13 +11,14 @@ public class PaymentRecord {
 
     @Id
     private String paymentId; // MongoDB uses String as IDs (ObjectId format)
-    private LocalDate dueDate;
-    private Double amount;
 
-    private PaymentStatus status;
-
+    private LocalDate dueDate; // Due date of the payment
+    private Double amount; // Total amount for the payment
+    private PaymentStatus status; // Status of the payment (Open, Pending, Paid, Overdue)
     private String orderid; // Field to reference the associated order
+    private Double balance; // Renamed field for the remaining balance after payments
 
+    // Enum to represent payment status
     public enum PaymentStatus {
         Open,
         Pending,
@@ -29,11 +30,12 @@ public class PaymentRecord {
     public PaymentRecord() {}
 
     // Parameterized constructor
-    public PaymentRecord(LocalDate dueDate, Double amount, PaymentStatus status, String orderid) {
+    public PaymentRecord(LocalDate dueDate, Double amount, PaymentStatus status, String orderid, Double balance) {
         this.dueDate = dueDate;
         this.amount = amount;
         this.status = status;
-        this.orderid = orderid; // Set the orderid
+        this.orderid = orderid;
+        this.balance = balance; // Set balance
     }
 
     // Getters and Setters
@@ -75,5 +77,13 @@ public class PaymentRecord {
 
     public void setOrderid(String orderid) {
         this.orderid = orderid;
+    }
+
+    public Double getBalance() {
+        return balance; // Getter for the renamed field
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance; // Setter for the renamed field
     }
 }

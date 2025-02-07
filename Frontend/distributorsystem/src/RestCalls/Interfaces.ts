@@ -140,6 +140,7 @@ export interface IOrder {
     penaltyrate: number;
     paymentterms: number;
     orderamount: number; // Total amount based on product prices
+    amount: number;
     orderamountsrp: number; // Total amount based on SRP
     distributor: IDistributor;
     collector: IEmployee | null;
@@ -227,6 +228,7 @@ export interface PaymentRecord {
   dueDate: string;
   orderid: string;
   status: string;
+  balance: number;
 }
 
 export interface IDirectPaymentReceipt extends IPaymentReceipt{
@@ -284,6 +286,7 @@ export interface IDeposit {
   orderid: string;
   paymentid: string;
   submissionDate: string; // Submission date and time of the deposit
+  status: string;
   dealer: IDealer | null; // Linked dealer object, if available
   distributor: IDistributor | null; // Linked distributor object, if available
   declineReason?: string;

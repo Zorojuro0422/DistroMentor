@@ -53,7 +53,6 @@ import DepositList from '../Components/Module 4 - Profiles & Approval/DepositLis
 import Customer from '../Components/Module 4 - Profiles & Approval/Customer';
 import Deposit from "../Components/Module 8 - Payments/Deposit";
 import DepositReceipt from "../Components/Module 8 - Payments/DepositReceipt";
-import DepositDetail from "../Components/Module 8 - Payments/DepositDetail";
 import DistributorOrderHistory from "../Components/Module 8 - Payments/DistributorOrderHistory";
 import History from "../Components/Module 8 - Payments/History";
 import DepositConfirmation from "../Components/Module 8 - Payments/DepositConfirmation";
@@ -140,7 +139,6 @@ export default function MainRoutes() {
                             <Route path="/dealerProfileDetails/:objectId" element={<><ScrollToTop/><DealerProfileDetails /></>}></Route>
                             <Route path="/dealerRegistration" element={<DealerRegistration/>} />
                             <Route path="/depositReceipt" element={<DepositReceipt />} />
-                            <Route path="/depositDetails/:objectId" element={<DepositDetail />} />
                             <Route path="/depositConfirmation/:objectId" element={<DepositConfirmation />} />
                             <Route path="/dealerApproval" element={<><ScrollToTop/><DealerApproval /></>} />
                             <Route path="/orderDetails/:objectId" element={<><ScrollToTop/><OrderDetails /></>} />

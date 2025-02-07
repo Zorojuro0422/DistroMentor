@@ -211,7 +211,7 @@ export function CustomerOrderTransaction() {
 
   useEffect(() => {
     axios
-      .get<ICustomerOrder>(`http://localhost:8080/customerOrder/getCustomerOrderById/${objectId}`)
+      .get<ICustomerOrder>(`https://distromentor.onrender.com/customerOrder/getCustomerOrderById/${objectId}`)
       .then((response) => setOrder(response.data))
       .catch((error) => {
         console.error("Error fetching order data:", error);
@@ -274,11 +274,11 @@ export function CustomerOrderTransaction() {
 
       // Make a PUT request to update the order
       axios
-        .put(`http://localhost:8080/customerOrder/${objectId}`, orderPayload)
+        .put(`https://distromentor.onrender.com/customerOrder/${objectId}`, orderPayload)
         .then(() => {
           // On successful order update, create the deposit record
           axios
-            .post('http://localhost:8080/api/deposit/create', depositRecordPayload) // Using the correct endpoint
+            .post('https://distromentor.onrender.com/api/deposit/create', depositRecordPayload) // Using the correct endpoint
             .then(() => {
               headerHandleAlert("Success", "Deposit and status updated successfully, deposit record created.", "success");
               window.location.reload();

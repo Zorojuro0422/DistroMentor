@@ -111,7 +111,7 @@ export default function CustomerRegistration() {
     }
 
     // Fetch the list of dealers from the backend
-    axios.get('http://localhost:8080/dealer/getAllDealers')
+    axios.get('https://distromentor.onrender.com/dealer/getAllDealers')
       .then(response => {
         setDealers(response.data);
       })
@@ -140,7 +140,7 @@ export default function CustomerRegistration() {
       customerAddress: customerAddress,
     };
 
-    const url = 'http://localhost:8080/customer/createCustomer';
+    const url = 'https://distromentor.onrender.com/customer/createCustomer';
 
     axios
       .post(url, customerData)

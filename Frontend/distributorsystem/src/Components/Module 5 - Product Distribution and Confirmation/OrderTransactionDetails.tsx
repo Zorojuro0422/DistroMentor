@@ -1,7 +1,8 @@
-import { Alert, AlertTitle, Box, Button, Grid, LinearProgress, Paper, Slide, SlideProps, Snackbar, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, styled } from "@mui/material";
+import { TextField, Alert, AlertTitle, Box, Button, Grid, LinearProgress, Paper, Slide, SlideProps, Snackbar, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, styled } from "@mui/material";
 import { IOrder, PaymentRecord } from "../../RestCalls/Interfaces";
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
+import React from "react";
 import { useParams } from "react-router-dom";
 import OrderTransactionDetailsPrint from "./OrderTransactionDetailsPrint";
 import logo5 from '../../Global Components/Images/logo5.png';
@@ -211,11 +212,12 @@ export function OrderTransactionDetails() {
   const [depositRecords, setDepositRecords] = useState<DepositRecord[]>([]);
   const user = JSON.parse(localStorage.getItem('user')!) || {};
   const [totalPenalty, setTotalPenalty] = useState(0);
-   const [totalInterest, setTotalInterest] = useState<{ dealerId: string; interest: number } | null>(null);
+  const [totalInterest, setTotalInterest] = useState<{ dealerId: string; interest: number } | null>(null);
+  const [depositAmount, setDepositAmount] = useState<number | null>(null);
 
   useEffect(() => {
     axios
-      .get<IOrder>(`http://localhost:8080/order/getOrderByID/${objectId}`)
+      .get<IOrder>(`https://distromentor.onrender.com/order/getOrderByID/${objectId}`)
       .then((response) => {
         const orderData = response.data;
         console.log("Fetched Order Data:", orderData); // Log the entire order data
@@ -232,7 +234,7 @@ export function OrderTransactionDetails() {
       if (!order) return;
 
       axios
-        .get(`http://localhost:8080/api/deposit/order/${objectId}`)
+        .get(`https://distromentor.onrender.com/api/deposit/order/${objectId}`)
         .then((response) => {
           setDepositRecords(response.data);
           console.log("Deposit records successfully fetched:", response.data); // Log the fetched deposit records
@@ -244,7 +246,7 @@ export function OrderTransactionDetails() {
 
   const fetchPaymentRecords = () => {
     axios
-      .get(`http://localhost:8080/payment-records/order/${objectId}`)
+      .get(`https://distromentor.onrender.com/payment-records/order/${objectId}`)
       .then((response) => {
         console.log("Fetched Payment Records:", response.data); // Log the fetched data
         setPaymentRecords(response.data); // Store the fetched data
@@ -293,7 +295,7 @@ export function OrderTransactionDetails() {
     }, 10);
   };
 
-  const handlePayWithProof = async (record: PaymentRecord) => {
+  const handlePayWithProof = async (record: PaymentRecord, depositAmount: number | null) => {
     try {
       console.log("Pay button clicked for record:", record);
 
@@ -327,14 +329,14 @@ export function OrderTransactionDetails() {
       formData.append("distributorId", distributorId);
       formData.append("orderId", orderId); // Pass the order ID correctly
       formData.append("paymentId", record.paymentId);
-      formData.append("amount", record.amount.toString());
+      formData.append("amount", (depositAmount ?? 0).toString());
       formData.append("transactionNumber", `TXN-${record.paymentId}`);
       formData.append("paymentDate", paymentDate);
       formData.append("proofOfRemittance", proofOfRemittance);
 
       // Make API request
       const response = await axios.post(
-        "http://localhost:8080/api/deposits/create",
+        "https://distromentor.onrender.com/api/deposits/create",
         formData,
         {
           headers: {
@@ -347,7 +349,7 @@ export function OrderTransactionDetails() {
 
        // If deposit creation is successful, update the payment record status to Pending
           const updateResponse = await axios.put(
-            `http://localhost:8080/payment-records/${record.paymentId}`,
+            `https://distromentor.onrender.com/payment-records/${record.paymentId}`,
             {
               ...record,
               status: "Pending", // Change the status to Pending
@@ -371,10 +373,10 @@ export function OrderTransactionDetails() {
       );
     }
   };
-
 useEffect(() => {
+  console.log("handleOverduePayments triggered");
   handleOverduePayments();
-}, [objectId]);
+}, []);
 
 const handleOverduePayments = async () => {
   try {
@@ -384,7 +386,7 @@ const handleOverduePayments = async () => {
     // Fetch order details
     console.log("Fetching order details for object ID:", objectId);
     const orderResponse = await axios.get(
-      `http://localhost:8080/order/getOrderByID/${objectId}`
+      `https://distromentor.onrender.com/order/getOrderByID/${objectId}`
     );
     const order = orderResponse.data;
     console.log("Fetched Order Details:", order);
@@ -400,12 +402,13 @@ const handleOverduePayments = async () => {
     // Fetch payment records
     console.log("Fetching payment records for order ID:", objectId);
     const response = await axios.get(
-      `http://localhost:8080/payment-records/order/${objectId}`
+      `https://distromentor.onrender.com/payment-records/order/${objectId}`
     );
     const paymentRecords = response.data;
     console.log("Fetched Payment Records:", paymentRecords);
 
     let totalPenalty = 0; // Total penalty for the dealer's payments
+    let overduePaymentAmount = 0; // Store the overdue payment amount to be added to next payment
 
     // Process each payment record
     for (const record of paymentRecords) {
@@ -431,10 +434,13 @@ const handleOverduePayments = async () => {
         const updatedAmount = record.amount + penalty;
         const updatedRecord = { ...record, status: "Overdue", amount: updatedAmount };
         await axios.put(
-          `http://localhost:8080/payment-records/${record.paymentId}`,
+          `https://distromentor.onrender.com/payment-records/${record.paymentId}`,
           updatedRecord
         );
         console.log(`Updated payment record ${record.paymentId} to 'Overdue' with updated amount ₱${updatedAmount}`);
+
+        // Store the updated amount to be added to the next payment record
+        overduePaymentAmount = updatedAmount;
       } else {
         console.log(
           `Payment record ${record.paymentId} is not overdue. Status: ${record.status}, Due Date: ${record.dueDate}`
@@ -442,32 +448,72 @@ const handleOverduePayments = async () => {
       }
     }
 
+    // Now handle the next payment that is "Open"
+    if (overduePaymentAmount > 0) {
+      const nextPayment = paymentRecords.find(
+              (record: PaymentRecord) => record.status === "Open" && moment(record.dueDate).isAfter(currentDate)
+            );
+
+      if (nextPayment) {
+        console.log("Next 'Open' payment found. Adding overdue amount to it.");
+
+        const newAmount = nextPayment.amount + overduePaymentAmount;
+        const updatedNextPayment = { ...nextPayment, amount: newAmount };
+
+        // Update the next payment record with the new amount
+        await axios.put(
+          `https://distromentor.onrender.com/payment-records/${nextPayment.paymentId}`,
+          updatedNextPayment
+        );
+        console.log(`Updated next payment record ${nextPayment.paymentId} with new amount ₱${newAmount}`);
+      } else {
+        console.log("No 'Open' payment found after the overdue payment.");
+      }
+    }
+
     // After processing all payment records, handle penalties and order updates
     if (totalPenalty > 0) {
       setTotalPenalty(totalPenalty);
-      const dividedPenalty = totalPenalty / 2; // Divide totalPenalty by 2
 
-      // Update the order's total amount
-      const updatedOrderAmount = order.orderamount + totalPenalty;
-      const updatedOrder = { ...order, orderamount: updatedOrderAmount };
+      const newOrderAmount = order.orderamount + totalPenalty;
+      console.log(`New order amount after adding penalty: ₱${newOrderAmount}`);
+
+      const updatedOrder = { ...order, orderamount: newOrderAmount };
       await axios.put(
-        `http://localhost:8080/order/updateOrder/${objectId}`,
+        `https://distromentor.onrender.com/order/updateOrder/${objectId}`,
         updatedOrder
       );
-      console.log(`Updated order amount for order ID ${objectId} to ₱${updatedOrderAmount}`);
-
-      // Record divided penalty in Total Interest for the dealer
-      await axios.post(
-        `http://localhost:8080/api/total-interest/${objectId}?interest=${dividedPenalty}`
-      );
-      console.log(`Total Penalty of ₱${totalPenalty} recorded in Total Interest for dealer ${dealerId}`);
+      console.log(`Order ${order.orderid} updated with new orderamount ₱${newOrderAmount}`);
 
       // Post divided penalty to the product subtotal
       await axios.post('http://localhost:8080/allProductSubtotals/saveOrUpdate', {
         dealerid: dealerId,
-        totalProductSubtotal: dividedPenalty,
+        totalProductSubtotal: totalPenalty,
       });
       console.log(`Divided penalty of ₱${totalPenalty} successfully posted for dealer ${dealerId}`);
+
+      const remainingBal = newOrderAmount - order.deposit;
+      const depositRecordPayload = {
+        orderid: order.orderid,
+        dealerid: dealerId,
+        depositDate: new Date().toISOString().split('T')[0], // Current date in YYYY-MM-DD format
+        penalty: totalPenalty, // The penalty amount
+        remainingBalance: remainingBal // New remaining balance after adding penalty
+      };
+
+      await axios
+        .post("https://distromentor.onrender.com/api/deposit/create", depositRecordPayload)
+        .then(() => {
+          headerHandleAlert(
+            "Success",
+            "Penalty and balance updated successfully, deposit record created.",
+            "success"
+          );
+        })
+        .catch((error) => {
+          console.error("Error creating deposit record:", error);
+          headerHandleAlert("Error", "Failed to create deposit record. Please try again.", "error");
+        });
 
       // Show alert
       headerHandleAlert(
@@ -475,12 +521,14 @@ const handleOverduePayments = async () => {
         `Unable to pay on time. A total penalty of ₱${totalPenalty} has been added to the payment records and dealer's credit limit adjusted.`,
         "warning"
       );
+
     } else {
-        setTotalPenalty(0);
+      setTotalPenalty(0);
       console.log("No overdue payments found to apply penalties.");
     }
 
     console.log("Finished processing all payment records.");
+
   } catch (error) {
     console.error("Error handling overdue payments:", error);
     headerHandleAlert(
@@ -490,21 +538,6 @@ const handleOverduePayments = async () => {
     );
   }
 };
-
-
-useEffect(() => {
-      if (!objectId) return;
-
-      axios
-        .get(`http://localhost:8080/api/total-interest/${objectId}`)
-        .then((response) => {
-          setTotalInterest(response.data);
-          console.log("total interest successfully fetched:", response.data); // Log the fetched deposit records
-        })
-        .catch((error) => {
-          console.error("Error fetching total deposit:", error);
-        });
-    }, [objectId]);
 
 
 
@@ -520,6 +553,14 @@ useEffect(() => {
       [paymentId]: file, // Store the file against the corresponding paymentId
     }));
   };
+
+const handleDepositAmountChange = (
+  event: React.ChangeEvent<HTMLInputElement>,
+  paymentId: string
+) => {
+  const value = parseFloat(event.target.value);
+  setDepositAmount(value); // Update deposit amount state
+};
 
   return (
     <div>
@@ -588,7 +629,7 @@ useEffect(() => {
 
                   <Grid item>
                     <StyleLabel style={{ marginLeft: -100 }}>Php Total Ordered Amount</StyleLabel>
-                    <StyleData style={{ marginLeft: -40 }}>₱ {order?.orderamount}</StyleData>
+                    <StyleData style={{ marginLeft: -40 }}>₱ {order?.amount}</StyleData>
                   </Grid>
                 </Grid>
                 <Grid container style={{ position: 'relative', justifyContent: "center", alignItems: "center" }}>
@@ -626,7 +667,7 @@ useEffect(() => {
                       </Grid>
                       <Grid item>
                         <StyleTotalPaper>
-                          <StyleTotalData>₱ {order?.orderamount}</StyleTotalData>
+                          <StyleTotalData>₱ {order?.amount}</StyleTotalData>
                         </StyleTotalPaper>
                       </Grid>
                     </Grid>
@@ -635,15 +676,15 @@ useEffect(() => {
                   {/* Deposit Record Section */}
                   {depositRecords.length > 0 && (
                     <>
-                      <Grid container style={{ position: 'relative', justifyContent: "center", alignItems: "center" }}>
-                        <StyleLabelData style={{ paddingTop: 100, marginLeft: -1030 }}>Payment</StyleLabelData>
-                      </Grid>
                       <PaperStyle>
+                      <Grid container style={{ position: 'relative', justifyContent: "center", alignItems: "center" }}>
+                          <StyleLabelData style={{ marginTop: -120, marginRight: 100 }}>Payment</StyleLabelData>
+                        </Grid>
                         <TableContainer>
                           <Table aria-label="deposit records table">
                             <TableHead style={{ backgroundColor: 'rgb(45, 133, 231, 0.08)' }}>
                               <TableRow>
-                                <TableHeaderCell align="center" sx={{ color: '#707070' }}>Deposit ID</TableHeaderCell>
+                                <TableHeaderCell align="center" sx={{ color: '#707070', paddingLeft: '50px' }}>Deposit ID</TableHeaderCell>
                                 <TableHeaderCell align="center" sx={{ color: '#707070' }}>Deposit Date</TableHeaderCell>
                                 <TableHeaderCell align="center" sx={{ color: '#707070' }}>Deposit</TableHeaderCell>
                                 <TableHeaderCell align="center" sx={{ color: '#707070' }}>Remaining Balance</TableHeaderCell>
@@ -651,19 +692,37 @@ useEffect(() => {
                             </TableHead>
                             <TableBody>
                               {depositRecords.map((record, index) => (
-                                <TableRow key={index} sx={{ backgroundColor: index % 2 === 0 ? 'inherit' : 'rgb(45, 133, 231, 0.08)' }}>
-                                  <TableCell align="center">{record.id}</TableCell>
-                                  <TableCell align="center">{record.depositDate}</TableCell>
-                                  <TableCell align="center">₱ {record.deposit}</TableCell>
-                                  <TableCell align="center">₱ {record.remainingBalance}</TableCell>
-                                </TableRow>
+                                <React.Fragment key={index}>
+                                  {/* Render the regular deposit row only if there's no penalty */}
+                                  {(record.penalty === undefined || record.penalty === null || record.penalty === 0) ? (
+                                    <TableRow
+                                      sx={{
+                                        backgroundColor: index % 2 === 0 ? 'inherit' : 'rgb(45, 133, 231, 0.08)',
+                                      }}
+                                    >
+                                      <TableCell align="center" sx={{paddingLeft: '50px'}}>{record.id}</TableCell>
+                                      <TableCell align="center">{record.depositDate}</TableCell>
+                                      <TableCell align="center">₱ {record.deposit}</TableCell>
+                                      <TableCell align="center">₱ {record.remainingBalance}</TableCell>
+                                    </TableRow>
+                                  ) : null}
+
+                                  {/* Render the penalty row only if penalty exists and is non-zero */}
+                                  {record.penalty !== 0 && (
+                                    <TableRow sx={{ backgroundColor: 'rgb(255, 233, 153, 0.4)' }}>
+                                      <TableCell colSpan={2} align="center" sx={{ fontWeight: 'bold' }}>
+                                        Penalty Date: {record.depositDate || 'N/A'}
+                                      </TableCell>
+                                      <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+                                        Penalty: ₱ {record.penalty}
+                                      </TableCell>
+                                      <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+                                        Remaining Balance after Penalty: ₱ {record.remainingBalance}
+                                      </TableCell>
+                                    </TableRow>
+                                  )}
+                                </React.Fragment>
                               ))}
-                              {totalInterest && totalInterest.interest > 0 && (
-                                <TableRow sx={{ backgroundColor: 'rgb(45, 133, 231, 0.08)' }}>
-                                  <TableCell colSpan={3} align="center">Penalty Applied:</TableCell>
-                                  <TableCell align="center">+ ₱{totalInterest.interest}</TableCell>
-                                </TableRow>
-                              )}
                             </TableBody>
                           </Table>
                         </TableContainer>
@@ -721,7 +780,7 @@ useEffect(() => {
                         <div>
                           {/* Sort payment records by due date */}
                           {paymentRecords
-                            .filter(record => record.status !== "Paid") // Filter out paid records
+                            .filter((record) => record.status !== "Paid" && record.status !== "Overdue") // Filter out paid and overdue records
                             .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()) // Sort by due date in ascending order
                             .slice(0, 1) // Only show the first due date (next unpaid record)
                             .map((record, index) => (
@@ -735,9 +794,18 @@ useEffect(() => {
                                 }}
                               >
                                 <Typography>Amount: ₱ {record.amount}</Typography>
-
-                                {/* Conditionally render Due Date for the next unpaid record */}
                                 <Typography>Due Date: {record.dueDate}</Typography>
+                                <Typography>
+                                  Remaining Balance:{" "}
+                                  <span
+                                    style={{
+                                      color: record.balance > 0 ? "red" : "green", // Red if balance > 0, Green if balance == 0
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    ₱ {record.balance}
+                                  </span>
+                                </Typography>
 
                                 <Box
                                   sx={{
@@ -767,7 +835,7 @@ useEffect(() => {
                                   </Typography>
                                 </Box>
 
-                                {/* File upload for proof of remittance */}
+                                {/* Deposit input and file upload */}
                                 <Box
                                   sx={{
                                     marginTop: "8px",
@@ -776,6 +844,24 @@ useEffect(() => {
                                     gap: "8px",
                                   }}
                                 >
+                                  {/* Input for deposit amount */}
+                                  <TextField
+                                    label="Enter Deposit Amount"
+                                    type="number"
+                                    variant="outlined"
+                                    fullWidth
+                                    inputProps={{
+                                      min: record.amount, // Minimum deposit amount
+                                    }}
+                                    onChange={(event) =>
+                                      handleDepositAmountChange(
+                                        event as React.ChangeEvent<HTMLInputElement>,
+                                        record.paymentId
+                                      ) // Cast event
+                                    }
+                                  />
+
+                                  {/* File upload for proof of remittance */}
                                   <input
                                     type="file"
                                     accept="image/*"
@@ -784,11 +870,18 @@ useEffect(() => {
                                     }
                                     disabled={record.status === "Paid" || record.status === "Pending"} // Disable file upload if already paid or overdue
                                   />
+
+                                  {/* Pay button */}
                                   <Button
                                     variant="contained"
                                     color="primary"
-                                    onClick={() => handlePayWithProof(record)}
-                                    disabled={record.status === "Paid" || record.status === "Pending"} // Disable button if already paid or overdue
+                                    onClick={() => handlePayWithProof(record, depositAmount)}
+                                    disabled={
+                                      record.status === "Paid" || // Disable if already paid
+                                      record.status === "Pending" || // Disable if pending
+                                      !depositAmount || // Disable if deposit amount is empty
+                                      depositAmount < record.amount // Disable if deposit is less than required
+                                    }
                                   >
                                     Pay
                                   </Button>
@@ -807,7 +900,6 @@ useEffect(() => {
                       </Button>
                     </DialogActions>
                   </Dialog>
-
 
                   {/* Alerts */}
                   <Snackbar open={openAlert} autoHideDuration={3000} onClose={handleCloseAlert} anchorOrigin={{

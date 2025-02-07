@@ -115,7 +115,7 @@ const CustomerList: React.FC = () => {
 
   const fetchCustomers = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/customer/dealer/${dealerID}`);
+      const response = await axios.get(`https://distromentor.onrender.com/customer/dealer/${dealerID}`);
       setCustomers(response.data);
     } catch (error) {
       console.error('Error fetching customers:', error);
@@ -135,7 +135,7 @@ const CustomerList: React.FC = () => {
   const handleDeleteCustomer = async () => {
     if (selectedCustomerID) {
       try {
-        await axios.delete(`http://localhost:8080/customer/${selectedCustomerID}`);
+        await axios.delete(`https://distromentor.onrender.com/customer/${selectedCustomerID}`);
         setAlertMessage('Customer deleted successfully');
         setAlertSeverity('success');
         setOpenSnackbar(true);

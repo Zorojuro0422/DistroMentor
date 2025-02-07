@@ -357,7 +357,7 @@ const DealerProfileDetails = () => {
     };
 
     const getOrderByDealerId = (dealerID: string) => {
-        axios.get(`http://localhost:8080/order/getAllConfirmedOrdersByDealerId/${dealerID}`)
+        axios.get(`https://distromentor.onrender.com/order/getAllConfirmedOrdersByDealerId/${dealerID}`)
             .then((response) => {
                 setOrders(response.data);
             })
@@ -366,7 +366,7 @@ const DealerProfileDetails = () => {
             });
     };
     const fetchCustomerOrders = (dealerID: string) => {
-        axios.get<ICustomerOrder[]>(`http://localhost:8080/customerOrder/getAllCustomerOrdersByDealerId/${dealerID}`)
+        axios.get<ICustomerOrder[]>(`https://distromentor.onrender.com/customerOrder/getAllCustomerOrdersByDealerId/${dealerID}`)
             .then((response) => {
                 console.log("Fetched Customer Orders: ", response.data); // Debug fetched data
                 setCustomerOrders(response.data);
@@ -377,7 +377,7 @@ const DealerProfileDetails = () => {
     };
 
     function getAllDealerDocuments() {
-        axios.get<IDealerDocument[]>(`http://localhost:8080/dealerdocument/findAllDocumentsByDealerId/${objectId!}`)
+        axios.get<IDealerDocument[]>(`https://distromentor.onrender.com/dealerdocument/findAllDocumentsByDealerId/${objectId!}`)
             .then((response) => {
                 setDealerDocuments(response.data);
             })
@@ -523,7 +523,7 @@ const DealerProfileDetails = () => {
     const handleConfirmClose = () => setCreditLimitModalOpen(false);
     const handleDeclinedClose = () => setOpenDeclinedModal(false);
     const handleDeleteConfirm = () => {
-        axios.delete(`http://localhost:8080/dealer/deleteDealer/${dealerId}`)
+        axios.delete(`https://distromentor.onrender.com/dealer/deleteDealer/${dealerId}`)
             .then(response => {
                 console.log('Dealer deleted successfully.');
             })
@@ -536,7 +536,7 @@ const DealerProfileDetails = () => {
     };
 
     const handleDeleteConfirmed = () => {
-        axios.delete(`http://localhost:8080/archived/deleteArchivedDealerById/${dealerId}`)
+        axios.delete(`https://distromentor.onrender.com/archived/deleteArchivedDealerById/${dealerId}`)
             .then(response => {
                 console.log('Dealer deleted successfully.');
             })

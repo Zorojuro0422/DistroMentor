@@ -329,7 +329,7 @@ export default function ProductDistributionList() {
   }
 
   function getAllProducts() {
-    axios.get<IProduct[]>('http://localhost:8080/product/getAllProducts')
+    axios.get<IProduct[]>('https://distromentor.onrender.com/product/getAllProducts')
       .then((response) => {
         setProducts(response.data);
         // headerHandleAlert('Success', 'Products have been successfully added for distribution.', 'success');
@@ -487,6 +487,7 @@ export default function ProductDistributionList() {
           penaltyrate: Number(penaltyRateRef.current?.value),
           paymentterms: paymentTerm,
           orderamount: orderAmount,
+          amount: orderAmount,
           orderamountsrp: orderAmountSRP,
           distributor: dealer!.distributor,
           collector: null,

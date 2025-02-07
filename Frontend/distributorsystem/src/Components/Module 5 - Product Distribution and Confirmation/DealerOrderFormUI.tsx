@@ -256,7 +256,7 @@ export default function DealerOrderForm() {
     }
 
     axios
-      .get(`http://localhost:8080/product/getProductsByDistributor/${distributorId}`)
+      .get(`https://distromentor.onrender.com/product/getProductsByDistributor/${distributorId}`)
       .then((response) => {
         setProducts(response.data);
       })
@@ -445,6 +445,7 @@ export default function DealerOrderForm() {
       penaltyrate: 10,
       paymentterms: paymentTerm,
       orderamount: orderAmount,
+      amount: orderAmount,
       orderamountsrp: orderAmountSRP,
       distributor: dealer?.distributor!,
       collector: null,
@@ -474,9 +475,10 @@ export default function DealerOrderForm() {
           amount: orderAmount,
           status: "Open",
           orderid: newOrderObj.orderid,
+          balance: orderAmount,
         };
 
-        await axios.post("http://localhost:8080/payment-records", paymentRecord);
+        await axios.post("https://distromentor.onrender.com/payment-records", paymentRecord);
         toast.success("Payment record created successfully.", {
           position: "bottom-right",
           autoClose: 5000,
@@ -499,9 +501,10 @@ export default function DealerOrderForm() {
             amount: installmentAmount,
             status: "Open",
             orderid: newOrderObj.orderid,
+            balance: orderAmount,
           };
 
-          await axios.post("http://localhost:8080/payment-records", paymentRecord);
+          await axios.post("https://distromentor.onrender.com/payment-records", paymentRecord);
           toast.success(
             `Payment record ${i} of ${paymentTerm} created successfully.`,
             {

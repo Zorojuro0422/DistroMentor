@@ -10,7 +10,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import moment from 'moment';
-import { IOrder, IOrderedProducts, IProduct, DealerProduct } from '../../RestCalls/Interfaces';
+import { IOrder, IOrderedProducts, IProduct, DealerProduct, PaymentRecord } from '../../RestCalls/Interfaces';
 import { v4 as uuidv4 } from 'uuid';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { useEffect, useRef, useState } from 'react';
@@ -221,6 +221,8 @@ export default function OrderConfirmation() {
   const quantityRef = useRef<TextFieldProps>(null);
   const penaltyRateRef = useRef<TextFieldProps>(null);
   const dealerIDRef = useRef<TextFieldProps>(null);
+  const [paymentRecords, setPaymentRecords] = useState<PaymentRecord[]>([]);
+  const [openPaymentDialog, setOpenPaymentDialog] = useState(false);
 
   function SlideTransitionDown(props: SlideProps) {
     return <Slide {...props} direction="down" />;
@@ -242,12 +244,46 @@ export default function OrderConfirmation() {
     }
   };
 
+  const fetchPaymentRecords = () => {
+      axios
+        .get(`https://distromentor.onrender.com/payment-records/order/${order?.orderid}`)
+        .then((response) => {
+          console.log("Fetched Payment Records for Order ID:", order?.orderid);
+          console.log("Payment Records:", response.data); // Log the entire data
+          setPaymentRecords(response.data); // Store the fetched data
+        })
+        .catch((error) => {
+          console.error("Error fetching payment records:", error);
+        });
+    };
+
+    useEffect(() => {
+      if (order?.orderid) {
+        fetchPaymentRecords();
+      }
+    }, [order?.orderid]);
+
+
   const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
     setOpen(false);
   };
+
+  const handleOpenAddOrderDialog = () => {
+      setOpenDialog(true);
+    };
+
+    // Handle Payment Schedule dialog open
+    const handleOpenPaymentDialog = () => {
+      setOpenPaymentDialog(true);
+      fetchPaymentRecords(); // Fetch payment records when opening the payment dialog
+    };
+
+  const handleClickClose = () => {
+      setOpenDialog(false);
+    };
 
   function saveHandleAlert(title: string, message: string, severity: 'success' | 'warning' | 'error') {
     setTitle(title);
@@ -256,8 +292,9 @@ export default function OrderConfirmation() {
     setOpen(true);
   }
 
-  function getAllProducts() {
-    axios.get<IProduct[]>('http://localhost:8080/product/getAllProducts')
+  function getProductsByDistributor() {
+    const distributorId = userFromStorage.distributor.distributorid; // Use the distributor ID from storage
+    axios.get<IProduct[]>(`https://distromentor.onrender.com/product/getProductsByDistributor/${distributorId}`)
       .then((response) => {
         setProducts(response.data);
       })
@@ -270,7 +307,7 @@ export default function OrderConfirmation() {
 
   useEffect(() => {
     if (!isDataFetched) {
-      getAllProducts();
+      getProductsByDistributor();  // Fetch products by distributor
       handleFindOrder();
       setDataFetched(true); // Set the flag to true to prevent re-fetching
     }
@@ -408,6 +445,7 @@ export default function OrderConfirmation() {
         penaltyrate: Number(penaltyRateRef.current?.value) || existingPenaltyRate, // Use new value or retain existing
         paymentterms: paymentTerm || existingPaymentTerms, // Use new value or retain existing
         orderamount: orderAmount,
+        amount: orderAmount,
         orderamountsrp: orderAmountSRP,
         distributor: dealer?.distributor!,
         collector: null,
@@ -427,13 +465,13 @@ export default function OrderConfirmation() {
         const updateProductQuantities = orderedProducts.map(async (orderedProduct) => {
           try {
             const product = orderedProduct.product;
-            const response = await axios.get<IProduct>(`http://localhost:8080/product/getAllProducts/${product.productid}`);
+            const response = await axios.get<IProduct>(`https://distromentor.onrender.com/product/getAllProducts/${product.productid}`);
             const existingQuantity = response.data.quantity;
 
             const updatedQuantity = existingQuantity - orderedProduct.quantity;
 
             // Update the product with the new quantity
-            await axios.put(`http://localhost:8080/product/${product.productid}`, {
+            await axios.put(`https://distromentor.onrender.com/product/${product.productid}`, {
               name: product.name,
               quantity: updatedQuantity,
               unit: product.unit,
@@ -442,7 +480,7 @@ export default function OrderConfirmation() {
 
             // Fetch dealer products to check if the product already exists for the dealer
             const dealerProductsResponse = await axios.get<DealerProduct[]>(
-              `http://localhost:8080/api/dealer-products/dealer/${order?.dealer.dealerid}`
+              `https://distromentor.onrender.com/api/dealer-products/dealer/${order?.dealer.dealerid}`
             );
 
             const existingDealerProduct = dealerProductsResponse.data.find(
@@ -453,7 +491,7 @@ export default function OrderConfirmation() {
               // If the product exists, update the quantity by adding the new quantity
               const newQuantity = existingDealerProduct.quantity + orderedProduct.quantity;
               await axios.put(
-                `http://localhost:8080/api/dealer-products/${existingDealerProduct.dealerproductid}`,
+                `https://distromentor.onrender.com/api/dealer-products/${existingDealerProduct.dealerproductid}`,
                 {
                   dealerproductid: existingDealerProduct.dealerproductid,
                   dealerid: existingDealerProduct.dealerid,
@@ -481,7 +519,7 @@ export default function OrderConfirmation() {
               };
 
               // Post the new dealer product to the API
-              await axios.post('http://localhost:8080/api/dealer-products', dealerProductPayload);
+              await axios.post('https://distromentor.onrender.com/api/dealer-products', dealerProductPayload);
             }
           } catch (error) {
             console.error('Error updating product quantity or posting dealer product:', error);
@@ -492,7 +530,7 @@ export default function OrderConfirmation() {
         await Promise.all(updateProductQuantities);
 
         // Post the AllProductSubtotal after confirming the order
-        await axios.post('http://localhost:8080/allProductSubtotals/saveOrUpdate', {
+        await axios.post('https://distromentor.onrender.com/allProductSubtotals/saveOrUpdate', {
           dealerid: order?.dealer.dealerid!, // Make sure this dealerid exists and is correct
           totalProductSubtotal: orderAmount, // Pass the subtotal (orderAmount) here
         });
@@ -524,15 +562,27 @@ export default function OrderConfirmation() {
               <StyleLabel>Dealer ID</StyleLabel>
               <StyleData>{order?.dealer.dealerid}</StyleData>
             </Grid>
-            <Grid item style={{ marginRight: -45 }} paddingBottom={2}>
+            <Grid item style={{ marginRight: -75 }} paddingBottom={2}>
               <StyleLabel>Dealer Name</StyleLabel>
               <StyleData>{order?.dealer.firstname + " " + order?.dealer.middlename + " " + order?.dealer.lastname}</StyleData>
             </Grid>
-            <Grid item paddingRight={5} paddingBottom={2}>
+            <Grid item paddingRight={30} paddingBottom={2}>
               <StyleLabel>Distribution Date</StyleLabel>
               <Typography sx={{ fontSize: 17, color: '#203949', fontFamily: 'Inter, sans-serif', marginTop: 2 }}>{dayjs().format('YYYY-MM-DD')}</Typography>
             </Grid>
           </LabelGrid>
+          <Grid item paddingLeft={85}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleOpenPaymentDialog}
+              sx={{
+                marginTop: -10, // Adjust the value to move the button up
+              }}
+            >
+              Payment Schedule
+            </Button>
+          </Grid>
         </Box>
 
         <Grid item container spacing={4} sx={{ display: "flex", justifyContent: "center", marginTop: '10px' }}>
@@ -646,6 +696,59 @@ export default function OrderConfirmation() {
             <Button onClick={() => setOpenDialog(false)} variant="outlined" color="error">Close</Button>
           </DialogActions>
         </Dialog>
+
+        {/* Dialog containing Payment Records */}
+              <Dialog open={openPaymentDialog} onClose={() => setOpenPaymentDialog(false)} fullWidth>
+                <DialogTitle>Payment Schedule</DialogTitle>
+                <DialogContent>
+                  {/* Table to display the payment records */}
+                  <Table>
+                    <TableHead>
+                      <TableRow
+                        sx={{
+                          backgroundColor: '#f5f5f5', // Gray background color
+                        }}
+                      >
+                        <TableCell align="center" sx={{ color: '#555', fontWeight: 'bold' }}>
+                          Payment ID
+                        </TableCell>
+                        <TableCell align="center" sx={{ color: '#555', fontWeight: 'bold' }}>
+                          Due Date
+                        </TableCell>
+                        <TableCell align="center" sx={{ color: '#555', fontWeight: 'bold' }}>
+                          Amount
+                        </TableCell>
+                        <TableCell align="center" sx={{ color: '#555', fontWeight: 'bold' }}>
+                          Status
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {paymentRecords.map((record, index) => (
+                        <TableRow key={index}>
+                          <TableCell align="center">{record.paymentId}</TableCell>
+                          <TableCell align="center">{record.dueDate}</TableCell>
+                          <TableCell align="center">₱ {record.amount}</TableCell>
+                          <TableCell
+                            align="center"
+                            sx={{
+                              color: record.status === 'Open' ? 'green' : record.status === 'Pending' ? 'orange' : 'red',
+                            }}
+                          >
+                            {record.status}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => setOpenPaymentDialog(false)} variant="outlined" color="error">
+                    Close
+                  </Button>
+                </DialogActions>
+              </Dialog>
+
 
 
 
