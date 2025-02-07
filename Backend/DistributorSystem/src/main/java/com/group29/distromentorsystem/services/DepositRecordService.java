@@ -10,9 +10,11 @@ import java.util.List;
 @Service
 public class DepositRecordService {
 
-    private final DepositRecordRepository depositRecordRepository;
 
     @Autowired
+    private DepositRecordRepository depositRecordRepository;
+
+
     public DepositRecordService(DepositRecordRepository depositRecordRepository) {
         this.depositRecordRepository = depositRecordRepository;
     }
