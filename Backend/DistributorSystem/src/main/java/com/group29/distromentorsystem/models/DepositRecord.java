@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.UUID;
 import java.time.LocalDate;
 
-@Document(collection = "depositRecords")
+@Document("depositRecords")
 public class DepositRecord {
 
     @Id
