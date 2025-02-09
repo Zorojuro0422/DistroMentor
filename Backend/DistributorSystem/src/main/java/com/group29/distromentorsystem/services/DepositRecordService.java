@@ -2,7 +2,6 @@ package com.group29.distromentorsystem.services;
 
 import com.group29.distromentorsystem.models.DepositRecord;
 import com.group29.distromentorsystem.repositories.DepositRecordRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,8 +10,7 @@ import java.util.List;
 public class DepositRecordService {
 
 
-    @Autowired
-    private DepositRecordRepository depositRecordRepository;
+    private final DepositRecordRepository depositRecordRepository;
 
 
     public DepositRecordService(DepositRecordRepository depositRecordRepository) {
