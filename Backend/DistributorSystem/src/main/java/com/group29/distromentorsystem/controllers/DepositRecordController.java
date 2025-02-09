@@ -2,7 +2,6 @@ package com.group29.distromentorsystem.controllers;
 
 import com.group29.distromentorsystem.models.DepositRecord;
 import com.group29.distromentorsystem.services.DepositRecordService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,8 +12,12 @@ import java.util.List;
 @RequestMapping("/api/records")
 public class DepositRecordController {
 
-    @Autowired
-    private DepositRecordService depositRecordService;
+    private final DepositRecordService depositRecordService;
+
+    // Constructor-based dependency injection
+    public DepositRecordController(DepositRecordService depositRecordService) {
+        this.depositRecordService = depositRecordService;
+    }
 
     // Health Check Endpoint
     @GetMapping("/health")
