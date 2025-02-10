@@ -409,7 +409,7 @@ const handleOverduePayments = async () => {
 
     let totalPenalty = 0; // Total penalty for the dealer's payments
     let overduePaymentAmount = 0; // Store the overdue payment amount to be added to next payment
-
+    let overdueBalanceAmount = 0;
     // Process each payment record
     for (const record of paymentRecords) {
       console.log("Processing payment record:", record);
@@ -449,6 +449,7 @@ const handleOverduePayments = async () => {
 
         // Store the updated amount to be added to the next payment record
         overduePaymentAmount = updatedAmount;
+        overdueBalanceAmount = updatedBalance;
       } else {
         console.log(
           `Payment record ${record.paymentId} is not overdue. Status: ${record.status}, Due Date: ${record.dueDate}`
@@ -466,13 +467,13 @@ const handleOverduePayments = async () => {
         console.log("Next 'Open' payment found. Adding overdue amount to it.");
 
         const newAmount = nextPayment.amount + overduePaymentAmount;
-        const updatedNextPayment = { ...nextPayment, amount: newAmount };
+        const newBalance = nextPayment.balance + overdueBalanceAmount; // Carry over balance
 
-        // Update the next payment record with the new amount
-        await axios.put(
-          `https://distromentor.onrender.com/payment-records/${nextPayment.paymentId}`,
-          updatedNextPayment
-        );
+            const updatedNextPayment = {
+              ...nextPayment,
+              amount: newAmount,
+              balance: newBalance // Ensure balance is also updated
+            };
         console.log(`Updated next payment record ${nextPayment.paymentId} with new amount ₱${newAmount}`);
       } else {
         console.log("No 'Open' payment found after the overdue payment.");
