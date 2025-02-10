@@ -12,8 +12,12 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping("/records")
 public class DepositRecordController {
+    private final DepositRecordService depositRecordService;
+
     @Autowired
-    private DepositRecordService depositRecordService;
+    public DepositRecordController(DepositRecordService depositRecordService) {
+        this.depositRecordService = depositRecordService;
+    }
 
     // Health Check Endpoint
     @GetMapping("/health")
