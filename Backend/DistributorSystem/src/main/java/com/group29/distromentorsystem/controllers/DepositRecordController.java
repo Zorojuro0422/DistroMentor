@@ -2,6 +2,7 @@ package com.group29.distromentorsystem.controllers;
 
 import com.group29.distromentorsystem.models.DepositRecord;
 import com.group29.distromentorsystem.services.DepositRecordService;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,12 @@ public class DepositRecordController {
     public DepositRecordController(DepositRecordService depositRecordService) {
         this.depositRecordService = depositRecordService;
     }
+
+    @PostConstruct
+    public void init() {
+        System.out.println("✅ DepositRecordController is active!");
+    }
+
 
     // Health Check Endpoint
     @GetMapping("/health")
