@@ -234,7 +234,7 @@ export function OrderTransactionDetails() {
       if (!order) return;
 
       axios
-        .get(`https://distromentor.onrender.com/api/deposit/order/${objectId}`)
+        .get(`https://distromentor.onrender.com/records/order/${objectId}`)
         .then((response) => {
           setDepositRecords(response.data);
           console.log("Deposit records successfully fetched:", response.data); // Log the fetched deposit records
@@ -502,7 +502,7 @@ const handleOverduePayments = async () => {
       };
 
       await axios
-        .post("https://distromentor.onrender.com/api/deposit/create", depositRecordPayload)
+        .post("https://distromentor.onrender.com/records/create", depositRecordPayload)
         .then(() => {
           headerHandleAlert(
             "Success",
