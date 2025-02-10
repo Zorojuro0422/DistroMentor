@@ -267,7 +267,7 @@ export default function DepositConfirmation() {
       if (!order) return; // Don't fetch if no order
 
       axios
-        .get<DepositRecord[]>(`https://distromentor.onrender.com/api/deposit/order/${order.orderid}`) // Assuming order.id is the correct field for orderID
+        .get<DepositRecord[]>(`https://distromentor.onrender.com/records/order/${order.orderid}`) // Assuming order.id is the correct field for orderID
         .then((response) => {
           setDepositRecords(response.data);
           console.log("Deposit records successfully fetched:", response.data);
@@ -500,7 +500,7 @@ const handleSnackbarClose = () => {
           remainingBalance: remainingBal - deposit.amount,
         };
 
-        await axios.post("https://distromentor.onrender.com/api/deposit/create", depositRecordPayload);
+        await axios.post("https://distromentor.onrender.com/records/create", depositRecordPayload);
 
         // Fetch payment records for the order
         console.log("Fetching payment records for order ID:", order.orderid);

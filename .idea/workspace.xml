@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="0dcae2e2-d05e-445c-92af-dded0365df7e" name="Changes" comment="02/10/25">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/DepositRecordController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/DistributorSystem/target/classes/com/group29/distromentorsystem/controllers/DepositRecordController.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,20 +109,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1721712519041</updated>
-    </task>
-    <task id="LOCAL-00045" summary="new update">
-      <created>1734284403041</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1734284403041</updated>
-    </task>
-    <task id="LOCAL-00046" summary="new update">
-      <created>1734284596988</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1734284596988</updated>
     </task>
     <task id="LOCAL-00047" summary="new update">
       <created>1734284744445</created>
@@ -454,7 +439,21 @@
       <option name="project" value="LOCAL" />
       <updated>1739206489812</updated>
     </task>
-    <option name="localTasksCounter" value="94" />
+    <task id="LOCAL-00094" summary="02/10/25">
+      <created>1739207311882</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1739207311882</updated>
+    </task>
+    <task id="LOCAL-00095" summary="02/10/25">
+      <created>1739207391022</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1739207391022</updated>
+    </task>
+    <option name="localTasksCounter" value="96" />
     <servers />
   </component>
   <component name="UnknownFeatures">
