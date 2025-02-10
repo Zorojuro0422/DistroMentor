@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/records")
+@RequestMapping("records")
 public class DepositRecordController {
     private final DepositRecordService depositRecordService;
 
