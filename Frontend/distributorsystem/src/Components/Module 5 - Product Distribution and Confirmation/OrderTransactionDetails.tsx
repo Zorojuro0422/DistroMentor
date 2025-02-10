@@ -432,7 +432,15 @@ const handleOverduePayments = async () => {
 
         // Update the individual payment record
         const updatedAmount = record.amount + penalty;
-        const updatedRecord = { ...record, status: "Overdue", amount: updatedAmount };
+        const updatedBalance = record.balance + penalty; // Update balance too!
+
+        const updatedRecord = {
+          ...record,
+          status: "Overdue",
+          amount: updatedAmount,
+          balance: updatedBalance // Ensure this is correctly passed
+        };
+
         await axios.put(
           `https://distromentor.onrender.com/payment-records/${record.paymentId}`,
           updatedRecord
