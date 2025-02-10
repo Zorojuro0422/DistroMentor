@@ -14,11 +14,13 @@ com\group29\distromentorsystem\models\Customer.class
 com\group29\distromentorsystem\services\AllProductSubtotalService.class
 com\group29\distromentorsystem\services\EmployeeService.class
 com\group29\distromentorsystem\models\DealerProduct.class
+com\group29\distromentorsystem\services\DepositRecordService.class
 com\group29\distromentorsystem\models\Product.class
 com\group29\distromentorsystem\repositories\DealerDocumentRepository.class
 com\group29\distromentorsystem\models\DistributorDocument.class
 com\group29\distromentorsystem\controllers\ArchivedDealerController.class
 com\group29\distromentorsystem\services\DistributorService.class
+com\group29\distromentorsystem\models\DepositRecord.class
 com\group29\distromentorsystem\repositories\DealerProductRepository.class
 com\group29\distromentorsystem\repositories\AllProductSubtotalRepository.class
 com\group29\distromentorsystem\models\TotalInterest.class
@@ -32,6 +34,7 @@ com\group29\distromentorsystem\services\login\SignInServiceImpl.class
 com\group29\distromentorsystem\DistributorSystemApplication.class
 com\group29\distromentorsystem\services\login\SignInService.class
 com\group29\distromentorsystem\services\CustomerService.class
+com\group29\distromentorsystem\repositories\DepositRecordRepository.class
 com\group29\distromentorsystem\controllers\TotalInterestController.class
 com\group29\distromentorsystem\controllers\OrderedProductController.class
 com\group29\distromentorsystem\controllers\EmployeeController.class
@@ -54,6 +57,7 @@ com\group29\distromentorsystem\WebConfig.class
 com\group29\distromentorsystem\models\CustomerOrder$Status.class
 com\group29\distromentorsystem\services\DealerProductService.class
 com\group29\distromentorsystem\controllers\DealerProductController.class
+com\group29\distromentorsystem\controllers\DepositRecordController.class
 com\group29\distromentorsystem\models\CustomerOrder.class
 com\group29\distromentorsystem\controllers\DistributorController.class
 com\group29\distromentorsystem\models\Distributor.class
