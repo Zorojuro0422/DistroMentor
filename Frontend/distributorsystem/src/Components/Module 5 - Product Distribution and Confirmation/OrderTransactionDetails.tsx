@@ -430,9 +430,10 @@ const handleOverduePayments = async () => {
         // Add penalty to the total penalty for this dealer
         totalPenalty += penalty;
 
+        const newOrderAmount = order.orderamount + totalPenalty;
         // Update the individual payment record
         const updatedAmount = record.amount + penalty;
-        const updatedBalance = penalty; // Update balance too!
+        const updatedBalance = newOrderAmount - order.deposit; // Update balance too!
 
         const updatedRecord = {
           ...record,
