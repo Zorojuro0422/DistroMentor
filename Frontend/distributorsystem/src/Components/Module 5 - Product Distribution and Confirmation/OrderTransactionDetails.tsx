@@ -504,7 +504,7 @@ const handleOverduePayments = async () => {
       console.log(`Order ${order.orderid} updated with new orderamount ₱${newOrderAmount}`);
 
       // Post divided penalty to the product subtotal
-      await axios.post('http://localhost:8080/allProductSubtotals/saveOrUpdate', {
+      await axios.post('https://distromentor.onrender.com/allProductSubtotals/saveOrUpdate', {
         dealerid: dealerId,
         totalProductSubtotal: totalPenalty,
       });
