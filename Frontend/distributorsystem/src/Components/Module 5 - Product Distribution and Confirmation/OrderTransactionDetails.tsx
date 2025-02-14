@@ -470,7 +470,7 @@ const handleOverduePayments = async () => {
         console.log("Next 'Open' payment found. Adding overdue amount and balance to it.");
 
         const newAmount = nextPayment.amount + overduePaymentAmount;
-        const newBalance = nextPayment.balance + overdueBalanceAmount; // Carry over balance
+        const newBalance = overdueBalanceAmount; // Carry over balance
 
         const updatedNextPayment = {
           ...nextPayment,
