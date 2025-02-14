@@ -432,7 +432,7 @@ const handleOverduePayments = async () => {
 
         // Update the individual payment record
         const updatedAmount = record.amount + penalty;
-        const updatedBalance = record.balance + penalty; // Update balance too!
+        const updatedBalance = penalty; // Update balance too!
 
         const updatedRecord = {
           ...record,
