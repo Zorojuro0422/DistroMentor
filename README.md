@@ -189,18 +189,12 @@ DistriLink is temporarily deployed with a modular approach to enhance performanc
 - [Postman Collection](https://distrilink-g5.postman.co/workspace/G5-Capstone~d84b7dfb-f8b7-459d-8668-9191d20967c8/collection/23487415-d5d198a0-4375-499c-bf2b-e7cb5d6841ab?action=share&creator=23487415)
 
 ### **Project Members**
-- **Kim Hilary M. Barnaba**
-    -   khbarnaba@gmail.com
-    -   09923290048
-- **Ariel Judah D. Musngi**
-    -  arieljudahmusngi@gmail.com
-    -  09959617346
+- **Gabriel D. Calesa**
+    -   calezagab@gmail.com
+    -   09065263241
+- **Nichole P. Cuizon**
+    -  
+    -  
 - **Ephraim Khirt O. Perez**
-    - khirtperez@gmail.com 
-    - 09094448875
-- **Kemriel Nick S. Perez**
-    - kemrielnikperez@gmail.com
-    - 09219222005
-- **Charmaine Mae I. Ramirez**
-    - charmaineramirez05@gmail.com
-    - 09158523587
+    - 
+    - 
