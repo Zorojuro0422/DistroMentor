@@ -195,6 +195,6 @@ DistriLink is temporarily deployed with a modular approach to enhance performanc
 - **Nichole P. Cuizon**
     -  
     -  
-- **Ephraim Khirt O. Perez**
+- **Brian Despi**
     - 
     - 
